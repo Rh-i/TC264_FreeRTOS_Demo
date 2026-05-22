@@ -27,23 +27,30 @@
 可以选用的芯片如下：
 
 1. Infineon微控制器
-   - AURIX? 系列 ： TC212、TC264、 TC297、 TC364、TC377、TC387（待补充）
-   - TRAVEO? 系列： CYT4BB7、CYT2BL3（待补充）
-2. STC微控制器
-   - Ai8051U，STC32G144K；（待补充）
-   - STC32G12K128， STC8H8K64U， STC32F12K54；
-3. NXP微控制器以及MicroPython开发板
-   - 限定NXP公司微控制器，以及基于NXP控制器的MicroPython控制开发板。 
-   - 主控芯片推荐使用 RT 系列单片机， 视觉模块使用 i.MXRT 系列和MCX Vision系列。
-4. 龙芯中科开发板
-   - 限定使用龙芯中科指定的微控制器对应的开发板。 第20届竞赛赠送的板卡依然可以使用。 开发工具除了使用 Linux系统之外， 还可以直接使用 C语言通过IDE下载工具完成软件的开发。
 
-> 往年是使用的TC264，然后往年要求只能用TC系列，电路板也是TC264的时候，因此沿用
+  - AURIX? 系列 ： TC212、TC264、 TC297、 TC364、TC377、TC387（待补充）
+  - TRAVEO? 系列： CYT4BB7、CYT2BL3（待补充）
+
+2. STC微控制器
+
+  - Ai8051U，STC32G144K；（待补充）
+  - STC32G12K128， STC8H8K64U， STC32F12K54；
+
+3. NXP微控制器以及MicroPython开发板
+
+  - 限定NXP公司微控制器，以及基于NXP控制器的MicroPython控制开发板。 
+  - 主控芯片推荐使用 RT 系列单片机， 视觉模块使用 i.MXRT 系列和MCX Vision系列。
+
+4. 龙芯中科开发板
+
+  - 限定使用龙芯中科指定的微控制器对应的开发板。 第20届竞赛赠送的板卡依然可以使用。 开发工具除了使用 Linux系统之外， 还可以直接使用 C语言通过IDE下载工具完成软件的开发。
+
+> 往年是使用的TC264，然后往年要求只能用TC系列，电路板也是TC264的，因此沿用
 
 ```text
-TODO:有换成CYT4BB7的想法
-- ARM编程
-- 使用Infineon的Modbox应该可以实现vscode原生开发
+TODO:有换成 CYT4BB7 的想法
+- ARM 编程
+- 使用 Infineon 的 Modbox 应该可以实现 vscode 原生开发
 - 找到了基于IAR的三核FreeRTOS+驱动的例程
 ```
 
