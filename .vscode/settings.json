@@ -1,0 +1,16 @@
+{
+  "files.encoding": "gbk",
+  "C_Cpp.errorSquiggles": "disabled",
+  "files.associations": {
+    "pts_deal.h": "c",
+    "cmath": "c",
+    "cstdlib": "c",
+    "limits": "c",
+    "zf_common_headfile.h": "c",
+    "image_processing.h": "c",
+    "perspective.h": "c",
+    "key.h": "c"
+  },
+  "[c]": {"files.encoding": "gbk"},
+  "[cpp]": {"files.encoding": "gbk"}
+}

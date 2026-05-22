@@ -1,0 +1,89 @@
+TC264是双核单片机，在用两个和运行同一资源时会出现竞争的问题，例如CPU0，CPU1在同时调用一个串口时会出现竞争，导致从串口输出值出现乱码，我们可以通过软件来解决这一问题，这就类似于互斥锁。
+双方在在开同一扇的同时，谁先拿到钥匙谁就开门，开完门后放回钥匙，等待下一次开门，这样双方就不会出现资源竞争了。
+TC264底层也给出了解决方案：
+英飞凌TC264之双核互斥_第1张图片
+
+IFX_EXTERN boolean IfxCpu_acquireMutex(IfxCpu_mutexLock *lock);
+boolean IfxCpu_acquireMutex(IfxCpu_mutexLock *lock)
+{
+    boolean         retVal;
+    volatile uint32 spinLockVal;
+
+    retVal      = FALSE;
+
+    spinLockVal = 1UL;
+    spinLockVal =
+        (uint32)__cmpAndSwap(((unsigned int *)lock), spinLockVal, 0);
+
+    /* Check if the SpinLock WAS set before the attempt to acquire spinlock */
+    if (spinLockVal == 0)
+    {
+        retVal = TRUE;
+    }
+
+    return retVal;
+}
+
+例程：
+
+CPU0：
+extern IfxCpu_mutexLock g_MutexUart;
+main()
+{
+        if(IfxCpu_acquireMutex(&g_MutexUart))  //判断互斥量是否使用
+        {
+            UART_PutStr(UART0, "这里是CPU0 \r\n");
+            IfxCpu_releaseMutex(&g_MutexUart);  //互斥量释放
+        }
+        delayms(5);  //这个时间可以让CPU1来使用互斥量
+}
+CPU1：
+IfxCpu_mutexLock g_MutexUart;  //设置互斥信号
+main()
+{
+        if(IfxCpu_acquireMutex(&g_MutexUart))  //判断互斥量是否使用
+        {
+            UART_PutStr(UART0, "这里是CPU1 \r\n");
+            IfxCpu_releaseMutex(&g_MutexUart);  //互斥量释放
+        }
+        delayms(5);  //这个时间可以让CPU1来使用互斥量
+}
+
+按照这个思路我们也可以设置一个全局变量来充当这个互斥量，令这个全局变量为1（钥匙），其中一核拿到1（钥匙），让这个全局变量为0，此时另一核判断全局变量为0（没拿到钥匙），拿到钥匙的核中执行完相应的程序后，再令设置的全局变量为1，这样就是先抢钥匙，抢到钥匙在进行相应的程序，就不会存在资源竞争的问题。
+
+---
+
+---
+
+2. 那怎么实现跨核通信？—— 等效的“跨核队列”
+虽然不能直接用 FreeRTOS 队列，但可以基于底层硬件机制自己实现一套核间消息队列，效果和直接调用类似。常用方法：
+
+方案一：共享内存 + 自旋锁 + 核间中断
+这是最经典、最灵活的做法，TC264 完全支持。
+
+定义共享数据结构（放在双核都可访问的共享 RAM 中）
+例如，一块环形缓冲区，附带读写指针和临界区保护锁。
+
+硬件自旋锁保护（如 IfxCpu_acquireMutex）
+A 核向共享缓冲区写入消息时，先获取自旋锁，写入数据，释放锁，然后触发一次核间中断通知 B 核。
+
+B 核中断服务函数
+在 B 核的中断服务函数（或延迟任务）中，取锁，从共享缓冲区读取消息，释放锁，然后以某种方式（比如通知 B 核的一个任务）把数据交给上层应用。
+
+封装成类似 FreeRTOS 队列的 API
+你可以自己写一套 ipc_queue_send / ipc_queue_recv 函数，内部完成上述操作，虽然底层不是 FreeRTOS 队列，但给应用层的感觉就像是直接调用。
+
+方案二：使用现成的 IPC 框架
+英飞凌 iLLD 库：提供了简单的核间通信驱动，如 IfxCpu 模块中的核间中断和自旋锁函数，你可以基于它构建自己的队列。
+
+OpenAMP / RPMsg：如果将来移植了较完整的 OpenAMP 栈，可以用虚拟队列（virtqueue）实现类似效果，不过在 TC264 的 TriCore 内核上使用 OpenAMP 需要一定移植工作量。
+
+3. 有没有“看起来”直接调用的魔法？
+如果强行让两个核运行同一个二进制镜像，并且使用支持 SMP 的 FreeRTOS，那就可以直接用同一个队列，并且另一个核可以直接调用 API。但 TC264 是典型的异构多核（TriCore 架构 + 可能还有 PCP），官方推荐的是 AMP 模式，使用一个 SMP 镜像反而可能不现实或风险较高。
+
+所以结论很明确：
+
+AMP 模式下，A 创建的队列，B 不能直接调。
+
+你需要自己造一个核间消息队列（基于共享内存+锁+中断）来等价实现跨核通信。
+
