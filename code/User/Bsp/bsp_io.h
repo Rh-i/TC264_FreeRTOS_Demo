@@ -25,7 +25,7 @@ extern struct Key key_c_dev;
 /* LED设备定义 */
 extern struct Led led_1_dev;
 extern struct Led led_2_dev;
-extern struct Led led_3_dev;
+// extern struct Led led_3_dev; // 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
 extern struct Led led_4_dev;
 
 /* 蜂鸣器设备定义 */

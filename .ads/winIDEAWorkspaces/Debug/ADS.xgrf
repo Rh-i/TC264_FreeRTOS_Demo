@@ -53,19 +53,19 @@
         </__.13>
         <__.1>
          <BookmarkList></BookmarkList>
-         <CaretPos>1905</CaretPos>
+         <CaretPos>2480</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\user\cpu0_main.c</FileName>
          <FileType>1</FileType>
-         <ScrollPos>70</ScrollPos>
+         <ScrollPos>87</ScrollPos>
         </__.1>
         <__.2>
          <BookmarkList></BookmarkList>
-         <CaretPos>1586</CaretPos>
+         <CaretPos>4268</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Bsp\bsp_uart.c</FileName>
          <FileType>1</FileType>
-         <ScrollPos>45</ScrollPos>
+         <ScrollPos>122</ScrollPos>
         </__.2>
         <__.3>
          <BookmarkList></BookmarkList>
@@ -77,11 +77,11 @@
         </__.3>
         <__.4>
          <BookmarkList></BookmarkList>
-         <CaretPos>5316</CaretPos>
+         <CaretPos>3041</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Protocol\uart_protocol.c</FileName>
          <FileType>1</FileType>
-         <ScrollPos>146</ScrollPos>
+         <ScrollPos>54</ScrollPos>
         </__.4>
         <__.5>
          <BookmarkList></BookmarkList>
@@ -109,7 +109,7 @@
         </__.7>
         <__.8>
          <BookmarkList></BookmarkList>
-         <CaretPos>1733</CaretPos>
+         <CaretPos>1881</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Bsp\bsp_freertos_cpu0.c</FileName>
          <FileType>1</FileType>
@@ -446,7 +446,7 @@
       <PrimaryDocumentPaneId>5</PrimaryDocumentPaneId>
       <Frames>
        <__.0>
-        <FocusedViewId>12</FocusedViewId>
+        <FocusedViewId>4</FocusedViewId>
         <FrameState>3</FrameState>
         <IsPrimary>true</IsPrimary>
         <Bounds>
@@ -502,7 +502,7 @@
                <IsPinned>false</IsPinned>
                <IsTabbed>true</IsTabbed>
                <Orientation>None</Orientation>
-               <TopTabViewId>12</TopTabViewId>
+               <TopTabViewId>9</TopTabViewId>
                <ViewId>-1</ViewId>
                <Children>
                 <__.0>

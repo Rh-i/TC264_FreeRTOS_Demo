@@ -614,9 +614,9 @@
         <ActionShow>false</ActionShow>
         <Condition>false</Condition>
         <Count>0</Count>
-        <Enabled>false</Enabled>
+        <Enabled>true</Enabled>
         <Expression></Expression>
-        <Location>&quot;..\..\..\user\cpu0_main.c&quot;::110</Location>
+        <Location>&quot;..\..\..\code\User\Protocol\uart_protocol.c&quot;::198</Location>
         <ProcessFilter></ProcessFilter>
        </__.2>
        <__.3>
@@ -628,21 +628,9 @@
         <Count>0</Count>
         <Enabled>true</Enabled>
         <Expression></Expression>
-        <Location>&quot;..\..\..\code\User\Protocol\uart_protocol.c&quot;::198</Location>
+        <Location>&quot;..\..\..\code\User\Protocol\uart_protocol.c&quot;::59</Location>
         <ProcessFilter></ProcessFilter>
        </__.3>
-       <__.4>
-        <ActionEnabled>false</ActionEnabled>
-        <ActionParams></ActionParams>
-        <ActionScript></ActionScript>
-        <ActionShow>false</ActionShow>
-        <Condition>false</Condition>
-        <Count>0</Count>
-        <Enabled>false</Enabled>
-        <Expression></Expression>
-        <Location>&quot;..\..\..\code\User\Protocol\uart_protocol.c&quot;::93</Location>
-        <ProcessFilter></ProcessFilter>
-       </__.4>
       </BPs>
       <Processes>
        <__.0>

@@ -62,11 +62,21 @@ void uart_protocol_poll(UartProtocol *protocol)
     return;
   }
 
-  /* 读取2字节到缓冲区 */
-  bsp_uart_recv(&bsp_uart3, protocol->rx_buffer, 2);
+  /* 读取1字节到缓冲区 */
+  bsp_uart_recv(&bsp_uart3, protocol->rx_buffer, 1);
 
-  /* 检查帧头0xAA 0x55 */
-  if (protocol->rx_buffer[0] != PROTOCOL_HEAD_0 || protocol->rx_buffer[1] != PROTOCOL_HEAD_1)
+  /* 检查帧头0xAA */
+  if (protocol->rx_buffer[0] != PROTOCOL_HEAD_0)
+  {
+    /* 帧头不匹配，丢弃这2字节，继续扫描 */
+    return;
+  }
+
+  /* 读取1字节到缓冲区 */
+  bsp_uart_recv(&bsp_uart3, &protocol->rx_buffer[1], 1);
+
+  /* 检查帧头0x55 */
+  if (protocol->rx_buffer[1] != PROTOCOL_HEAD_1)
   {
     /* 帧头不匹配，丢弃这2字节，继续扫描 */
     return;

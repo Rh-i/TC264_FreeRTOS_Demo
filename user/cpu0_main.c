@@ -22,7 +22,7 @@
 #pragma section all "cpu0_dsram"
 
 /**
- * @brief LED任务
+ * @brief LED固定闪烁任务
  * @param pvParameters 任务参数
  */
 void led_task(void *pvParameters)
@@ -36,7 +36,7 @@ void led_task(void *pvParameters)
 }
 
 /**
- * @brief key1处理
+ * @brief key1触发处理 短按
  * @param pvParameters 任务参数
  */
 void key1_task(void *pvParameters)
@@ -49,7 +49,7 @@ void key1_task(void *pvParameters)
 
     // 蜂鸣器响100ms
     buzzer_on(&buzzer_dev);
-    vTaskDelay(pdMS_TO_TICKS(100));
+    vTaskDelay(100);
     buzzer_off(&buzzer_dev);
 
     // 翻转LED1
@@ -58,7 +58,7 @@ void key1_task(void *pvParameters)
 }
 
 /**
- * @brief key2处理
+ * @brief key2触发处理 短按
  * @param pvParameters 任务参数
  */
 void key2_task(void *pvParameters)
@@ -71,7 +71,7 @@ void key2_task(void *pvParameters)
 
     // 蜂鸣器响100ms
     buzzer_on(&buzzer_dev);
-    vTaskDelay(pdMS_TO_TICKS(100));
+    vTaskDelay(100);
     buzzer_off(&buzzer_dev);
 
     // 翻转LED2
@@ -80,7 +80,7 @@ void key2_task(void *pvParameters)
 }
 
 /**
- * @brief key3处理
+ * @brief key3触发处理 短按
  * @param pvParameters 任务参数
  */
 void key3_task(void *pvParameters)
@@ -93,15 +93,23 @@ void key3_task(void *pvParameters)
 
     // 蜂鸣器响100ms
     buzzer_on(&buzzer_dev);
-    vTaskDelay(pdMS_TO_TICKS(100));
+    vTaskDelay(100);
     buzzer_off(&buzzer_dev);
 
     // 翻转LED3
-    led_toggle(&led_3_dev);
+    // led_toggle(&led_3_dev); // 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
   }
 }
 
-void test_task(void *pvParameters)
+/**
+ * @brief 上下位机通讯串口接收处理任务，串口3
+ * @note  接收的是中断接收存入fifo的数据，进行解包处理
+ *
+ * @todo  解包之后需要把对应的数据传入小车的运动控制
+ *
+ * @param pvParameters
+ */
+void uart3_protocol_task(void *pvParameters)
 {
   (void)pvParameters;
 
@@ -111,6 +119,31 @@ void test_task(void *pvParameters)
   }
 }
 
+
+void test_task(void *pvParameters)
+{
+  (void)pvParameters;
+
+  char msg[64];
+
+  while (1)
+  {
+    // bsp_pwm_set_duty(&bsp_pwm_motor,1000);
+
+    // 机械中值 0°
+    // bsp_pwm_set_duty(&bsp_pwm_servo1,4750);
+    // device_servo_set_angle(&g_servo, -35);
+    // device_servo_set_angle(&g_servo,35);
+
+    int count = bsp_encoder_get_count(&bsp_encoder_tim2);
+    sprintf(msg, "cnt: %d\n", count);
+    bsp_uart_send_string(&bsp_uart0,msg);
+    // bsp_encoder_clear_count(&bsp_encoder_tim2) ;
+
+
+    vTaskDelay(1000);
+  }
+}
 
 /**
  * @brief CPU0主函数
@@ -124,11 +157,15 @@ int core0_main(void)
   user_init(); // 用户的初始化
 
 
-  xTaskCreate(led_task, "led_task", 64, NULL, 3, NULL);    // 优先级越大越高 0~9
-  xTaskCreate(key1_task, "key1_task", 256, NULL, 3, NULL); // 优先级越大越高 0~9
-  xTaskCreate(key2_task, "key2_task", 256, NULL, 3, NULL); // 优先级越大越高 0~9
-  xTaskCreate(key3_task, "key3_task", 256, NULL, 3, NULL); // 优先级越大越高 0~9
+  xTaskCreate(led_task, "led", 64, NULL, 2, NULL);    // 优先级越大越高 0~9
+  xTaskCreate(key1_task, "key1", 256, NULL, 3, NULL); // 优先级越大越高 0~9
+  xTaskCreate(key2_task, "key2", 256, NULL, 3, NULL); // 优先级越大越高 0~9
+  xTaskCreate(key3_task, "key3", 256, NULL, 3, NULL); // 优先级越大越高 0~9
+
+  xTaskCreate(uart3_protocol_task, "uart3_protocol", 512, NULL, 4, NULL); // 优先级越大越高 0~9
+
   xTaskCreate(test_task, "test_task", 512, NULL, 4, NULL); // 优先级越大越高 0~9
+
 
   start_freertos();
 

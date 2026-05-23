@@ -22,7 +22,7 @@ Led led_1_dev;
 Led led_2_dev;
 
 /* LED设备 - P21_5 */
-Led led_3_dev;
+// Led led_3_dev; // 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
 
 /* LED设备 - P21_4 */
 Led led_4_dev;
@@ -48,7 +48,7 @@ void bsp_io_init(void)
   /* 初始化LED */
   led_init(&led_1_dev, P20_9, true);
   led_init(&led_2_dev, P20_8, true);
-  led_init(&led_3_dev, P21_5, true);
+  // led_init(&led_3_dev, P21_5, true); // 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
   led_init(&led_4_dev, P21_4, true);
 
   /* 初始化蜂鸣器 */
@@ -60,12 +60,12 @@ void bsp_io_init(void)
   key_init_gpio(&key_c_dev);
   led_init_gpio(&led_1_dev);
   led_init_gpio(&led_2_dev);
-  led_init_gpio(&led_3_dev);
+  // led_init_gpio(&led_3_dev); // 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
   led_init_gpio(&led_4_dev);
   buzzer_init_gpio(&buzzer_dev);
 
   pit_ms_init(CCU61_CH0, 1); // 开启处理key_scan的1ms一次的中断初始化
-                             /********** IO **********/
+  /********** IO **********/
 }
 
 /**
