@@ -1,10 +1,6 @@
 #ifndef __BSP_FREERTOS_CPU0_H__
 #define __BSP_FREERTOS_CPU0_H__
 
-#ifdef __cplusplus
-extern "C" 
-{
-#endif
 
 /**
  * @brief 对外暴露接口，开启freertos
@@ -13,8 +9,5 @@ extern "C"
  */
 void start_freertos(void);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif // __BSP_FREERTOS_CPU0_H__

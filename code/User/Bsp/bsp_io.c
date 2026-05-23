@@ -33,53 +33,53 @@ Buzzer buzzer_dev;
 #pragma section all restore
 
 
- /**
-  * @brief 总初始化
-  * 
-  */
+/**
+ * @brief 总初始化
+ *
+ */
 void bsp_io_init(void)
 {
-    /********** IO **********/
-    /* 初始化按键 */
-    key_init(&key_a_dev, P22_0, 7);
-    key_init(&key_b_dev, P23_1, 7);
-    key_init(&key_c_dev, P32_4, 7);
+  /********** IO **********/
+  /* 初始化按键 */
+  key_init(&key_a_dev, P22_0, 7);
+  key_init(&key_b_dev, P23_1, 7);
+  key_init(&key_c_dev, P32_4, 7);
 
-    /* 初始化LED */
-    led_init(&led_1_dev, P20_9, true);
-    led_init(&led_2_dev, P20_8, true);
-    led_init(&led_3_dev, P21_5, true);
-    led_init(&led_4_dev, P21_4, true);
+  /* 初始化LED */
+  led_init(&led_1_dev, P20_9, true);
+  led_init(&led_2_dev, P20_8, true);
+  led_init(&led_3_dev, P21_5, true);
+  led_init(&led_4_dev, P21_4, true);
 
-    /* 初始化蜂鸣器 */
-    buzzer_init(&buzzer_dev, P22_1);
+  /* 初始化蜂鸣器 */
+  buzzer_init(&buzzer_dev, P22_1);
 
-    /* 初始化GPIO */
-    key_init_gpio(&key_a_dev);
-    key_init_gpio(&key_b_dev);
-    key_init_gpio(&key_c_dev);
-    led_init_gpio(&led_1_dev);
-    led_init_gpio(&led_2_dev);
-    led_init_gpio(&led_3_dev);
-    led_init_gpio(&led_4_dev);
-    buzzer_init_gpio(&buzzer_dev);
+  /* 初始化GPIO */
+  key_init_gpio(&key_a_dev);
+  key_init_gpio(&key_b_dev);
+  key_init_gpio(&key_c_dev);
+  led_init_gpio(&led_1_dev);
+  led_init_gpio(&led_2_dev);
+  led_init_gpio(&led_3_dev);
+  led_init_gpio(&led_4_dev);
+  buzzer_init_gpio(&buzzer_dev);
 
-    pit_ms_init(CCU61_CH0, 1); // 开启处理key_scan的1ms一次的中断初始化
-    /********** IO **********/
+  pit_ms_init(CCU61_CH0, 1); // 开启处理key_scan的1ms一次的中断初始化
+                             /********** IO **********/
 }
 
 /**
  * @brief key使用到的中断回调 1ms触发一次
- * 
+ *
  */
 IFX_INTERRUPT(cc61_pit_ch0_isr, 0, CCU6_1_CH0_ISR_PRIORITY)
 {
-    interrupt_global_enable(0); // 开启中断嵌套
-    pit_clear_flag(CCU61_CH0);
+  interrupt_global_enable(0); // 开启中断嵌套
+  pit_clear_flag(CCU61_CH0);
 
-    key_scan(&key_a_dev);
-    key_scan(&key_b_dev);
-    key_scan(&key_c_dev);
+  key_scan(&key_a_dev);
+  key_scan(&key_b_dev);
+  key_scan(&key_c_dev);
 }
 
 
@@ -97,11 +97,11 @@ IFX_INTERRUPT(cc61_pit_ch0_isr, 0, CCU6_1_CH0_ISR_PRIORITY)
  */
 void key_init(Key *key, gpio_pin_enum key_pin, uint8_t filter_cnt)
 {
-    key->pin = key_pin;
-    key->filter_cnt = filter_cnt;
-    key->filter_state = 0;
-    key->pressed = 0;
-    key->sem = NULL;
+  key->pin          = key_pin;
+  key->filter_cnt   = filter_cnt;
+  key->filter_state = 0;
+  key->pressed      = 0;
+  key->sem          = NULL;
 }
 
 /**
@@ -110,11 +110,11 @@ void key_init(Key *key, gpio_pin_enum key_pin, uint8_t filter_cnt)
  */
 void key_deinit(Key *key)
 {
-    if (key->sem != NULL)
-    {
-        vSemaphoreDelete(key->sem);
-        key->sem = NULL;
-    }
+  if (key->sem != NULL)
+  {
+    vSemaphoreDelete(key->sem);
+    key->sem = NULL;
+  }
 }
 
 /**
@@ -124,8 +124,8 @@ void key_deinit(Key *key)
  */
 void key_init_gpio(Key *key)
 {
-    gpio_init(key->pin, GPI, GPIO_HIGH, GPI_PULL_UP);
-    key->sem = xSemaphoreCreateBinary();
+  gpio_init(key->pin, GPI, GPIO_HIGH, GPI_PULL_UP);
+  key->sem = xSemaphoreCreateBinary();
 }
 
 /**
@@ -135,22 +135,22 @@ void key_init_gpio(Key *key)
  */
 void key_scan(Key *key)
 {
-    /* 按键按下检测 */
-    if (gpio_get_level(key->pin) == 0)
+  /* 按键按下检测 */
+  if (gpio_get_level(key->pin) == 0)
+  {
+    key->filter_state++;
+    if (key->filter_state >= key->filter_cnt && key->pressed == 0)
     {
-        key->filter_state++;
-        if (key->filter_state >= key->filter_cnt && key->pressed == 0)
-        {
-            key->pressed = 1;
-            BaseType_t xHigherPriorityTaskWoken_temp = pdFALSE;
-            xSemaphoreGiveFromISR(key->sem, &xHigherPriorityTaskWoken_temp);
-        }
+      key->pressed                             = 1;
+      BaseType_t xHigherPriorityTaskWoken_temp = pdFALSE;
+      xSemaphoreGiveFromISR(key->sem, &xHigherPriorityTaskWoken_temp);
     }
-    else
-    {
-        key->filter_state = 0;
-        key->pressed = 0;
-    }
+  }
+  else
+  {
+    key->filter_state = 0;
+    key->pressed      = 0;
+  }
 }
 
 /**
@@ -160,7 +160,7 @@ void key_scan(Key *key)
  */
 SemaphoreHandle_t key_get_semaphore(Key *key)
 {
-    return key->sem;
+  return key->sem;
 }
 
 /*==============================================================================
@@ -176,8 +176,8 @@ SemaphoreHandle_t key_get_semaphore(Key *key)
  */
 void led_init(Led *led, gpio_pin_enum led_pin, bool active_high)
 {
-    led->pin = led_pin;
-    led->active_high = active_high;
+  led->pin         = led_pin;
+  led->active_high = active_high;
 }
 
 /**
@@ -187,7 +187,7 @@ void led_init(Led *led, gpio_pin_enum led_pin, bool active_high)
  */
 void led_init_gpio(Led *led)
 {
-    gpio_init(led->pin, GPO, led->active_high ? GPIO_HIGH : GPIO_LOW, GPO_PUSH_PULL);
+  gpio_init(led->pin, GPO, led->active_high ? GPIO_HIGH : GPIO_LOW, GPO_PUSH_PULL);
 }
 
 /**
@@ -197,7 +197,7 @@ void led_init_gpio(Led *led)
  */
 void led_on(Led *led)
 {
-    gpio_set_level(led->pin, led->active_high ? 1 : 0);
+  gpio_set_level(led->pin, led->active_high ? 0 : 1);
 }
 
 /**
@@ -207,7 +207,7 @@ void led_on(Led *led)
  */
 void led_off(Led *led)
 {
-    gpio_set_level(led->pin, led->active_high ? 0 : 1);
+  gpio_set_level(led->pin, led->active_high ? 1 : 0);
 }
 
 /**
@@ -217,7 +217,7 @@ void led_off(Led *led)
  */
 void led_toggle(Led *led)
 {
-    gpio_toggle_level(led->pin);
+  gpio_toggle_level(led->pin);
 }
 
 /**
@@ -227,14 +227,14 @@ void led_toggle(Led *led)
  */
 void led_set(Led *led, bool state)
 {
-    if (state)
-    {
-        led_on(led);
-    }
-    else
-    {
-        led_off(led);
-    }
+  if (state)
+  {
+    led_on(led);
+  }
+  else
+  {
+    led_off(led);
+  }
 }
 
 /*==============================================================================
@@ -249,7 +249,7 @@ void led_set(Led *led, bool state)
  */
 void buzzer_init(Buzzer *buzzer, gpio_pin_enum buzzer_pin)
 {
-    buzzer->pin = buzzer_pin;
+  buzzer->pin = buzzer_pin;
 }
 
 /**
@@ -258,7 +258,7 @@ void buzzer_init(Buzzer *buzzer, gpio_pin_enum buzzer_pin)
  */
 void buzzer_deinit(Buzzer *buzzer)
 {
-    (void)buzzer; /* 不需要释放资源 */
+  (void)buzzer; /* 不需要释放资源 */
 }
 
 /**
@@ -267,7 +267,7 @@ void buzzer_deinit(Buzzer *buzzer)
  */
 void buzzer_init_gpio(Buzzer *buzzer)
 {
-    gpio_init(buzzer->pin, GPO, GPIO_LOW, GPO_PUSH_PULL);
+  gpio_init(buzzer->pin, GPO, GPIO_LOW, GPO_PUSH_PULL);
 }
 
 /**
@@ -276,7 +276,7 @@ void buzzer_init_gpio(Buzzer *buzzer)
  */
 void buzzer_on(Buzzer *buzzer)
 {
-    gpio_set_level(buzzer->pin, 1);
+  gpio_set_level(buzzer->pin, 1);
 }
 
 /**
@@ -285,7 +285,7 @@ void buzzer_on(Buzzer *buzzer)
  */
 void buzzer_off(Buzzer *buzzer)
 {
-    gpio_set_level(buzzer->pin, 0);
+  gpio_set_level(buzzer->pin, 0);
 }
 
 /**
@@ -295,12 +295,12 @@ void buzzer_off(Buzzer *buzzer)
  */
 void buzzer_set(Buzzer *buzzer, bool state)
 {
-    if (state)
-    {
-        buzzer_on(buzzer);
-    }
-    else
-    {
-        buzzer_off(buzzer);
-    }
+  if (state)
+  {
+    buzzer_on(buzzer);
+  }
+  else
+  {
+    buzzer_off(buzzer);
+  }
 }

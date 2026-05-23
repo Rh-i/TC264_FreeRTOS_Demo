@@ -8,12 +8,7 @@
 
 #include "bsp_io.h"
 #include "bsp_uart.h"
-
-/* 串口设备声明 */
-extern BspUart bsp_uart0;
-extern BspUart bsp_uart1;
-extern BspUart bsp_uart2;
-extern BspUart bsp_uart3;
+#include "uart_protocol.h"
 
 /**
  * @brief 用户所有的初始化

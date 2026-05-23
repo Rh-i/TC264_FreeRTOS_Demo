@@ -104,57 +104,57 @@ IFX_INTERRUPT(exti_ch3_ch7_isr, 0, EXTI_CH3_CH7_INT_PRIO)
 
 
 // **************************** 串口中断函数 ****************************
-// 串口0默认作为调试串口
-IFX_INTERRUPT(uart0_tx_isr, 0, UART0_TX_INT_PRIO)
-{
-  interrupt_global_enable(0); // 开启中断嵌套
-}
-IFX_INTERRUPT(uart0_rx_isr, 0, UART0_RX_INT_PRIO)
-{
-    interrupt_global_enable(0);                     // 开启中断嵌套
+// // 串口0默认作为调试串口
+// IFX_INTERRUPT(uart0_tx_isr, 0, UART0_TX_INT_PRIO)
+// {
+//   interrupt_global_enable(0); // 开启中断嵌套
+// }
+// IFX_INTERRUPT(uart0_rx_isr, 0, UART0_RX_INT_PRIO)
+// {
+//     interrupt_global_enable(0);                     // 开启中断嵌套
 
-#if DEBUG_UART_USE_INTERRUPT                        // 如果开启 debug 串口中断
-        debug_interrupr_handler();                  // 调用 debug 串口接收处理函数 数据会被 debug 环形缓冲区读取
-#endif                                              // 如果修改了 DEBUG_UART_INDEX 那这段代码需要放到对应的串口中断去
-}
+// #if DEBUG_UART_USE_INTERRUPT                        // 如果开启 debug 串口中断
+//         debug_interrupr_handler();                  // 调用 debug 串口接收处理函数 数据会被 debug 环形缓冲区读取
+// #endif                                              // 如果修改了 DEBUG_UART_INDEX 那这段代码需要放到对应的串口中断去
+// }
 
-// 串口1
-IFX_INTERRUPT(uart1_tx_isr, 0, UART1_TX_INT_PRIO)
-{
-  interrupt_global_enable(0); // 开启中断嵌套
-}
-IFX_INTERRUPT(uart1_rx_isr, 0, UART1_RX_INT_PRIO)
-{
-  interrupt_global_enable(0); // 开启中断嵌套
-}
+// // 串口1
+// IFX_INTERRUPT(uart1_tx_isr, 0, UART1_TX_INT_PRIO)
+// {
+//   interrupt_global_enable(0); // 开启中断嵌套
+// }
+// IFX_INTERRUPT(uart1_rx_isr, 0, UART1_RX_INT_PRIO)
+// {
+//   interrupt_global_enable(0); // 开启中断嵌套
+// }
 
-// 串口2
-IFX_INTERRUPT(uart2_tx_isr, 0, UART2_TX_INT_PRIO)
-{
-  interrupt_global_enable(0); // 开启中断嵌套
-}
-IFX_INTERRUPT(uart2_rx_isr, 0, UART2_RX_INT_PRIO)
-{
-  interrupt_global_enable(0);     // 开启中断嵌套
-  // wireless_module_uart_handler(); // 无线模块统一回调函数，TODO可以使用此处回调内容作为串口驱动
-}
+// // 串口2
+// IFX_INTERRUPT(uart2_tx_isr, 0, UART2_TX_INT_PRIO)
+// {
+//   interrupt_global_enable(0); // 开启中断嵌套
+// }
+// IFX_INTERRUPT(uart2_rx_isr, 0, UART2_RX_INT_PRIO)
+// {
+//   interrupt_global_enable(0);     // 开启中断嵌套
+//   // wireless_module_uart_handler(); // 无线模块统一回调函数，TODO可以使用此处回调内容作为串口驱动
+// }
 
-// 串口3
-IFX_INTERRUPT(uart3_tx_isr, 0, UART3_TX_INT_PRIO)
-{
-  interrupt_global_enable(0); // 开启中断嵌套
-}
-IFX_INTERRUPT(uart3_rx_isr, 0, UART3_RX_INT_PRIO)
-{
-  interrupt_global_enable(0); // 开启中断嵌套
-  // gps_uart_callback();        // 无线模块统一回调函数，TODO可以使用此处回调内容作为串口协议驱动
-}
+// // 串口3
+// IFX_INTERRUPT(uart3_tx_isr, 0, UART3_TX_INT_PRIO)
+// {
+//   interrupt_global_enable(0); // 开启中断嵌套
+// }
+// IFX_INTERRUPT(uart3_rx_isr, 0, UART3_RX_INT_PRIO)
+// {
+//   interrupt_global_enable(0); // 开启中断嵌套
+//   // gps_uart_callback();        // 无线模块统一回调函数，TODO可以使用此处回调内容作为串口协议驱动
+// }
 
-// 串口4
-IFX_INTERRUPT(uart4_rx_isr, 0, UART3_RX_INT_PRIO)
-{
-  interrupt_global_enable(0); // 开启中断嵌套
-}
+// // 串口4
+// IFX_INTERRUPT(uart4_rx_isr, 0, UART3_RX_INT_PRIO)
+// {
+//   interrupt_global_enable(0); // 开启中断嵌套
+// }
 
 
 // 串口通讯错误中断

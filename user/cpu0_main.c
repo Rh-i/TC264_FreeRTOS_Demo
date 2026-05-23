@@ -46,12 +46,12 @@ void key1_task(void *pvParameters)
   {
     // 等待key_a信号量
     xSemaphoreTake(key_get_semaphore(&key_a_dev), portMAX_DELAY);
-    
+
     // 蜂鸣器响100ms
     buzzer_on(&buzzer_dev);
     vTaskDelay(pdMS_TO_TICKS(100));
     buzzer_off(&buzzer_dev);
-    
+
     // 翻转LED1
     led_toggle(&led_1_dev);
   }
@@ -68,12 +68,12 @@ void key2_task(void *pvParameters)
   {
     // 等待key_b信号量
     xSemaphoreTake(key_get_semaphore(&key_b_dev), portMAX_DELAY);
-    
+
     // 蜂鸣器响100ms
     buzzer_on(&buzzer_dev);
     vTaskDelay(pdMS_TO_TICKS(100));
     buzzer_off(&buzzer_dev);
-    
+
     // 翻转LED2
     led_toggle(&led_2_dev);
   }
@@ -90,16 +90,27 @@ void key3_task(void *pvParameters)
   {
     // 等待key_c信号量
     xSemaphoreTake(key_get_semaphore(&key_c_dev), portMAX_DELAY);
-    
+
     // 蜂鸣器响100ms
     buzzer_on(&buzzer_dev);
     vTaskDelay(pdMS_TO_TICKS(100));
     buzzer_off(&buzzer_dev);
-    
+
     // 翻转LED3
     led_toggle(&led_3_dev);
   }
 }
+
+void test_task(void *pvParameters)
+{
+  (void)pvParameters;
+
+  while (1)
+  {
+    uart_protocol_poll(&g_uart_protocol);
+  }
+}
+
 
 /**
  * @brief CPU0主函数
@@ -108,14 +119,17 @@ int core0_main(void)
 {
   clock_init(); // 获取时钟频率
 
+  cpu_wait_event_ready(); // 等待所有核心初始化完毕
+
   user_init(); // 用户的初始化
 
-  cpu_wait_event_ready(); // 等待所有核心初始化完毕
 
   xTaskCreate(led_task, "led_task", 64, NULL, 3, NULL);    // 优先级越大越高 0~9
   xTaskCreate(key1_task, "key1_task", 256, NULL, 3, NULL); // 优先级越大越高 0~9
   xTaskCreate(key2_task, "key2_task", 256, NULL, 3, NULL); // 优先级越大越高 0~9
   xTaskCreate(key3_task, "key3_task", 256, NULL, 3, NULL); // 优先级越大越高 0~9
+  xTaskCreate(test_task, "test_task", 512, NULL, 4, NULL); // 优先级越大越高 0~9
+
   start_freertos();
 
   while (1)

@@ -124,29 +124,29 @@ void uart_set_buffer (uart_index_enum uartn)
         {
             uart_config.txBuffer     = &uart0_tx_buffer;
             uart_config.rxBuffer     = &uart0_rx_buffer;
-            uart_config.txBufferSize = 1;
-            uart_config.rxBufferSize = 1;
+            uart_config.txBufferSize = 8;
+            uart_config.rxBufferSize = 8;
         }break;
         case UART_1:
         {
             uart_config.txBuffer     = &uart1_tx_buffer;
             uart_config.rxBuffer     = &uart1_rx_buffer;
-            uart_config.txBufferSize = 1;
-            uart_config.rxBufferSize = 1;
+            uart_config.txBufferSize = 8;
+            uart_config.rxBufferSize = 8;
         }break;
         case UART_2:
         {
             uart_config.txBuffer     = &uart2_tx_buffer;
             uart_config.rxBuffer     = &uart2_rx_buffer;
-            uart_config.txBufferSize = 1;
-            uart_config.rxBufferSize = 1;
+            uart_config.txBufferSize = 8;
+            uart_config.rxBufferSize = 8;
         }break;
         case UART_3:
         {
             uart_config.txBuffer     = &uart3_tx_buffer;
             uart_config.rxBuffer     = &uart3_rx_buffer;
-            uart_config.txBufferSize = 1;
-            uart_config.rxBufferSize = 1;
+            uart_config.txBufferSize = 8;
+            uart_config.rxBufferSize = 8;
         }break;
         default: IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
     }

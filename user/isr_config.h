@@ -11,34 +11,34 @@
 
 //================================================PIT中断参数相关定义===============================================
 #define CCU6_0_CH0_INT_SERVICE IfxSrc_Tos_cpu0 // 定义CCU6_0 PIT通道0中断服务类型，即中断是由谁响应处理 IfxSrc_Tos_cpu0 IfxSrc_Tos_cpu1 IfxSrc_Tos_dma 不可设置为其他值
-#define CCU6_0_CH0_ISR_PRIORITY 30             // 定义CCU6_0 PIT通道0中断优先级 优先级范围1-255 越大优先级越高 与平时使用的单片机不一样
+#define CCU6_0_CH0_ISR_PRIORITY 22             // 定义CCU6_0 PIT通道0中断优先级 优先级范围1-255 越大优先级越高 与平时使用的单片机不一样
 
 #define CCU6_0_CH1_INT_SERVICE IfxSrc_Tos_cpu0
-#define CCU6_0_CH1_ISR_PRIORITY 31
+#define CCU6_0_CH1_ISR_PRIORITY 23
 
 #define CCU6_1_CH0_INT_SERVICE IfxSrc_Tos_cpu0
-#define CCU6_1_CH0_ISR_PRIORITY 32
+#define CCU6_1_CH0_ISR_PRIORITY 24
 
 #define CCU6_1_CH1_INT_SERVICE IfxSrc_Tos_cpu0
-#define CCU6_1_CH1_ISR_PRIORITY 33
+#define CCU6_1_CH1_ISR_PRIORITY 25
 
 
 //================================================GPIO中断参数相关定义===============================================
 // 通道0与通道4是公用一个中断函数 在中断内部通过标志位判断是谁触发的中断
 #define EXTI_CH0_CH4_INT_SERVICE IfxSrc_Tos_cpu0 // 定义ERU通道0和通道4中断服务类型，即中断是由谁响应处理 IfxSrc_Tos_cpu0 IfxSrc_Tos_cpu1 IfxSrc_Tos_dma  不可设置为其他值
-#define EXTI_CH0_CH4_INT_PRIO 40                 // 定义ERU通道0和通道4中断优先级 优先级范围1-255 越大优先级越高 与平时使用的单片机不一样
+#define EXTI_CH0_CH4_INT_PRIO 26                 // 定义ERU通道0和通道4中断优先级 优先级范围1-255 越大优先级越高 与平时使用的单片机不一样
 
 // 通道1与通道5是公用一个中断函数 在中断内部通过标志位 判断是谁触发的中断
 #define EXTI_CH1_CH5_INT_SERVICE IfxSrc_Tos_cpu0 // 定义ERU通道1和通道5中断服务类型，同上
-#define EXTI_CH1_CH5_INT_PRIO 41                 // 定义ERU通道1和通道5中断优先级 同上
+#define EXTI_CH1_CH5_INT_PRIO 27                 // 定义ERU通道1和通道5中断优先级 同上
 
 // 通道2与通道6是公用一个中断函数 在中断内部通过标志位 判断是谁触发的中断
 #define EXTI_CH2_CH6_INT_SERVICE IfxSrc_Tos_dma // 定义ERU通道2和通道6中断服务类型，同上
-#define EXTI_CH2_CH6_INT_PRIO 5                 // 定义ERU通道2和通道6中断优先级 可设置范围为0-47
+#define EXTI_CH2_CH6_INT_PRIO 28                 // 定义ERU通道2和通道6中断优先级 可设置范围为0-47
 
 // 通道3与通道7是公用一个中断函数 在中断内部通过标志位 判断是谁触发的中断
 #define EXTI_CH3_CH7_INT_SERVICE IfxSrc_Tos_cpu0 // 定义ERU通道3和通道7中断服务类型，同上
-#define EXTI_CH3_CH7_INT_PRIO 43                 // 定义ERU通道3和通道7中断优先级 同上
+#define EXTI_CH3_CH7_INT_PRIO 29                 // 定义ERU通道3和通道7中断优先级 同上
 
 
 //===================================================DMA中断参数相关定义===============================================

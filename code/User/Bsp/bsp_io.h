@@ -6,9 +6,9 @@
 #ifndef BSP_IO_H_
 #define BSP_IO_H_
 
-#include "zf_common_headfile.h"
 #include "FreeRTOS.h"
 #include "semphr.h"
+#include "zf_common_headfile.h"
 
 void bsp_io_init();
 
@@ -39,11 +39,11 @@ extern struct Buzzer buzzer_dev;
  *============================================================================*/
 typedef struct Key
 {
-    gpio_pin_enum pin;               /**< 按键连接的GPIO引脚 */
-    uint8_t filter_cnt;             /**< 去抖计数阈值，需连续检测到该次数才确认按下 */
-    uint8_t filter_state;           /**< 消抖计数器，记录连续按下检测次数 */
-    uint8_t pressed;                /**< 按键确认按下标志，防止一次按下多次触发 */
-    SemaphoreHandle_t sem;          /**< 二值信号量，按键按下时从ISR释放 */
+  gpio_pin_enum     pin;          /**< 按键连接的GPIO引脚 */
+  uint8_t           filter_cnt;   /**< 去抖计数阈值，需连续检测到该次数才确认按下 */
+  uint8_t           filter_state; /**< 消抖计数器，记录连续按下检测次数 */
+  uint8_t           pressed;      /**< 按键确认按下标志，防止一次按下多次触发 */
+  SemaphoreHandle_t sem;          /**< 二值信号量，按键按下时从ISR释放 */
 } Key;
 
 /**
@@ -88,8 +88,8 @@ SemaphoreHandle_t key_get_semaphore(Key *key);
  *============================================================================*/
 typedef struct Led
 {
-    gpio_pin_enum pin;               /**< LED连接的GPIO引脚 */
-    bool active_high;               /**< 高电平有效标记，true表示高电平点亮 */
+  gpio_pin_enum pin;         /**< LED连接的GPIO引脚 */
+  bool          active_high; /**< 高电平有效标记，true表示高电平点亮 */
 } Led;
 
 /**
@@ -140,7 +140,7 @@ void led_set(Led *led, bool state);
  *============================================================================*/
 typedef struct Buzzer
 {
-    gpio_pin_enum pin;               /**< 蜂鸣器连接的GPIO引脚 */
+  gpio_pin_enum pin; /**< 蜂鸣器连接的GPIO引脚 */
 } Buzzer;
 
 /**

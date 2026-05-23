@@ -19,30 +19,110 @@
          <FileType>7</FileType>
          <ScrollPos>0</ScrollPos>
         </__.0>
+        <__.10>
+         <BookmarkList></BookmarkList>
+         <CaretPos>82820</CaretPos>
+         <Encoding>6</Encoding>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\libraries\infineon_libraries\iLLD\TC26B\Tricore\Ccu6\Std\IfxCcu6.h</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>1867</ScrollPos>
+        </__.10>
+        <__.11>
+         <BookmarkList></BookmarkList>
+         <CaretPos>3861</CaretPos>
+         <Encoding>6</Encoding>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\libraries\infineon_libraries\iLLD\TC26B\Tricore\Ccu6\Std\IfxCcu6.c</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>60</ScrollPos>
+        </__.11>
+        <__.12>
+         <BookmarkList></BookmarkList>
+         <CaretPos>57594</CaretPos>
+         <Encoding>6</Encoding>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\OS\FreeRTOS\queue.c</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>1260</ScrollPos>
+        </__.12>
+        <__.13>
+         <BookmarkList></BookmarkList>
+         <CaretPos>17386</CaretPos>
+         <Encoding>6</Encoding>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\OS\FreeRTOS\portable\TriCore\port.c</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>376</ScrollPos>
+        </__.13>
         <__.1>
          <BookmarkList></BookmarkList>
-         <CaretPos>25130</CaretPos>
+         <CaretPos>1905</CaretPos>
          <Encoding>6</Encoding>
-         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\libraries\infineon_libraries\iLLD\TC26B\Tricore\Scu\Std\IfxScuWdt.h</FileName>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\user\cpu0_main.c</FileName>
          <FileType>1</FileType>
-         <ScrollPos>438</ScrollPos>
+         <ScrollPos>70</ScrollPos>
         </__.1>
         <__.2>
+         <BookmarkList></BookmarkList>
+         <CaretPos>1586</CaretPos>
+         <Encoding>6</Encoding>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Bsp\bsp_uart.c</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>45</ScrollPos>
+        </__.2>
+        <__.3>
          <BookmarkList></BookmarkList>
          <CaretPos>321</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\user\cpu1_main.cpp</FileName>
          <FileType>7</FileType>
          <ScrollPos>0</ScrollPos>
-        </__.2>
-        <__.3>
+        </__.3>
+        <__.4>
          <BookmarkList></BookmarkList>
-         <CaretPos>140871</CaretPos>
+         <CaretPos>5316</CaretPos>
+         <Encoding>6</Encoding>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Protocol\uart_protocol.c</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>146</ScrollPos>
+        </__.4>
+        <__.5>
+         <BookmarkList></BookmarkList>
+         <CaretPos>6907</CaretPos>
+         <Encoding>6</Encoding>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\libraries\infineon_libraries\iLLD\TC26B\Tricore\Cpu\Trap\IfxCpu_Trap.c</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>110</ScrollPos>
+        </__.5>
+        <__.6>
+         <BookmarkList></BookmarkList>
+         <CaretPos>25130</CaretPos>
+         <Encoding>6</Encoding>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\libraries\infineon_libraries\iLLD\TC26B\Tricore\Scu\Std\IfxScuWdt.h</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>438</ScrollPos>
+        </__.6>
+        <__.7>
+         <BookmarkList></BookmarkList>
+         <CaretPos>150483</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\OS\FreeRTOS\tasks.c</FileName>
          <FileType>1</FileType>
-         <ScrollPos>3384</ScrollPos>
-        </__.3>
+         <ScrollPos>3638</ScrollPos>
+        </__.7>
+        <__.8>
+         <BookmarkList></BookmarkList>
+         <CaretPos>1733</CaretPos>
+         <Encoding>6</Encoding>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Bsp\bsp_freertos_cpu0.c</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>11</ScrollPos>
+        </__.8>
+        <__.9>
+         <BookmarkList></BookmarkList>
+         <CaretPos>4788</CaretPos>
+         <Encoding>6</Encoding>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\libraries\zf_common\zf_common_fifo.c</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>70</ScrollPos>
+        </__.9>
        </EditorPersist>
       </EditorPersist>
      </REG_ROOT>
@@ -93,41 +173,73 @@
      <ViewData>
       <AllViewBaseData>
        <__.0>
-        <ViewId>0</ViewId>
-        <ViewType>Symbols</ViewType>
-       </__.0>
-       <__.1>
-        <ViewId>1</ViewId>
-        <ViewType>Output_Progress</ViewType>
-       </__.1>
-       <__.2>
-        <ViewId>2</ViewId>
-        <ViewType>Locals</ViewType>
-       </__.2>
-       <__.3>
-        <ViewId>3</ViewId>
-        <ViewType>CustomWatch</ViewType>
-       </__.3>
-       <__.4>
         <ViewId>4</ViewId>
         <ViewType>Disassembly</ViewType>
+       </__.0>
+       <__.10>
+        <ViewId>14</ViewId>
+        <ViewType>Document</ViewType>
+       </__.10>
+       <__.11>
+        <ViewId>15</ViewId>
+        <ViewType>Document</ViewType>
+       </__.11>
+       <__.12>
+        <ViewId>16</ViewId>
+        <ViewType>Document</ViewType>
+       </__.12>
+       <__.13>
+        <ViewId>17</ViewId>
+        <ViewType>Document</ViewType>
+       </__.13>
+       <__.14>
+        <ViewId>18</ViewId>
+        <ViewType>Document</ViewType>
+       </__.14>
+       <__.15>
+        <ViewId>1</ViewId>
+        <ViewType>Output_Progress</ViewType>
+       </__.15>
+       <__.16>
+        <ViewId>0</ViewId>
+        <ViewType>Symbols</ViewType>
+       </__.16>
+       <__.1>
+        <ViewId>2</ViewId>
+        <ViewType>Locals</ViewType>
+       </__.1>
+       <__.2>
+        <ViewId>3</ViewId>
+        <ViewType>CustomWatch</ViewType>
+       </__.2>
+       <__.3>
+        <ViewId>6</ViewId>
+        <ViewType>Document</ViewType>
+       </__.3>
+       <__.4>
+        <ViewId>8</ViewId>
+        <ViewType>Document</ViewType>
        </__.4>
        <__.5>
-        <ViewId>5</ViewId>
+        <ViewId>9</ViewId>
         <ViewType>Document</ViewType>
        </__.5>
        <__.6>
-        <ViewId>6</ViewId>
+        <ViewId>10</ViewId>
         <ViewType>Document</ViewType>
        </__.6>
        <__.7>
-        <ViewId>7</ViewId>
+        <ViewId>11</ViewId>
         <ViewType>Document</ViewType>
        </__.7>
        <__.8>
-        <ViewId>8</ViewId>
+        <ViewId>12</ViewId>
         <ViewType>Document</ViewType>
        </__.8>
+       <__.9>
+        <ViewId>13</ViewId>
+        <ViewType>Document</ViewType>
+       </__.9>
       </AllViewBaseData>
       <DissasemblyViews>
        <__.0>
@@ -154,25 +266,65 @@
       </DissasemblyViews>
       <DocumentViews>
        <__.0>
-        <RelativePath>..\..\..\user\cpu0_main.cpp</RelativePath>
-        <ViewId>5</ViewId>
-        <ViewType>Document</ViewType>
-       </__.0>
-       <__.1>
         <RelativePath>..\..\..\libraries\infineon_libraries\iLLD\TC26B\Tricore\Scu\Std\IfxScuWdt.h</RelativePath>
         <ViewId>6</ViewId>
         <ViewType>Document</ViewType>
-       </__.1>
-       <__.2>
-        <RelativePath>..\..\..\user\cpu1_main.cpp</RelativePath>
-        <ViewId>7</ViewId>
+       </__.0>
+       <__.10>
+        <RelativePath>..\..\..\code\OS\FreeRTOS\queue.c</RelativePath>
+        <ViewId>17</ViewId>
         <ViewType>Document</ViewType>
-       </__.2>
-       <__.3>
+       </__.10>
+       <__.11>
+        <RelativePath>..\..\..\code\OS\FreeRTOS\portable\TriCore\port.c</RelativePath>
+        <ViewId>18</ViewId>
+        <ViewType>Document</ViewType>
+       </__.11>
+       <__.1>
         <RelativePath>..\..\..\code\OS\FreeRTOS\tasks.c</RelativePath>
         <ViewId>8</ViewId>
         <ViewType>Document</ViewType>
+       </__.1>
+       <__.2>
+        <RelativePath>..\..\..\user\cpu0_main.c</RelativePath>
+        <ViewId>9</ViewId>
+        <ViewType>Document</ViewType>
+       </__.2>
+       <__.3>
+        <RelativePath>..\..\..\code\User\Bsp\bsp_freertos_cpu0.c</RelativePath>
+        <ViewId>10</ViewId>
+        <ViewType>Document</ViewType>
        </__.3>
+       <__.4>
+        <RelativePath>..\..\..\code\User\Bsp\bsp_uart.c</RelativePath>
+        <ViewId>11</ViewId>
+        <ViewType>Document</ViewType>
+       </__.4>
+       <__.5>
+        <RelativePath>..\..\..\code\User\Protocol\uart_protocol.c</RelativePath>
+        <ViewId>12</ViewId>
+        <ViewType>Document</ViewType>
+       </__.5>
+       <__.6>
+        <RelativePath>..\..\..\libraries\zf_common\zf_common_fifo.c</RelativePath>
+        <ViewId>13</ViewId>
+        <ViewType>Document</ViewType>
+       </__.6>
+       <__.7>
+        <RelativePath>..\..\..\libraries\infineon_libraries\iLLD\TC26B\Tricore\Ccu6\Std\IfxCcu6.h</RelativePath>
+        <ViewId>14</ViewId>
+        <ViewType>Document</ViewType>
+       </__.7>
+       <__.8>
+        <RelativePath>..\..\..\libraries\infineon_libraries\iLLD\TC26B\Tricore\Ccu6\Std\IfxCcu6.c</RelativePath>
+        <ViewId>15</ViewId>
+        <ViewType>Document</ViewType>
+       </__.8>
+       <__.9>
+        <RelativePath>..\..\..\libraries\infineon_libraries\iLLD\TC26B\Tricore\Cpu\Trap\IfxCpu_Trap.c</RelativePath>
+        <ViewId>16</ViewId>
+        <ViewType>Document</ViewType>
+       </__.9>
       </DocumentViews>
       <OtherViews>
        <__.0>
@@ -294,7 +446,7 @@
       <PrimaryDocumentPaneId>5</PrimaryDocumentPaneId>
       <Frames>
        <__.0>
-        <FocusedViewId>5</FocusedViewId>
+        <FocusedViewId>12</FocusedViewId>
         <FrameState>3</FrameState>
         <IsPrimary>true</IsPrimary>
         <Bounds>
@@ -350,7 +502,7 @@
                <IsPinned>false</IsPinned>
                <IsTabbed>true</IsTabbed>
                <Orientation>None</Orientation>
-               <TopTabViewId>5</TopTabViewId>
+               <TopTabViewId>12</TopTabViewId>
                <ViewId>-1</ViewId>
                <Children>
                 <__.0>
@@ -361,8 +513,28 @@
                  <IsTabbed>false</IsTabbed>
                  <Orientation>None</Orientation>
                  <TopTabViewId>-1</TopTabViewId>
-                 <ViewId>5</ViewId>
+                 <ViewId>6</ViewId>
                 </__.0>
+                <__.10>
+                 <DockType>Document</DockType>
+                 <Extent>1</Extent>
+                 <IsDocumentPane>false</IsDocumentPane>
+                 <IsPinned>false</IsPinned>
+                 <IsTabbed>false</IsTabbed>
+                 <Orientation>None</Orientation>
+                 <TopTabViewId>-1</TopTabViewId>
+                 <ViewId>17</ViewId>
+                </__.10>
+                <__.11>
+                 <DockType>Document</DockType>
+                 <Extent>1</Extent>
+                 <IsDocumentPane>false</IsDocumentPane>
+                 <IsPinned>false</IsPinned>
+                 <IsTabbed>false</IsTabbed>
+                 <Orientation>None</Orientation>
+                 <TopTabViewId>-1</TopTabViewId>
+                 <ViewId>18</ViewId>
+                </__.11>
                 <__.1>
                  <DockType>Document</DockType>
                  <Extent>1</Extent>
@@ -371,7 +543,7 @@
                  <IsTabbed>false</IsTabbed>
                  <Orientation>None</Orientation>
                  <TopTabViewId>-1</TopTabViewId>
-                 <ViewId>6</ViewId>
+                 <ViewId>8</ViewId>
                 </__.1>
                 <__.2>
                  <DockType>Document</DockType>
@@ -381,7 +553,7 @@
                  <IsTabbed>false</IsTabbed>
                  <Orientation>None</Orientation>
                  <TopTabViewId>-1</TopTabViewId>
-                 <ViewId>7</ViewId>
+                 <ViewId>9</ViewId>
                 </__.2>
                 <__.3>
                  <DockType>Document</DockType>
@@ -391,8 +563,68 @@
                  <IsTabbed>false</IsTabbed>
                  <Orientation>None</Orientation>
                  <TopTabViewId>-1</TopTabViewId>
-                 <ViewId>8</ViewId>
+                 <ViewId>10</ViewId>
                 </__.3>
+                <__.4>
+                 <DockType>Document</DockType>
+                 <Extent>1</Extent>
+                 <IsDocumentPane>false</IsDocumentPane>
+                 <IsPinned>false</IsPinned>
+                 <IsTabbed>false</IsTabbed>
+                 <Orientation>None</Orientation>
+                 <TopTabViewId>-1</TopTabViewId>
+                 <ViewId>11</ViewId>
+                </__.4>
+                <__.5>
+                 <DockType>Document</DockType>
+                 <Extent>1</Extent>
+                 <IsDocumentPane>false</IsDocumentPane>
+                 <IsPinned>false</IsPinned>
+                 <IsTabbed>false</IsTabbed>
+                 <Orientation>None</Orientation>
+                 <TopTabViewId>-1</TopTabViewId>
+                 <ViewId>12</ViewId>
+                </__.5>
+                <__.6>
+                 <DockType>Document</DockType>
+                 <Extent>1</Extent>
+                 <IsDocumentPane>false</IsDocumentPane>
+                 <IsPinned>false</IsPinned>
+                 <IsTabbed>false</IsTabbed>
+                 <Orientation>None</Orientation>
+                 <TopTabViewId>-1</TopTabViewId>
+                 <ViewId>13</ViewId>
+                </__.6>
+                <__.7>
+                 <DockType>Document</DockType>
+                 <Extent>1</Extent>
+                 <IsDocumentPane>false</IsDocumentPane>
+                 <IsPinned>false</IsPinned>
+                 <IsTabbed>false</IsTabbed>
+                 <Orientation>None</Orientation>
+                 <TopTabViewId>-1</TopTabViewId>
+                 <ViewId>14</ViewId>
+                </__.7>
+                <__.8>
+                 <DockType>Document</DockType>
+                 <Extent>1</Extent>
+                 <IsDocumentPane>false</IsDocumentPane>
+                 <IsPinned>false</IsPinned>
+                 <IsTabbed>false</IsTabbed>
+                 <Orientation>None</Orientation>
+                 <TopTabViewId>-1</TopTabViewId>
+                 <ViewId>15</ViewId>
+                </__.8>
+                <__.9>
+                 <DockType>Document</DockType>
+                 <Extent>1</Extent>
+                 <IsDocumentPane>false</IsDocumentPane>
+                 <IsPinned>false</IsPinned>
+                 <IsTabbed>false</IsTabbed>
+                 <Orientation>None</Orientation>
+                 <TopTabViewId>-1</TopTabViewId>
+                 <ViewId>16</ViewId>
+                </__.9>
                </Children>
               </__.1>
              </Children>
@@ -470,10 +702,6 @@
       </FindInFilesDialogData>
      </GlobalData>
      <History>
-      <ComboBox>
-       <ComboBoxes>
-       </ComboBoxes>
-      </ComboBox>
      </History>
      <Options>
       <CallstackWindow>

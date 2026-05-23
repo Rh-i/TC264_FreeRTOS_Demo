@@ -1,6 +1,6 @@
 /**
  * @file bsp_uart.c
- * @brief UART设备驱动实现 - 串口收发，使用FIFO阻塞发送+中断接收
+ * @brief UART设备驱动实现 - 串口收发，使用逐飞FIFO阻塞发送+中断接收
  */
 
 #include "bsp_uart.h"
@@ -23,32 +23,34 @@ static void bsp_uart_rx_isr_handler(BspUart *uart);
 static void bsp_uart_rx_interrupt_enable(uart_index_enum uart_n);
 
 /* UART0 接收中断 */
-IFX_INTERRUPT(bsp_uart0_rx_isr, 0, UART0_RX_INT_PRIO)
+IFX_INTERRUPT(uart0_rx_isr, 0, UART0_RX_INT_PRIO)
 {
-    interrupt_global_enable(0);
-    bsp_uart_rx_isr_handler(&bsp_uart0);
+  interrupt_global_enable(0);
+  bsp_uart_rx_isr_handler(&bsp_uart0);
 }
 
 /* UART1 接收中断 */
-IFX_INTERRUPT(bsp_uart1_rx_isr, 0, UART1_RX_INT_PRIO)
+IFX_INTERRUPT(uart1_rx_isr, 0, UART1_RX_INT_PRIO)
 {
-    interrupt_global_enable(0);
-    bsp_uart_rx_isr_handler(&bsp_uart1);
+  interrupt_global_enable(0);
+  bsp_uart_rx_isr_handler(&bsp_uart1);
 }
 
 /* UART2 接收中断 */
-IFX_INTERRUPT(bsp_uart2_rx_isr, 0, UART2_RX_INT_PRIO)
+IFX_INTERRUPT(uart2_rx_isr, 0, UART2_RX_INT_PRIO)
 {
-    interrupt_global_enable(0);
-    bsp_uart_rx_isr_handler(&bsp_uart2);
+  interrupt_global_enable(0);
+  bsp_uart_rx_isr_handler(&bsp_uart2);
 }
 
 /* UART3 接收中断 */
-IFX_INTERRUPT(bsp_uart3_rx_isr, 0, UART3_RX_INT_PRIO)
+IFX_INTERRUPT(uart3_rx_isr, 0, UART3_RX_INT_PRIO)
 {
-    interrupt_global_enable(0);
-    bsp_uart_rx_isr_handler(&bsp_uart3);
+  interrupt_global_enable(0);
+  bsp_uart_rx_isr_handler(&bsp_uart3);
 }
+
+uint8 dat = 0;
 
 /**
  * @brief UART接收中断处理函数
@@ -56,12 +58,13 @@ IFX_INTERRUPT(bsp_uart3_rx_isr, 0, UART3_RX_INT_PRIO)
  */
 static void bsp_uart_rx_isr_handler(BspUart *uart)
 {
-    uint8 dat;
-    /* 读取所有可用的数据并写入流缓冲区 */
-    while (uart_query_byte(uart->uart_index, &dat))
-    {
-        xStreamBufferSendFromISR(uart->rx_stream, &dat, 1, NULL);
-    }
+  /* 读取所有可用的数据并写入逐飞FIFO */
+  while (uart_query_byte(uart->uart_index, &dat))
+  {
+    fifo_write_buffer(&uart->rx_fifo, &dat, 1);
+  }
+  /* 给出接收完成信号量 */
+  xSemaphoreGiveFromISR(uart->rx_sem, NULL);
 }
 
 /**
@@ -70,7 +73,7 @@ static void bsp_uart_rx_isr_handler(BspUart *uart)
  */
 static void bsp_uart_rx_interrupt_enable(uart_index_enum uart_n)
 {
-    uart_rx_interrupt(uart_n, 1);
+  uart_rx_interrupt(uart_n, 1);
 }
 
 /*==============================================================================
@@ -84,37 +87,36 @@ static void bsp_uart_rx_interrupt_enable(uart_index_enum uart_n)
  * @param baud 波特率
  * @param tx_pin 发送引脚
  * @param rx_pin 接收引脚
- * @param rx_buf_size 流缓冲区大小
+ * @param rx_buf_size FIFO缓冲区大小
  */
-void bsp_uart_init(BspUart *uart, uart_index_enum uart_index, uint32 baud, 
-                   uart_tx_pin_enum tx_pin, uart_rx_pin_enum rx_pin, size_t rx_buf_size)
+void bsp_uart_init(BspUart *uart, uart_index_enum uart_index, uint32 baud, uart_tx_pin_enum tx_pin, uart_rx_pin_enum rx_pin, size_t rx_buf_size)
 {
-    uart->uart_index = uart_index;
-    uart->tx_pin = tx_pin;
-    uart->rx_pin = rx_pin;
-    uart->baudrate = baud;
-    
-    /* 创建流缓冲区用于接收数据 */
-    uart->rx_stream = xStreamBufferCreate(rx_buf_size, 1);
-    
-    /* 初始化逐飞串口驱动 */
-    uart_init(uart_index, baud, tx_pin, rx_pin);
-    
-    /* 启用接收中断 */
-    bsp_uart_rx_interrupt_enable(uart_index);
+  uart->uart_index = uart_index;
+  uart->tx_pin     = tx_pin;
+  uart->rx_pin     = rx_pin;
+  uart->baudrate   = baud;
+
+  /* 初始化逐飞FIFO用于接收数据 */
+  fifo_init(&uart->rx_fifo, FIFO_DATA_8BIT, uart->rx_buffer, (uint32)rx_buf_size);
+
+  /* 创建二值信号量 */
+  uart->rx_sem = xSemaphoreCreateBinary();
+  configASSERT(uart->rx_sem != NULL);
+
+  /* 初始化逐飞串口驱动 */
+  uart_init(uart_index, baud, tx_pin, rx_pin);
+
+  /* 启用接收中断 */
+  bsp_uart_rx_interrupt_enable(uart_index);
 }
 
 /**
- * @brief 析构函数，释放流缓冲区资源
+ * @brief 析构函数，逐飞FIFO无需显式释放资源
  * @param uart 串口结构体指针
  */
 void bsp_uart_deinit(BspUart *uart)
 {
-    if (uart->rx_stream != NULL)
-    {
-        vStreamBufferDelete(uart->rx_stream);
-        uart->rx_stream = NULL;
-    }
+  (void)uart; /* 逐飞FIFO无需释放 */
 }
 
 /**
@@ -124,7 +126,7 @@ void bsp_uart_deinit(BspUart *uart)
  */
 void bsp_uart_send_byte(BspUart *uart, uint8 dat)
 {
-    uart_write_byte(uart->uart_index, dat);
+  uart_write_byte(uart->uart_index, dat);
 }
 
 /**
@@ -134,7 +136,7 @@ void bsp_uart_send_byte(BspUart *uart, uint8 dat)
  */
 void bsp_uart_send_string(BspUart *uart, const char *str)
 {
-    uart_write_string(uart->uart_index, str);
+  uart_write_string(uart->uart_index, str);
 }
 
 /**
@@ -145,28 +147,59 @@ void bsp_uart_send_string(BspUart *uart, const char *str)
  */
 void bsp_uart_send_buffer(BspUart *uart, const uint8 *buff, uint32 len)
 {
-    uart_write_buffer(uart->uart_index, buff, len);
+  uart_write_buffer(uart->uart_index, buff, len);
 }
 
 /**
- * @brief 非阻塞从流缓冲区读取数据
+ * @brief 从FIFO读取数据（非阻塞）
  * @param uart 串口结构体指针
  * @param buff 接收数据缓冲区
  * @param len 要读取的数据长度
- * @param timeoutTicks 超时时间（portMAX_DELAY表示永久等待）
  * @return 实际读取的字节数
  */
-size_t bsp_uart_recv(BspUart *uart, uint8 *buff, size_t len, TickType_t timeoutTicks)
+uint32 bsp_uart_recv(BspUart *uart, uint8 *buff, uint32 len)
 {
-    return xStreamBufferReceive(uart->rx_stream, buff, len, timeoutTicks);
+  uint32 read_len = len;
+  fifo_read_buffer(&uart->rx_fifo, buff, &read_len, FIFO_READ_AND_CLEAN);
+  return read_len;
 }
 
 /**
- * @brief 查询流缓冲区中可读数据的长度
+ * @brief 检查FIFO中可读取的数据长度
  * @param uart 串口结构体指针
- * @return 流缓冲区中可读数据的字节数
+ * @return FIFO中可读取的字节数
  */
-size_t bsp_uart_recv_available(BspUart *uart)
+uint32 bsp_uart_available(BspUart *uart)
 {
-    return uxStreamBufferGetSize(uart->rx_stream);
+  return fifo_used(&uart->rx_fifo);
+}
+
+/**
+ * @brief 等待接收信号量
+ * @param uart 串口结构体指针
+ * @param timeout 超时时间
+ * @return pdTRUE收到信号量，pdFALSE超时
+ */
+BaseType_t bsp_uart_wait(BspUart *uart, TickType_t timeout)
+{
+  return xSemaphoreTake(uart->rx_sem, timeout);
+}
+
+/**
+ * @brief 总初始化数据
+ */
+void bsp_uart_all_init(void)
+{
+  /* 串口初始化 - 使用默认配置示例 */
+  /* UART0: 波特率115200, TX=P14_0, RX=P14_1, FIFO缓冲区64字节 */
+  bsp_uart_init(&bsp_uart0, UART_0, 115200, UART0_TX_P14_0, UART0_RX_P14_1, 64);
+
+  /* UART1: 波特率115200, TX=P15_0, RX=P15_1, FIFO缓冲区64字节 */
+  bsp_uart_init(&bsp_uart1, UART_1, 115200, UART1_TX_P15_0, UART1_RX_P15_1, 64);
+
+  /* UART2: 波特率115200, TX=P02_0, RX=P02_1, FIFO缓冲区64字节 */
+  bsp_uart_init(&bsp_uart2, UART_2, 115200, UART2_TX_P02_0, UART2_RX_P02_1, 64);
+
+  /* UART3: 波特率115200, TX=P00_0, RX=P00_1, FIFO缓冲区64字节 */
+  bsp_uart_init(&bsp_uart3, UART_3, 115200, UART3_TX_P00_0, UART3_RX_P00_1, 64);
 }
