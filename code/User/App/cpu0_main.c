@@ -15,9 +15,9 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "bsp_freertos_cpu0.h"
 
 #include "app_cfg.h"
-#include "bsp_freertos_cpu0.h"
 
 #pragma section all "cpu0_dsram"
 
@@ -30,10 +30,8 @@ void led_task(void *pvParameters)
   (void)pvParameters;
   while (1)
   {
-    printf("0,0,%d,100\n", (int)g_motor.speed_pid.speed_cm_s); // 临时
-
-    // led_toggle(&led_4_dev);
-    vTaskDelay(10);
+    led_toggle(&led_4_dev);
+    vTaskDelay(500);
   }
 }
 
@@ -107,8 +105,6 @@ void key3_task(void *pvParameters)
  * @brief 上下位机通讯串口接收处理任务，串口3
  * @note  接收的是中断接收存入fifo的数据，进行解包处理
  *
- * @todo  解包之后需要把对应的数据传入小车的运动控制
- *
  * @param pvParameters
  */
 void uart3_protocol_task(void *pvParameters)
@@ -117,8 +113,17 @@ void uart3_protocol_task(void *pvParameters)
 
   while (1)
   {
-    uart_protocol_poll(&g_uart_protocol);
+    if(uart_protocol_poll(&g_uart_protocol))
+    {
+      // 如果解包到了数据，那我处理。这个不会重复解包
+      auto_ctrl_update();
+    }
+    else
+    {
+      gpio_toggle_level(P20_9);
+    }
   }
+
 }
 
 
@@ -146,11 +151,11 @@ void test_task(void *pvParameters)
     // bsp_encoder_clear_count(&bsp_encoder_tim2) ;
     /* 电机编码器测试 */
 
-    /* 电机pid测试 */
-    device_motor_set_speed_time(&g_motor, 100, 1000);
-    vTaskDelay(2000);
-    device_motor_set_speed_time(&g_motor, -60, 1000);
-    vTaskDelay(2000);
+    /* 电机pid测试 - 已由 auto_ctrl 接管，注释掉以避免冲突 */
+    // device_motor_set_speed_time(&g_motor, 100, 1000);
+    // vTaskDelay(2000);
+    // device_motor_set_speed_time(&g_motor, -60, 1000);
+    // vTaskDelay(2000);
     /* 电机pid测试 */
 
     /*  */
@@ -174,9 +179,9 @@ int core0_main(void)
   xTaskCreate(key2_task, "key2", 256, NULL, 3, NULL); // 优先级越大越高 0~9
   xTaskCreate(key3_task, "key3", 256, NULL, 3, NULL); // 优先级越大越高 0~9
 
-  xTaskCreate(uart3_protocol_task, "uart3_protocol", 512, NULL, 4, NULL); // 优先级越大越高 0~9
+  xTaskCreate(uart3_protocol_task, "uart3_protocol", 1024, NULL, 4, NULL); // 优先级越大越高 0~9
 
-  xTaskCreate(test_task, "test_task", 512, NULL, 4, NULL); // 优先级越大越高 0~9
+//  xTaskCreate(test_task, "test_task", 512, NULL, 4, NULL); // 优先级越大越高 0~9
 
 
   start_freertos();

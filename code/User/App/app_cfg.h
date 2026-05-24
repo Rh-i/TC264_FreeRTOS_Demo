@@ -17,6 +17,7 @@
 #include "device_motor.h"
 #include "device_servo.h"
 
+#include "auto_ctrl.h"
 
 /**
  * @brief 用户所有的初始化

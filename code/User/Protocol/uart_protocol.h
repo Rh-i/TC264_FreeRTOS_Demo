@@ -85,7 +85,6 @@ typedef struct
 {
   int32        target_speed; /**< 目标速度 cm/s */
   int32        target_time;  /**< 目标时间 ms */
-  uint8        is_busy;      /**< 运动中标志 */
   ProtocolMode mode;         /**< 当前控制模式 */
 } SlaveStatus;
 
@@ -115,7 +114,7 @@ void uart_protocol_init(UartProtocol *protocol);
  * @brief 协议轮询处理（主循环或FreeRTOS任务调用）
  * @param protocol 协议结构体指针
  */
-void uart_protocol_poll(UartProtocol *protocol);
+uint8_t uart_protocol_poll(UartProtocol *protocol);
 
 /**
  * @brief 发送运动完成事件

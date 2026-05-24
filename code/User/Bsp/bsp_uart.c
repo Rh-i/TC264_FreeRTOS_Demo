@@ -63,8 +63,12 @@ static void bsp_uart_rx_isr_handler(BspUart *uart)
   {
     fifo_write_buffer(&uart->rx_fifo, &dat, 1);
   }
-  /* 给出接收完成信号量 */
-  xSemaphoreGiveFromISR(uart->rx_sem, NULL);
+
+  if (uart == &bsp_uart3 && fifo_used(&uart->rx_fifo) >= 16)
+  {
+    /* 给出接收完成信号量 */
+    xSemaphoreGiveFromISR(uart->rx_sem, NULL);
+  }
 }
 
 /**

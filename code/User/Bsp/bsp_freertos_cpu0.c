@@ -45,23 +45,6 @@ IFX_INTERRUPT(OsTasks_TickProvider, 0, configKERNEL_INTERRUPT_PRIORITY)
   vPortSystemTickHandler();
 }
 
-volatile uint32 ulIdleCycleCount = 0UL;
-
-/**
- * @brief 空闲任务钩子函数
- *
- */
-void vApplicationIdleHook(void)
-{
-  /* This hook function does nothing but increment a counter. */
-  ulIdleCycleCount++;
-  {
-    /* IDLE Task START */
-    ;
-    /* IDLE Task END */
-  }
-}
-
 /**
  * @brief 对外暴露接口，开启freertos
  * @note  需要在他前面创建任务

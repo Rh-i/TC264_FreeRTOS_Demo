@@ -25,6 +25,9 @@ void user_init(void)
   bsp_encoder_all_init();
   device_motor_all_init();
   device_motor_enable(&g_motor, 1);
+
+  auto_ctrl_init();
+  auto_ctrl_enable();
 }
 
 int fputc(int ch, FILE *stream)

@@ -11,6 +11,7 @@
 #include "bsp_pwm.h"
 #include "isr_config.h"
 #include "task.h"
+#include "uart_protocol.h" /* 用于运动完成时主动上报 */
 
 #pragma section all "cpu0_dsram"
 
@@ -201,6 +202,10 @@ uint8 device_motor_update(DeviceMotor *motor)
     {
       /* 运动完成，真正停止电机 */
       device_motor_stop(motor);
+
+      /* 通过串口协议主动上报运动完成事件 */
+      uart_protocol_send_motion_done(&g_uart_protocol);
+
       return 1;
     }
   }

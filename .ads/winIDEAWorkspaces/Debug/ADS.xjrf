@@ -590,12 +590,24 @@
         <ActionShow>false</ActionShow>
         <Condition>false</Condition>
         <Count>0</Count>
-        <Enabled>false</Enabled>
+        <Enabled>true</Enabled>
         <Expression></Expression>
-        <Location>&quot;..\..\..\code\User\Bsp\bsp_uart.c&quot;::67</Location>
+        <Location>&quot;..\..\..\code\User\App\cpu0_main.c&quot;::117</Location>
         <ProcessFilter></ProcessFilter>
        </__.0>
        <__.1>
+        <ActionEnabled>false</ActionEnabled>
+        <ActionParams></ActionParams>
+        <ActionScript></ActionScript>
+        <ActionShow>false</ActionShow>
+        <Condition>false</Condition>
+        <Count>0</Count>
+        <Enabled>true</Enabled>
+        <Expression></Expression>
+        <Location>&quot;..\..\..\code\User\App\cpu0_main.c&quot;::120</Location>
+        <ProcessFilter></ProcessFilter>
+       </__.1>
+       <__.2>
         <ActionEnabled>false</ActionEnabled>
         <ActionParams></ActionParams>
         <ActionScript></ActionScript>
@@ -606,18 +618,6 @@
         <Expression></Expression>
         <Location>&quot;..\..\..\code\User\Bsp\bsp_uart.c&quot;::43</Location>
         <ProcessFilter></ProcessFilter>
-       </__.1>
-       <__.2>
-        <ActionEnabled>false</ActionEnabled>
-        <ActionParams></ActionParams>
-        <ActionScript></ActionScript>
-        <ActionShow>false</ActionShow>
-        <Condition>false</Condition>
-        <Count>0</Count>
-        <Enabled>true</Enabled>
-        <Expression></Expression>
-        <Location>&quot;..\..\..\code\User\Protocol\uart_protocol.c&quot;::198</Location>
-        <ProcessFilter></ProcessFilter>
        </__.2>
        <__.3>
         <ActionEnabled>false</ActionEnabled>
@@ -626,9 +626,9 @@
         <ActionShow>false</ActionShow>
         <Condition>false</Condition>
         <Count>0</Count>
-        <Enabled>true</Enabled>
+        <Enabled>false</Enabled>
         <Expression></Expression>
-        <Location>&quot;..\..\..\code\User\Protocol\uart_protocol.c&quot;::59</Location>
+        <Location>&quot;..\..\..\code\User\Protocol\uart_protocol.c&quot;::198</Location>
         <ProcessFilter></ProcessFilter>
        </__.3>
        <__.4>
@@ -640,33 +640,9 @@
         <Count>0</Count>
         <Enabled>true</Enabled>
         <Expression></Expression>
-        <Location>&quot;..\..\..\code\User\Device\device_motor.c&quot;::396</Location>
+        <Location>&quot;..\..\..\code\User\App\cpu0_main.c&quot;::178</Location>
         <ProcessFilter></ProcessFilter>
        </__.4>
-       <__.5>
-        <ActionEnabled>false</ActionEnabled>
-        <ActionParams></ActionParams>
-        <ActionScript></ActionScript>
-        <ActionShow>false</ActionShow>
-        <Condition>false</Condition>
-        <Count>0</Count>
-        <Enabled>true</Enabled>
-        <Expression></Expression>
-        <Location>&quot;..\..\..\user\cpu0_main.c&quot;::150</Location>
-        <ProcessFilter></ProcessFilter>
-       </__.5>
-       <__.6>
-        <ActionEnabled>false</ActionEnabled>
-        <ActionParams></ActionParams>
-        <ActionScript></ActionScript>
-        <ActionShow>false</ActionShow>
-        <Condition>false</Condition>
-        <Count>0</Count>
-        <Enabled>true</Enabled>
-        <Expression></Expression>
-        <Location>&quot;..\..\..\code\User\Device\device_motor.c&quot;::64</Location>
-        <ProcessFilter></ProcessFilter>
-       </__.6>
       </BPs>
       <Processes>
        <__.0>

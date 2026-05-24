@@ -9,7 +9,7 @@
  * 内部函数声明
  *============================================================================*/
 static uint8 protocol_calculate_checksum(const uint8 *data, uint32 len);
-static void  protocol_parse_frame(UartProtocol *protocol);
+static uint8  protocol_parse_frame(UartProtocol *protocol);
 static void  protocol_send_response(UartProtocol *protocol, uint8 cmd, uint8 status);
 static void  protocol_send_query_speed(UartProtocol *protocol);
 
@@ -34,30 +34,28 @@ void uart_protocol_init(UartProtocol *protocol)
   /* 初始化从机状态 */
   protocol->status.target_speed = PROTOCOL_DEFAULT_SPEED;
   protocol->status.target_time  = 0;
-  protocol->status.is_busy      = 0;
   protocol->status.mode         = PROTOCOL_MODE_IDLE;
 }
 
 /**
- * @brief 协议轮询处理
- * @note 等待信号量后处理FIFO数据，扫描匹配帧头后检查帧尾和校验
+ * @brief 协议轮询处理（主循环或FreeRTOS任务调用）
  * @param protocol 协议结构体指针
  */
-void uart_protocol_poll(UartProtocol *protocol)
+uint8_t uart_protocol_poll(UartProtocol *protocol)
 {
   uint32 available;
 
   /* 等待接收信号量 */
   if (bsp_uart_wait(&bsp_uart3, portMAX_DELAY) != pdTRUE)
   {
-    return;
+    return 0;
   }
 
   /* 检查是否有16字节 */
   available = bsp_uart_available(&bsp_uart3);
   if (available < PROTOCOL_FRAME_SIZE)
   {
-    return;
+    return 0;
   }
 
   /* 读取1字节到缓冲区 */
@@ -66,8 +64,8 @@ void uart_protocol_poll(UartProtocol *protocol)
   /* 检查帧头0xAA */
   if (protocol->rx_buffer[0] != PROTOCOL_HEAD_0)
   {
-    /* 帧头不匹配，丢弃这2字节，继续扫描 */
-    return;
+    /* 帧头不匹配，丢弃这1字节，继续扫描 */
+    return 0;
   }
 
   /* 读取1字节到缓冲区 */
@@ -76,8 +74,8 @@ void uart_protocol_poll(UartProtocol *protocol)
   /* 检查帧头0x55 */
   if (protocol->rx_buffer[1] != PROTOCOL_HEAD_1)
   {
-    /* 帧头不匹配，丢弃这2字节，继续扫描 */
-    return;
+    /* 帧头不匹配，丢弃这1字节，继续扫描 */
+    return 0;
   }
 
   /* 帧头匹配，读取剩余14字节 */
@@ -87,18 +85,18 @@ void uart_protocol_poll(UartProtocol *protocol)
   if (protocol->rx_buffer[PROTOCOL_OFF_TAIL] != PROTOCOL_TAIL_0 || protocol->rx_buffer[PROTOCOL_OFF_TAIL + 1] != PROTOCOL_TAIL_1)
   {
     /* 帧尾不匹配，丢弃并返回 */
-    return;
+    return 0;
   }
 
   /* 计算并校验校验和（前13字节） */
   if (protocol->rx_buffer[PROTOCOL_OFF_CHECK] != protocol_calculate_checksum(protocol->rx_buffer, PROTOCOL_OFF_CHECK))
   {
     /* 校验失败，丢弃并返回 */
-    return;
+    return 0;
   }
 
   /* 帧校验通过，解析数据 */
-  protocol_parse_frame(protocol);
+  return protocol_parse_frame(protocol);
 }
 
 /**
@@ -174,7 +172,7 @@ static uint8 protocol_calculate_checksum(const uint8 *data, uint32 len)
  * @brief 解析完整帧
  * @param protocol 协议结构体指针
  */
-static void protocol_parse_frame(UartProtocol *protocol)
+static uint8_t protocol_parse_frame(UartProtocol *protocol)
 {
   uint8 *frame = protocol->rx_buffer;
   uint8  cmd;
@@ -195,11 +193,14 @@ static void protocol_parse_frame(UartProtocol *protocol)
       }
       protocol->status.mode = PROTOCOL_MODE_SPEED;
       protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
+      /* 通知 auto_ctrl 有新数据 */
+      return 1;
       break;
 
     case PROTOCOL_CMD_QUERY_SPEED:
       /* 查询速度：回复当前速度 */
       protocol_send_query_speed(protocol);
+      return 0;
       break;
 
     case PROTOCOL_CMD_SPEED_TIME:
@@ -212,15 +213,18 @@ static void protocol_parse_frame(UartProtocol *protocol)
       }
       protocol->status.mode = PROTOCOL_MODE_SPEED_TIME;
       protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
+      /* 通知 auto_ctrl 有新数据 */
+      return 1;
       break;
 
     case PROTOCOL_CMD_STOP:
       /* 紧急停止：覆盖式停止所有运动 */
       protocol->status.target_speed = 0;
       protocol->status.target_time  = 0;
-      protocol->status.is_busy      = 0;
       protocol->status.mode         = PROTOCOL_MODE_IDLE;
       protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
+      /* 通知 auto_ctrl 有新数据 */
+      return 1;
       break;
 
     case PROTOCOL_CMD_MOTION_DONE:
@@ -230,7 +234,10 @@ static void protocol_parse_frame(UartProtocol *protocol)
     default:
       /* 未知命令，无响应 */
       break;
+
+
   }
+  return 0; // 不需auto_ctrl
 }
 
 /**
