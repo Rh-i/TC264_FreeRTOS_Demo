@@ -11,10 +11,12 @@
 #include "bsp_uart.h"
 #include "uart_protocol.h"
 
-#include "bsp_pwm.h"
 #include "bsp_encoder.h"
+#include "bsp_pwm.h"
 
+#include "device_motor.h"
 #include "device_servo.h"
+
 
 /**
  * @brief 用户所有的初始化

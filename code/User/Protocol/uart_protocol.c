@@ -12,7 +12,6 @@ static uint8 protocol_calculate_checksum(const uint8 *data, uint32 len);
 static void  protocol_parse_frame(UartProtocol *protocol);
 static void  protocol_send_response(UartProtocol *protocol, uint8 cmd, uint8 status);
 static void  protocol_send_query_speed(UartProtocol *protocol);
-static void  protocol_send_query_position(UartProtocol *protocol);
 
 /*==============================================================================
  * 全局实例（使用UART3）
@@ -33,11 +32,10 @@ void uart_protocol_init(UartProtocol *protocol)
   protocol->rx_index = 0;
 
   /* 初始化从机状态 */
-  protocol->status.target_speed    = PROTOCOL_DEFAULT_SPEED;
-  protocol->status.target_position = 0;
-  protocol->status.target_time     = 0;
-  protocol->status.is_busy         = 0;
-  protocol->status.mode            = PROTOCOL_MODE_IDLE;
+  protocol->status.target_speed = PROTOCOL_DEFAULT_SPEED;
+  protocol->status.target_time  = 0;
+  protocol->status.is_busy      = 0;
+  protocol->status.mode         = PROTOCOL_MODE_IDLE;
 }
 
 /**
@@ -112,6 +110,8 @@ void uart_protocol_send_motion_done(UartProtocol *protocol)
   uint8  frame[PROTOCOL_FRAME_SIZE];
   uint32 i;
   uint8  checksum;
+
+  (void)protocol; /* 未使用 */
 
   /* 组装帧 */
   frame[0] = PROTOCOL_HEAD_0;
@@ -202,22 +202,6 @@ static void protocol_parse_frame(UartProtocol *protocol)
       protocol_send_query_speed(protocol);
       break;
 
-    case PROTOCOL_CMD_SET_POSITION:
-      /* 设置相对位置：数据长度4字节，int32 */
-      if (data_len >= 4)
-      {
-        /* 小端格式读取：低字节在前 */
-        protocol->status.target_position = (int32)frame[PROTOCOL_OFF_DATA] | ((int32)frame[PROTOCOL_OFF_DATA + 1] << 8) | ((int32)frame[PROTOCOL_OFF_DATA + 2] << 16) | ((int32)frame[PROTOCOL_OFF_DATA + 3] << 24);
-      }
-      protocol->status.mode = PROTOCOL_MODE_POSITION;
-      protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
-      break;
-
-    case PROTOCOL_CMD_QUERY_POS:
-      /* 查询位置：回复当前位置 */
-      protocol_send_query_position(protocol);
-      break;
-
     case PROTOCOL_CMD_SPEED_TIME:
       /* 速度-时间模式：数据长度8字节，速度4字节+时间4字节 */
       if (data_len >= 8)
@@ -230,25 +214,12 @@ static void protocol_parse_frame(UartProtocol *protocol)
       protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
       break;
 
-    case PROTOCOL_CMD_DIST_TIME:
-      /* 距离-时间模式：数据长度8字节，距离4字节+时间4字节 */
-      if (data_len >= 8)
-      {
-        /* 小端格式读取：低字节在前 */
-        protocol->status.target_position = (int32)frame[PROTOCOL_OFF_DATA] | ((int32)frame[PROTOCOL_OFF_DATA + 1] << 8) | ((int32)frame[PROTOCOL_OFF_DATA + 2] << 16) | ((int32)frame[PROTOCOL_OFF_DATA + 3] << 24);
-        protocol->status.target_time     = (int32)frame[PROTOCOL_OFF_DATA + 4] | ((int32)frame[PROTOCOL_OFF_DATA + 5] << 8) | ((int32)frame[PROTOCOL_OFF_DATA + 6] << 16) | ((int32)frame[PROTOCOL_OFF_DATA + 7] << 24);
-      }
-      protocol->status.mode = PROTOCOL_MODE_DIST_TIME;
-      protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
-      break;
-
     case PROTOCOL_CMD_STOP:
       /* 紧急停止：覆盖式停止所有运动 */
-      protocol->status.target_speed    = 0;
-      protocol->status.target_position = 0;
-      protocol->status.target_time     = 0;
-      protocol->status.is_busy         = 0;
-      protocol->status.mode            = PROTOCOL_MODE_IDLE;
+      protocol->status.target_speed = 0;
+      protocol->status.target_time  = 0;
+      protocol->status.is_busy      = 0;
+      protocol->status.mode         = PROTOCOL_MODE_IDLE;
       protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
       break;
 
@@ -326,50 +297,6 @@ static void protocol_send_query_speed(UartProtocol *protocol)
   frame[PROTOCOL_OFF_DATA + 1] = (uint8)((speed >> 8) & 0xFF);
   frame[PROTOCOL_OFF_DATA + 2] = (uint8)((speed >> 16) & 0xFF);
   frame[PROTOCOL_OFF_DATA + 3] = (uint8)((speed >> 24) & 0xFF);
-
-  /* 数据区剩余清零 */
-  for (i = 4; i < PROTOCOL_DATA_MAX; i++)
-  {
-    frame[PROTOCOL_OFF_DATA + i] = 0;
-  }
-
-  /* 计算校验和 */
-  checksum                  = protocol_calculate_checksum(frame, PROTOCOL_OFF_CHECK);
-  frame[PROTOCOL_OFF_CHECK] = checksum;
-
-  /* 帧尾 */
-  frame[PROTOCOL_OFF_TAIL]     = PROTOCOL_TAIL_0;
-  frame[PROTOCOL_OFF_TAIL + 1] = PROTOCOL_TAIL_1;
-
-  /* 发送 */
-  bsp_uart_send_buffer(&bsp_uart3, frame, PROTOCOL_FRAME_SIZE);
-}
-
-/**
- * @brief 发送查询位置响应
- * @param protocol 协议结构体指针
- */
-static void protocol_send_query_position(UartProtocol *protocol)
-{
-  uint8  frame[PROTOCOL_FRAME_SIZE];
-  uint32 i;
-  uint8  checksum;
-  int32  position;
-
-  /* 获取当前位置（注：实际位置由运动控制模块提供，此处预留） */
-  position = protocol->status.target_position; /* TODO: 替换为实际位置 */
-
-  /* 组装帧 */
-  frame[0] = PROTOCOL_HEAD_0;
-  frame[1] = PROTOCOL_HEAD_1;
-  frame[2] = PROTOCOL_CMD_QUERY_POS;
-  frame[3] = 4; /* 数据长度4 */
-
-  /* 填充位置数据（小端） */
-  frame[PROTOCOL_OFF_DATA]     = (uint8)(position & 0xFF);
-  frame[PROTOCOL_OFF_DATA + 1] = (uint8)((position >> 8) & 0xFF);
-  frame[PROTOCOL_OFF_DATA + 2] = (uint8)((position >> 16) & 0xFF);
-  frame[PROTOCOL_OFF_DATA + 3] = (uint8)((position >> 24) & 0xFF);
 
   /* 数据区剩余清零 */
   for (i = 4; i < PROTOCOL_DATA_MAX; i++)

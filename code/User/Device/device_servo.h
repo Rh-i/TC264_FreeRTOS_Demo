@@ -6,11 +6,6 @@
 #ifndef DEVICE_SERVO_H_
 #define DEVICE_SERVO_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 #include "zf_common_headfile.h"
 #include "bsp_pwm.h"
 
@@ -87,9 +82,5 @@ extern struct DeviceServo g_servo;
  * @brief 舵机总初始化函数
  */
 void device_servo_all_init(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* DEVICE_SERVO_H_ */

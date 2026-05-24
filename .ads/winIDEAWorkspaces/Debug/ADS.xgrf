@@ -13,11 +13,11 @@
        <EditorPersist>
         <__.0>
          <BookmarkList></BookmarkList>
-         <CaretPos>537</CaretPos>
+         <CaretPos>4268</CaretPos>
          <Encoding>6</Encoding>
-         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\user\cpu0_main.cpp</FileName>
-         <FileType>7</FileType>
-         <ScrollPos>0</ScrollPos>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Bsp\bsp_uart.c</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>122</ScrollPos>
         </__.0>
         <__.10>
          <BookmarkList></BookmarkList>
@@ -51,21 +51,29 @@
          <FileType>1</FileType>
          <ScrollPos>376</ScrollPos>
         </__.13>
+        <__.14>
+         <BookmarkList></BookmarkList>
+         <CaretPos>1513</CaretPos>
+         <Encoding>6</Encoding>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Device\device_motor.c</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>59</ScrollPos>
+        </__.14>
         <__.1>
          <BookmarkList></BookmarkList>
-         <CaretPos>2480</CaretPos>
+         <CaretPos>3062</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\user\cpu0_main.c</FileName>
          <FileType>1</FileType>
-         <ScrollPos>87</ScrollPos>
+         <ScrollPos>111</ScrollPos>
         </__.1>
         <__.2>
          <BookmarkList></BookmarkList>
-         <CaretPos>4268</CaretPos>
+         <CaretPos>537</CaretPos>
          <Encoding>6</Encoding>
-         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Bsp\bsp_uart.c</FileName>
-         <FileType>1</FileType>
-         <ScrollPos>122</ScrollPos>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\user\cpu0_main.cpp</FileName>
+         <FileType>7</FileType>
+         <ScrollPos>0</ScrollPos>
         </__.2>
         <__.3>
          <BookmarkList></BookmarkList>
@@ -77,27 +85,27 @@
         </__.3>
         <__.4>
          <BookmarkList></BookmarkList>
-         <CaretPos>3041</CaretPos>
-         <Encoding>6</Encoding>
-         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Protocol\uart_protocol.c</FileName>
-         <FileType>1</FileType>
-         <ScrollPos>54</ScrollPos>
-        </__.4>
-        <__.5>
-         <BookmarkList></BookmarkList>
          <CaretPos>6907</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\libraries\infineon_libraries\iLLD\TC26B\Tricore\Cpu\Trap\IfxCpu_Trap.c</FileName>
          <FileType>1</FileType>
          <ScrollPos>110</ScrollPos>
-        </__.5>
-        <__.6>
+        </__.4>
+        <__.5>
          <BookmarkList></BookmarkList>
          <CaretPos>25130</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\libraries\infineon_libraries\iLLD\TC26B\Tricore\Scu\Std\IfxScuWdt.h</FileName>
          <FileType>1</FileType>
          <ScrollPos>438</ScrollPos>
+        </__.5>
+        <__.6>
+         <BookmarkList></BookmarkList>
+         <CaretPos>3041</CaretPos>
+         <Encoding>6</Encoding>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Protocol\uart_protocol.c</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>54</ScrollPos>
         </__.6>
         <__.7>
          <BookmarkList></BookmarkList>
@@ -204,6 +212,10 @@
         <ViewId>0</ViewId>
         <ViewType>Symbols</ViewType>
        </__.16>
+       <__.17>
+        <ViewId>19</ViewId>
+        <ViewType>Document</ViewType>
+       </__.17>
        <__.1>
         <ViewId>2</ViewId>
         <ViewType>Locals</ViewType>
@@ -280,6 +292,11 @@
         <ViewId>18</ViewId>
         <ViewType>Document</ViewType>
        </__.11>
+       <__.12>
+        <RelativePath>..\..\..\code\User\Device\device_motor.c</RelativePath>
+        <ViewId>19</ViewId>
+        <ViewType>Document</ViewType>
+       </__.12>
        <__.1>
         <RelativePath>..\..\..\code\OS\FreeRTOS\tasks.c</RelativePath>
         <ViewId>8</ViewId>
@@ -446,7 +463,7 @@
       <PrimaryDocumentPaneId>5</PrimaryDocumentPaneId>
       <Frames>
        <__.0>
-        <FocusedViewId>4</FocusedViewId>
+        <FocusedViewId>19</FocusedViewId>
         <FrameState>3</FrameState>
         <IsPrimary>true</IsPrimary>
         <Bounds>
@@ -502,7 +519,7 @@
                <IsPinned>false</IsPinned>
                <IsTabbed>true</IsTabbed>
                <Orientation>None</Orientation>
-               <TopTabViewId>9</TopTabViewId>
+               <TopTabViewId>19</TopTabViewId>
                <ViewId>-1</ViewId>
                <Children>
                 <__.0>
@@ -535,6 +552,16 @@
                  <TopTabViewId>-1</TopTabViewId>
                  <ViewId>18</ViewId>
                 </__.11>
+                <__.12>
+                 <DockType>Document</DockType>
+                 <Extent>1</Extent>
+                 <IsDocumentPane>false</IsDocumentPane>
+                 <IsPinned>false</IsPinned>
+                 <IsTabbed>false</IsTabbed>
+                 <Orientation>None</Orientation>
+                 <TopTabViewId>-1</TopTabViewId>
+                 <ViewId>19</ViewId>
+                </__.12>
                 <__.1>
                  <DockType>Document</DockType>
                  <Extent>1</Extent>

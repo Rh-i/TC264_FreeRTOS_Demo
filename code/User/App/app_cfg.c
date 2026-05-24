@@ -23,6 +23,14 @@ void user_init(void)
   device_servo_all_init();
 
   bsp_encoder_all_init();
+  device_motor_all_init();
+  device_motor_enable(&g_motor, 1);
+}
+
+int fputc(int ch, FILE *stream)
+{
+  uart_write_byte(UART_0, (char)ch);
+  return (ch);
 }
 
 

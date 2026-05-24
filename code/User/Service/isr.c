@@ -23,11 +23,12 @@ IFX_INTERRUPT(cc60_pit_ch1_isr, 0, CCU6_0_CH1_ISR_PRIORITY)
 //   pit_clear_flag(CCU61_CH0);
 // }
 
-IFX_INTERRUPT(cc61_pit_ch1_isr, 0, CCU6_1_CH1_ISR_PRIORITY)
-{
-  interrupt_global_enable(0); // 开启中断嵌套
-  pit_clear_flag(CCU61_CH1);
-}
+// 别处定义了
+// IFX_INTERRUPT(cc61_pit_ch1_isr, 0, CCU6_1_CH1_ISR_PRIORITY)
+// {
+//   interrupt_global_enable(0); // 开启中断嵌套
+//   pit_clear_flag(CCU61_CH1);
+// }
 // **************************** PIT中断函数 ****************************
 
 

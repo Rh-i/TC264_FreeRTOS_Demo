@@ -30,8 +30,10 @@ void led_task(void *pvParameters)
   (void)pvParameters;
   while (1)
   {
-    led_toggle(&led_4_dev);
-    vTaskDelay(500);
+    printf("0,0,%d,100\n", (int)g_motor.speed_pid.speed_cm_s); // 临时
+
+    // led_toggle(&led_4_dev);
+    vTaskDelay(10);
   }
 }
 
@@ -124,24 +126,34 @@ void test_task(void *pvParameters)
 {
   (void)pvParameters;
 
-  char msg[64];
+  // char msg[64];
 
   while (1)
   {
+    /* 电机和舵机测试 */
     // bsp_pwm_set_duty(&bsp_pwm_motor,1000);
 
-    // 机械中值 0°
-    // bsp_pwm_set_duty(&bsp_pwm_servo1,4750);
+    // bsp_pwm_set_duty(&bsp_pwm_servo1,4750); // 机械中值 0°
     // device_servo_set_angle(&g_servo, -35);
     // device_servo_set_angle(&g_servo,35);
+    /* 电机和舵机测试 */
 
-    int count = bsp_encoder_get_count(&bsp_encoder_tim2);
-    sprintf(msg, "cnt: %d\n", count);
-    bsp_uart_send_string(&bsp_uart0,msg);
+
+    /* 电机编码器测试 */
+    // int count = bsp_encoder_get_count(&bsp_encoder_tim2);
+    // sprintf(msg, "cnt: %d\n", count);
+    // bsp_uart_send_string(&bsp_uart0,msg);
     // bsp_encoder_clear_count(&bsp_encoder_tim2) ;
+    /* 电机编码器测试 */
 
+    /* 电机pid测试 */
+    device_motor_set_speed_time(&g_motor, 100, 1000);
+    vTaskDelay(2000);
+    device_motor_set_speed_time(&g_motor, -60, 1000);
+    vTaskDelay(2000);
+    /* 电机pid测试 */
 
-    vTaskDelay(1000);
+    /*  */
   }
 }
 

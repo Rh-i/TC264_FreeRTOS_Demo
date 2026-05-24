@@ -1,85 +1,84 @@
-/*
- * pid.c
- *
- *  Created on: 2024年6月6日
- *      Author: w1445
+/**
+ * @file pid.c
+ * @brief 基础单环PID控制器实现
+ * @note 最简易稳定的PID实现
  */
 
 #include "pid.h"
 
+#pragma section all "cpu0_dsram"
+
+/*==============================================================================
+ * 函数实现
+ *============================================================================*/
+
 /**
- * @brief  限幅
+ * @brief PID初始化
  */
-float AmplitudeLimit(float input, float amplitude)
+void PID_Init(PID *pid, float kp, float ki, float kd, float out_max, float i_max)
 {
-  if (input < -amplitude)
-    return -amplitude;
-  else if (input > amplitude)
-    return amplitude;
-  else
-    return input;
+  pid->kp = kp;
+  pid->ki = ki;
+  pid->kd = kd;
+
+  pid->output_max   = out_max;
+  pid->integral_max = i_max;
+
+  pid->target     = 0.0f;
+  pid->feedback   = 0.0f;
+  pid->error      = 0.0f;
+  pid->integral   = 0.0f;
+  pid->output     = 0.0f;
+  pid->last_error = 0.0f;
 }
 
 /**
- * @brief 单环PID初始化
+ * @brief PID计算（位置式）
+ * @note 最简易稳定的实现
  */
-void BasePID_Init(BasePID_Object *base_pid, float kp, float ki, float kd, float detach)
+float PID_Calculate(PID *pid, float target, float feedback)
 {
-  base_pid->KiPartDetachment = detach;
+  pid->target   = target;
+  pid->feedback = feedback;
 
-  base_pid->Kp = kp;
-  base_pid->Ki = ki;
-  base_pid->Kd = kd;
+  // 计算误差
+  pid->error = target - feedback;
 
-  base_pid->KpPart = 0;
-  base_pid->KiPart = 0;
-  base_pid->KdPart = 0;
+  // 比例项
+  float p_out = pid->kp * pid->error;
+
+  // 积分项（带积分限幅）
+  pid->integral += pid->ki * pid->error;
+  if (pid->integral > pid->integral_max)
+    pid->integral = pid->integral_max;
+  if (pid->integral < -pid->integral_max)
+    pid->integral = -pid->integral_max;
+
+  // 微分项
+  float d_out     = pid->kd * (pid->error - pid->last_error);
+  pid->last_error = pid->error;
+
+  // 计算输出
+  pid->output = p_out + pid->integral + d_out;
+
+  // 输出限幅
+  if (pid->output > pid->output_max)
+    pid->output = pid->output_max;
+  if (pid->output < -pid->output_max)
+    pid->output = -pid->output_max;
+
+  return pid->output;
 }
 
 /**
- * @brief 位置式pid
+ * @brief PID重置
  */
-float BasePID_PositionControl(BasePID_Object *base_pid, float target_speed, float feedback_speed)
+void PID_Reset(PID *pid)
 {
-  base_pid->Error = target_speed - feedback_speed;
-
-  base_pid->KpPart = base_pid->Error * base_pid->Kp;
-  base_pid->KiPart += base_pid->Error * base_pid->Ki;
-
-  if (base_pid->Error > base_pid->KiPartDetachment)
-  {
-    base_pid->KiPart = 0;
-  }
-  else if (base_pid->Error < -(base_pid->KiPartDetachment))
-  {
-    base_pid->KiPart = 0;
-  }
-
-  base_pid->KdPart = (base_pid->Error - base_pid->LastError) * base_pid->KdPart;
-
-  base_pid->Out = base_pid->KpPart + base_pid->KiPart + base_pid->KdPart;
-
-  base_pid->LastError     = base_pid->Error;
-  base_pid->LastlastError = base_pid->LastError;
-
-  return base_pid->Out;
+  pid->error      = 0.0f;
+  pid->integral   = 0.0f;
+  pid->output     = 0.0f;
+  pid->last_error = 0.0f;
 }
 
-/**
- * @brief 增量式pid
- */
-float BasePID_IncrementalControl(BasePID_Object *base_pid, float target_speed, float feedback_speed)
-{
-  base_pid->Error = target_speed - feedback_speed;
-
-  base_pid->KpPart = (base_pid->Error - base_pid->LastError) * base_pid->Kp;
-  base_pid->KiPart = base_pid->Error * base_pid->Ki;
-  base_pid->KdPart = (base_pid->Error - 2.0f * base_pid->LastError + base_pid->LastlastError) * base_pid->Kd;
-
-  base_pid->Out = base_pid->KpPart + base_pid->KiPart + base_pid->KdPart;
-
-  base_pid->LastError     = base_pid->Error;
-  base_pid->LastlastError = base_pid->LastError;
-
-  return base_pid->Out;
-}
+#pragma section all restore
