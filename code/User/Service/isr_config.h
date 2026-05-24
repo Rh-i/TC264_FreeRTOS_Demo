@@ -34,7 +34,7 @@
 
 // 通道2与通道6是公用一个中断函数 在中断内部通过标志位 判断是谁触发的中断
 #define EXTI_CH2_CH6_INT_SERVICE IfxSrc_Tos_dma // 定义ERU通道2和通道6中断服务类型，同上
-#define EXTI_CH2_CH6_INT_PRIO 28                 // 定义ERU通道2和通道6中断优先级 可设置范围为0-47
+#define EXTI_CH2_CH6_INT_PRIO 28                // 定义ERU通道2和通道6中断优先级 可设置范围为0-47
 
 // 通道3与通道7是公用一个中断函数 在中断内部通过标志位 判断是谁触发的中断
 #define EXTI_CH3_CH7_INT_SERVICE IfxSrc_Tos_cpu0 // 定义ERU通道3和通道7中断服务类型，同上

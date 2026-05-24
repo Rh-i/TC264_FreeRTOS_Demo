@@ -8,10 +8,10 @@
 /*==============================================================================
  * 内部函数声明
  *============================================================================*/
-static uint8 protocol_calculate_checksum(const uint8 *data, uint32 len);
+static uint32 protocol_calculate_checksum(const uint8 *data, uint32 len);
 static uint8  protocol_parse_frame(UartProtocol *protocol);
-static void  protocol_send_response(UartProtocol *protocol, uint8 cmd, uint8 status);
-static void  protocol_send_query_speed(UartProtocol *protocol);
+static void   protocol_send_response(UartProtocol *protocol, uint8 cmd, uint8 status);
+static void   protocol_send_query_speed(UartProtocol *protocol);
 
 /*==============================================================================
  * 全局实例（使用UART3）
@@ -100,42 +100,6 @@ uint8_t uart_protocol_poll(UartProtocol *protocol)
 }
 
 /**
- * @brief 发送运动完成事件
- * @param protocol 协议结构体指针
- */
-void uart_protocol_send_motion_done(UartProtocol *protocol)
-{
-  uint8  frame[PROTOCOL_FRAME_SIZE];
-  uint32 i;
-  uint8  checksum;
-
-  (void)protocol; /* 未使用 */
-
-  /* 组装帧 */
-  frame[0] = PROTOCOL_HEAD_0;
-  frame[1] = PROTOCOL_HEAD_1;
-  frame[2] = PROTOCOL_CMD_MOTION_DONE;
-  frame[3] = 0; /* 数据长度0 */
-
-  /* 数据区清零 */
-  for (i = 0; i < PROTOCOL_DATA_MAX; i++)
-  {
-    frame[PROTOCOL_OFF_DATA + i] = 0;
-  }
-
-  /* 计算校验和 */
-  checksum                  = protocol_calculate_checksum(frame, PROTOCOL_OFF_CHECK);
-  frame[PROTOCOL_OFF_CHECK] = checksum;
-
-  /* 帧尾 */
-  frame[PROTOCOL_OFF_TAIL]     = PROTOCOL_TAIL_0;
-  frame[PROTOCOL_OFF_TAIL + 1] = PROTOCOL_TAIL_1;
-
-  /* 发送 */
-  bsp_uart_send_buffer(&bsp_uart3, frame, PROTOCOL_FRAME_SIZE);
-}
-
-/**
  * @brief 获取从机状态指针
  * @param protocol 协议结构体指针
  * @return 从机状态指针
@@ -155,17 +119,21 @@ SlaveStatus *uart_protocol_get_status(UartProtocol *protocol)
  * @param len 要校验的字节数
  * @return 校验和
  */
-static uint8 protocol_calculate_checksum(const uint8 *data, uint32 len)
+static uint32 protocol_calculate_checksum(const uint8 *data, uint32 len)
 {
   uint32 i;
-  uint8  sum = 0;
+  uint32 sum = 0;
 
   for (i = 0; i < len; i++)
   {
     sum += data[i];
   }
 
-  return sum & 0xFF;
+  uint32 out = sum & 0xFF;
+
+  // printf("out:%d\n", out);
+
+  return out;
 }
 
 /**
@@ -227,15 +195,10 @@ static uint8_t protocol_parse_frame(UartProtocol *protocol)
       return 1;
       break;
 
-    case PROTOCOL_CMD_MOTION_DONE:
-      /* 运动完成事件是主动上报，从机不处理 */
-      break;
 
     default:
       /* 未知命令，无响应 */
       break;
-
-
   }
   return 0; // 不需auto_ctrl
 }

@@ -1,5 +1,5 @@
-#include "zf_common_headfile.h"
 #include "isr_config.h"
+#include "zf_common_headfile.h"
 
 // **************************** PIT中断函数 ****************************
 // 类似于定时器触发完成中断
@@ -66,15 +66,15 @@ IFX_INTERRUPT(exti_ch1_ch5_isr, 0, EXTI_CH1_CH5_INT_PRIO)
 
 IFX_INTERRUPT(exti_ch2_ch6_isr, 0, EXTI_CH2_CH6_INT_PRIO)
 {
- interrupt_global_enable(0);                     // 开启中断嵌套
- if(exti_flag_get(ERU_CH2_REQ7_P00_4))           // 通道2中断
- {
-     exti_flag_clear(ERU_CH2_REQ7_P00_4);
- }
- if(exti_flag_get(ERU_CH6_REQ9_P20_0))           // 通道6中断
- {
-     exti_flag_clear(ERU_CH6_REQ9_P20_0);
- }
+  interrupt_global_enable(0);            // 开启中断嵌套
+  if (exti_flag_get(ERU_CH2_REQ7_P00_4)) // 通道2中断
+  {
+    exti_flag_clear(ERU_CH2_REQ7_P00_4);
+  }
+  if (exti_flag_get(ERU_CH6_REQ9_P20_0)) // 通道6中断
+  {
+    exti_flag_clear(ERU_CH6_REQ9_P20_0);
+  }
 }
 
 IFX_INTERRUPT(exti_ch3_ch7_isr, 0, EXTI_CH3_CH7_INT_PRIO)

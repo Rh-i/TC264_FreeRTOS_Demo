@@ -15,13 +15,13 @@
  *============================================================================*/
 typedef struct BspPwm
 {
-    pwm_channel_enum  channel;   /**< PWM 通道引脚 */
-    uint32            frequency;  /**< PWM 频率 (Hz) */
-    uint32            duty;       /**< 当前占空比值 (0-10000) */
+  pwm_channel_enum channel;   /**< PWM 通道引脚 */
+  uint32           frequency; /**< PWM 频率 (Hz) */
+  uint32           duty;      /**< 当前占空比值 (0-10000) */
 } BspPwm;
 
-extern struct BspPwm bsp_pwm_servo1;    /* 舵机 PWM */
-extern struct BspPwm bsp_pwm_motor;     /* 电机 PWM */
+extern struct BspPwm bsp_pwm_servo1; /* 舵机 PWM */
+extern struct BspPwm bsp_pwm_motor;  /* 电机 PWM */
 
 
 /*==============================================================================

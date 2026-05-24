@@ -111,21 +111,21 @@ static uint8 check_motion_completed(DeviceMotor *motor)
  */
 void device_motor_init(DeviceMotor *motor, BspEncoder *encoder, BspPwm *pwm, gpio_pin_enum dir_pin, float speed_kp, float speed_ki, float speed_kd, uint32 out_max)
 {
-  motor->encoder       = encoder;
-  motor->pwm           = pwm;
-  motor->dir_pin       = dir_pin;
-  motor->max_output    = out_max;
-  motor->enabled       = 0;
-  motor->output        = 0;
-  motor->actual_speed  = 0;
+  motor->encoder      = encoder;
+  motor->pwm          = pwm;
+  motor->dir_pin      = dir_pin;
+  motor->max_output   = out_max;
+  motor->enabled      = 0;
+  motor->output       = 0;
+  motor->actual_speed = 0;
 
   /* 初始化运动状态 */
-  motor->motion.mode            = MOTOR_MODE_STOP;
-  motor->motion.target_speed    = 0;
-  motor->motion.target_time     = 0;
-  motor->motion.start_time      = 0;
-  motor->motion.is_active       = 0;
-  motor->motion.is_completed    = 0;
+  motor->motion.mode         = MOTOR_MODE_STOP;
+  motor->motion.target_speed = 0;
+  motor->motion.target_time  = 0;
+  motor->motion.start_time   = 0;
+  motor->motion.is_active    = 0;
+  motor->motion.is_completed = 0;
 
   /* 初始化速度环PID */
   SpeedPID_Init(&motor->speed_pid, speed_kp, speed_ki, speed_kd, (float)out_max);
@@ -141,7 +141,7 @@ void device_motor_set_speed(DeviceMotor *motor, int32 speed)
 {
   motor->motion.mode         = MOTOR_MODE_SPEED;
   motor->motion.target_speed = speed;
-  motor->motion.is_active   = 1;
+  motor->motion.is_active    = 1;
   motor->motion.is_completed = 0;
 }
 
@@ -150,7 +150,7 @@ void device_motor_set_speed(DeviceMotor *motor, int32 speed)
  */
 void device_motor_set_speed_time(DeviceMotor *motor, int32 speed, uint32 time_ms)
 {
-  motor->motion.mode          = MOTOR_MODE_SPEED_TIME;
+  motor->motion.mode         = MOTOR_MODE_SPEED_TIME;
   motor->motion.target_speed = speed;
   motor->motion.target_time  = time_ms;
   motor->motion.start_time   = get_system_time_ms();
@@ -203,9 +203,6 @@ uint8 device_motor_update(DeviceMotor *motor)
       /* 运动完成，真正停止电机 */
       device_motor_stop(motor);
 
-      /* 通过串口协议主动上报运动完成事件 */
-      uart_protocol_send_motion_done(&g_uart_protocol);
-
       return 1;
     }
   }
@@ -222,8 +219,8 @@ uint8 device_motor_update(DeviceMotor *motor)
       /* 速度模式：使用速度环PID */
       {
         float pwm_out = SpeedPID_Calculate(&motor->speed_pid,
-                                          (float)motor->motion.target_speed,
-                                          delta_count);
+                                           (float)motor->motion.target_speed,
+                                           delta_count);
         motor->output = (int32)pwm_out;
         /* 更新实际速度 */
         motor->actual_speed = motor->speed_pid.speed_cm_s;

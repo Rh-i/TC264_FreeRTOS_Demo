@@ -18,8 +18,8 @@
  *============================================================================*/
 typedef enum
 {
-    MOTOR_DIR_REVERSE = 0, /**< 后退 */
-    MOTOR_DIR_FORWARD = 1,  /**< 前进 */
+  MOTOR_DIR_REVERSE = 0, /**< 后退 */
+  MOTOR_DIR_FORWARD = 1, /**< 前进 */
 } MotorDir_enum;
 
 /*==============================================================================
@@ -27,9 +27,9 @@ typedef enum
  *============================================================================*/
 typedef enum
 {
-    MOTOR_MODE_STOP = 0,      /**< 停止模式 */
-    MOTOR_MODE_SPEED = 1,     /**< 纯速度模式 */
-    MOTOR_MODE_SPEED_TIME = 2, /**< 速度+时间模式 */
+  MOTOR_MODE_STOP       = 0, /**< 停止模式 */
+  MOTOR_MODE_SPEED      = 1, /**< 纯速度模式 */
+  MOTOR_MODE_SPEED_TIME = 2, /**< 速度+时间模式 */
 } MotorMode_enum;
 
 /*==============================================================================
@@ -37,12 +37,12 @@ typedef enum
  *============================================================================*/
 typedef struct
 {
-    MotorMode_enum mode;      /**< 当前运动模式 */
-    int32 target_speed;       /**< 目标速度 cm/s */
-    uint32 target_time;       /**< 目标时间 ms */
-    uint32 start_time;        /**< 运动开始时间 ms */
-    uint8 is_active;          /**< 运动是否进行中 */
-    uint8 is_completed;       /**< 运动是否完成 */
+  MotorMode_enum mode;         /**< 当前运动模式 */
+  int32          target_speed; /**< 目标速度 cm/s */
+  uint32         target_time;  /**< 目标时间 ms */
+  uint32         start_time;   /**< 运动开始时间 ms */
+  uint8          is_active;    /**< 运动是否进行中 */
+  uint8          is_completed; /**< 运动是否完成 */
 } MotorMotionState;
 
 /*==============================================================================
@@ -51,18 +51,18 @@ typedef struct
  *============================================================================*/
 typedef struct DeviceMotor
 {
-    BspEncoder *encoder;         /**< 编码器设备指针 */
-    BspPwm *pwm;                 /**< PWM设备指针 */
-    gpio_pin_enum dir_pin;        /**< 方向控制引脚 */
+  BspEncoder   *encoder; /**< 编码器设备指针 */
+  BspPwm       *pwm;     /**< PWM设备指针 */
+  gpio_pin_enum dir_pin; /**< 方向控制引脚 */
 
-    SpeedPID speed_pid;           /**< 速度环PID */
+  SpeedPID speed_pid; /**< 速度环PID */
 
-    MotorMotionState motion;      /**< 运动状态 */
+  MotorMotionState motion; /**< 运动状态 */
 
-    int32 actual_speed;           /**< 实际速度 cm/s */
-    int32 output;                  /**< PWM输出值 */
-    uint32 max_output;            /**< 最大输出限幅 */
-    uint8 enabled;                 /**< 使能标志 */
+  int32  actual_speed; /**< 实际速度 cm/s */
+  int32  output;       /**< PWM输出值 */
+  uint32 max_output;   /**< 最大输出限幅 */
+  uint8  enabled;      /**< 使能标志 */
 } DeviceMotor;
 
 /*==============================================================================
@@ -80,8 +80,7 @@ typedef struct DeviceMotor
  * @param speed_kd 速度环微分系数
  * @param out_max 输出限幅(PWM占空比)
  */
-void device_motor_init(DeviceMotor *motor, BspEncoder *encoder, BspPwm *pwm, gpio_pin_enum dir_pin,
-                       float speed_kp, float speed_ki, float speed_kd, uint32 out_max);
+void device_motor_init(DeviceMotor *motor, BspEncoder *encoder, BspPwm *pwm, gpio_pin_enum dir_pin, float speed_kp, float speed_ki, float speed_kd, uint32 out_max);
 
 /**
  * @brief 设置电机目标速度（纯速度模式）

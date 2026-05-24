@@ -23,7 +23,7 @@ AutoCtrl g_auto_ctrl;
  */
 void auto_ctrl_init(void)
 {
-  g_auto_ctrl.state         = AUTO_CTRL_STATE_DISABLED;
+  g_auto_ctrl.state          = AUTO_CTRL_STATE_DISABLED;
   g_auto_ctrl.prev_busy      = 0;
   g_auto_ctrl.is_initialized = 1;
 }

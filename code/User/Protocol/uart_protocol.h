@@ -30,7 +30,7 @@
 #define PROTOCOL_OFF_TAIL 14  /**< 帧尾偏移 */
 
 /* 默认值 */
-#define PROTOCOL_DEFAULT_SPEED 5 /**< 默认速度 cm/s */
+#define PROTOCOL_DEFAULT_SPEED 40 /**< 默认速度 cm/s */
 
 /*==============================================================================
  * 命令码定义
@@ -41,7 +41,6 @@ typedef enum
   PROTOCOL_CMD_QUERY_SPEED = 0x02, /**< 查询当前速度 */
   PROTOCOL_CMD_SPEED_TIME  = 0x03, /**< 速度-时间模式 */
   PROTOCOL_CMD_STOP        = 0x04, /**< 紧急停止 */
-  PROTOCOL_CMD_MOTION_DONE = 0x05, /**< 运动完成事件 */
 } ProtocolCmd;
 
 /*==============================================================================
@@ -115,12 +114,6 @@ void uart_protocol_init(UartProtocol *protocol);
  * @param protocol 协议结构体指针
  */
 uint8_t uart_protocol_poll(UartProtocol *protocol);
-
-/**
- * @brief 发送运动完成事件
- * @param protocol 协议结构体指针
- */
-void uart_protocol_send_motion_done(UartProtocol *protocol);
 
 /**
  * @brief 获取从机状态指针

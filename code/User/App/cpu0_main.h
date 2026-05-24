@@ -3,11 +3,6 @@
 
 #include "Cpu/Std/Ifx_Types.h"
 
-#ifdef __cplusplus
-extern "C" 
-{
-#endif
-
 typedef struct
 {
   float32 sysFreq; /**< \brief Actual SPB frequency */
@@ -23,9 +18,5 @@ typedef struct
 
 
 IFX_EXTERN App_Cpu0 g_AppCpu0;
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

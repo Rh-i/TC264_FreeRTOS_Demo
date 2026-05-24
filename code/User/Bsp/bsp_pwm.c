@@ -12,8 +12,8 @@
  *============================================================================*/
 
 /* 示例 PWM 设备 */
-struct BspPwm bsp_pwm_servo1;    /* 舵机 PWM */
-struct BspPwm bsp_pwm_motor;     /* 电机 PWM */
+struct BspPwm bsp_pwm_servo1; /* 舵机 PWM */
+struct BspPwm bsp_pwm_motor;  /* 电机 PWM */
 
 #pragma section all restore
 
@@ -30,12 +30,12 @@ struct BspPwm bsp_pwm_motor;     /* 电机 PWM */
  */
 void bsp_pwm_init(BspPwm *pwm, pwm_channel_enum channel, uint32 freq, uint32 duty)
 {
-    pwm->channel   = channel;
-    pwm->frequency = freq;
-    pwm->duty     = duty;
+  pwm->channel   = channel;
+  pwm->frequency = freq;
+  pwm->duty      = duty;
 
-    /* 初始化逐飞 PWM 驱动 */
-    pwm_init(channel, freq, duty);
+  /* 初始化逐飞 PWM 驱动 */
+  pwm_init(channel, freq, duty);
 }
 
 /**
@@ -45,8 +45,8 @@ void bsp_pwm_init(BspPwm *pwm, pwm_channel_enum channel, uint32 freq, uint32 dut
  */
 void bsp_pwm_set_duty(BspPwm *pwm, uint32 duty)
 {
-    pwm->duty = duty;
-    pwm_set_duty(pwm->channel, duty);
+  pwm->duty = duty;
+  pwm_set_duty(pwm->channel, duty);
 }
 
 /**
@@ -56,7 +56,7 @@ void bsp_pwm_set_duty(BspPwm *pwm, uint32 duty)
  */
 uint32 bsp_pwm_get_duty(BspPwm *pwm)
 {
-    return pwm->duty;
+  return pwm->duty;
 }
 
 /**
@@ -65,8 +65,8 @@ uint32 bsp_pwm_get_duty(BspPwm *pwm)
  */
 void bsp_pwm_stop(BspPwm *pwm)
 {
-    pwm_set_duty(pwm->channel, 0);
-    pwm->duty = 0;
+  pwm_set_duty(pwm->channel, 0);
+  pwm->duty = 0;
 }
 
 /**
@@ -74,7 +74,7 @@ void bsp_pwm_stop(BspPwm *pwm)
  */
 void bsp_pwm_all_stop(void)
 {
-    pwm_all_channel_close();
+  pwm_all_channel_close();
 }
 
 /**
@@ -83,9 +83,9 @@ void bsp_pwm_all_stop(void)
  */
 void bsp_pwm_all_init(void)
 {
-    /* 舵机 PWM - ATOM0_CH3_P21_5, 330Hz, 初始占空比 4950 (中值1500μs) */
-    bsp_pwm_init(&bsp_pwm_servo1, ATOM0_CH3_P21_5, 330, 4950);
+  /* 舵机 PWM - ATOM0_CH3_P21_5, 330Hz, 初始占空比 4950 (中值1500μs) */
+  bsp_pwm_init(&bsp_pwm_servo1, ATOM0_CH3_P21_5, 330, 4950);
 
-    /* 电机 PWM - ATOM1_CH0_P21_2, 1000Hz, 初始占空比 0 */
-    bsp_pwm_init(&bsp_pwm_motor, ATOM1_CH0_P21_2, 1000, 0);
+  /* 电机 PWM - ATOM1_CH0_P21_2, 1000Hz, 初始占空比 0 */
+  bsp_pwm_init(&bsp_pwm_motor, ATOM1_CH0_P21_2, 1000, 0);
 }

@@ -14,8 +14,8 @@
 #include "zf_common_headfile.h"
 
 #include "FreeRTOS.h"
-#include "task.h"
 #include "bsp_freertos_cpu0.h"
+#include "task.h"
 
 #include "app_cfg.h"
 
@@ -113,7 +113,7 @@ void uart3_protocol_task(void *pvParameters)
 
   while (1)
   {
-    if(uart_protocol_poll(&g_uart_protocol))
+    if (uart_protocol_poll(&g_uart_protocol))
     {
       // 如果解包到了数据，那我处理。这个不会重复解包
       auto_ctrl_update();
@@ -123,7 +123,6 @@ void uart3_protocol_task(void *pvParameters)
       gpio_toggle_level(P20_9);
     }
   }
-
 }
 
 
@@ -181,7 +180,7 @@ int core0_main(void)
 
   xTaskCreate(uart3_protocol_task, "uart3_protocol", 1024, NULL, 4, NULL); // 优先级越大越高 0~9
 
-//  xTaskCreate(test_task, "test_task", 512, NULL, 4, NULL); // 优先级越大越高 0~9
+  //  xTaskCreate(test_task, "test_task", 512, NULL, 4, NULL); // 优先级越大越高 0~9
 
 
   start_freertos();

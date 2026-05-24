@@ -9,9 +9,9 @@
 #define AUTO_CTRL_H_
 
 #include "FreeRTOS.h"
+#include "device_motor.h"
 #include "semphr.h"
 #include "uart_protocol.h"
-#include "device_motor.h"
 
 /*==============================================================================
  * 枚举定义
@@ -22,8 +22,8 @@
  */
 typedef enum
 {
-    AUTO_CTRL_STATE_DISABLED = 0, /**< 自动控制未启用 */
-    AUTO_CTRL_STATE_ENABLED  = 1,  /**< 自动控制已启用 */
+  AUTO_CTRL_STATE_DISABLED = 0, /**< 自动控制未启用 */
+  AUTO_CTRL_STATE_ENABLED  = 1, /**< 自动控制已启用 */
 } AutoCtrlState;
 
 /*==============================================================================
@@ -35,9 +35,9 @@ typedef enum
  */
 typedef struct
 {
-    AutoCtrlState state;    /**< 当前状态 */
-    uint8         prev_busy; /**< 上次运动是否进行中（用于检测完成） */
-    uint8         is_initialized; /**< 初始化标志 */
+  AutoCtrlState state;          /**< 当前状态 */
+  uint8         prev_busy;      /**< 上次运动是否进行中（用于检测完成） */
+  uint8         is_initialized; /**< 初始化标志 */
 } AutoCtrl;
 
 /*==============================================================================
