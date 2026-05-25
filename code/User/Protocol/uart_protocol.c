@@ -25,9 +25,11 @@ UartProtocol g_uart_protocol;
 /**
  * @brief 初始化协议层
  * @param protocol 协议结构体指针
+ * @param uart 串口设备指针
  */
-void uart_protocol_init(UartProtocol *protocol)
+void uart_protocol_init(UartProtocol *protocol, struct BspUart *uart)
 {
+  protocol->uart     = uart;
   protocol->state    = PROTOCOL_STATE_IDLE;
   protocol->rx_index = 0;
 
@@ -46,20 +48,20 @@ uint8_t uart_protocol_poll(UartProtocol *protocol)
   uint32 available;
 
   /* 等待接收信号量 */
-  if (bsp_uart_wait(&bsp_uart3, portMAX_DELAY) != pdTRUE)
+  if (bsp_uart_wait(protocol->uart, portMAX_DELAY) != pdTRUE)
   {
     return 0;
   }
 
   /* 检查是否有16字节 */
-  available = bsp_uart_available(&bsp_uart3);
+  available = bsp_uart_available(protocol->uart);
   if (available < PROTOCOL_FRAME_SIZE)
   {
     return 0;
   }
 
   /* 读取1字节到缓冲区 */
-  bsp_uart_recv(&bsp_uart3, protocol->rx_buffer, 1);
+  bsp_uart_recv(protocol->uart, protocol->rx_buffer, 1);
 
   /* 检查帧头0xAA */
   if (protocol->rx_buffer[0] != PROTOCOL_HEAD_0)
@@ -69,7 +71,7 @@ uint8_t uart_protocol_poll(UartProtocol *protocol)
   }
 
   /* 读取1字节到缓冲区 */
-  bsp_uart_recv(&bsp_uart3, &protocol->rx_buffer[1], 1);
+  bsp_uart_recv(protocol->uart, &protocol->rx_buffer[1], 1);
 
   /* 检查帧头0x55 */
   if (protocol->rx_buffer[1] != PROTOCOL_HEAD_1)
@@ -79,7 +81,7 @@ uint8_t uart_protocol_poll(UartProtocol *protocol)
   }
 
   /* 帧头匹配，读取剩余14字节 */
-  bsp_uart_recv(&bsp_uart3, &protocol->rx_buffer[2], 14);
+  bsp_uart_recv(protocol->uart, &protocol->rx_buffer[2], 14);
 
   /* 检查帧尾0xBB 0x66 */
   if (protocol->rx_buffer[PROTOCOL_OFF_TAIL] != PROTOCOL_TAIL_0 || protocol->rx_buffer[PROTOCOL_OFF_TAIL + 1] != PROTOCOL_TAIL_1)
@@ -215,8 +217,6 @@ static void protocol_send_response(UartProtocol *protocol, uint8 cmd, uint8 stat
   uint32 i;
   uint8  checksum;
 
-  (void)protocol; /* 暂未使用 */
-
   /* 组装帧 */
   frame[0]                 = PROTOCOL_HEAD_0;
   frame[1]                 = PROTOCOL_HEAD_1;
@@ -239,7 +239,7 @@ static void protocol_send_response(UartProtocol *protocol, uint8 cmd, uint8 stat
   frame[PROTOCOL_OFF_TAIL + 1] = PROTOCOL_TAIL_1;
 
   /* 发送 */
-  bsp_uart_send_buffer(&bsp_uart3, frame, PROTOCOL_FRAME_SIZE);
+  bsp_uart_send_buffer(protocol->uart, frame, PROTOCOL_FRAME_SIZE);
 }
 
 /**
@@ -283,5 +283,5 @@ static void protocol_send_query_speed(UartProtocol *protocol)
   frame[PROTOCOL_OFF_TAIL + 1] = PROTOCOL_TAIL_1;
 
   /* 发送 */
-  bsp_uart_send_buffer(&bsp_uart3, frame, PROTOCOL_FRAME_SIZE);
+  bsp_uart_send_buffer(protocol->uart, frame, PROTOCOL_FRAME_SIZE);
 }

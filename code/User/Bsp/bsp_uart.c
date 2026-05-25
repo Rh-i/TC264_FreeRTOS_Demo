@@ -64,8 +64,10 @@ static void bsp_uart_rx_isr_handler(BspUart *uart)
     fifo_write_buffer(&uart->rx_fifo, &dat, 1);
   }
 
-  if (uart == &bsp_uart3 && fifo_used(&uart->rx_fifo) >= 16)
+  // TODO 此处要根据串口协议使用的串口来进行修改
+  if (uart == &bsp_uart2 && fifo_used(&uart->rx_fifo) >= 16)
   {
+    gpio_toggle_level(P20_9);
     /* 给出接收完成信号量 */
     xSemaphoreGiveFromISR(uart->rx_sem, NULL);
   }
@@ -202,7 +204,7 @@ void bsp_uart_all_init(void)
   bsp_uart_init(&bsp_uart1, UART_1, 115200, UART1_TX_P15_0, UART1_RX_P15_1, 64);
 
   /* UART2: 波特率115200, TX=P02_0, RX=P02_1, FIFO缓冲区64字节 */
-  bsp_uart_init(&bsp_uart2, UART_2, 115200, UART2_TX_P02_0, UART2_RX_P02_1, 64);
+  bsp_uart_init(&bsp_uart2, UART_2, 115200, UART2_TX_P14_2, UART2_RX_P14_3, 64);
 
   /* UART3: 波特率115200, TX=P00_0, RX=P00_1, FIFO缓冲区64字节 */
   bsp_uart_init(&bsp_uart3, UART_3, 115200, UART3_TX_P00_0, UART3_RX_P00_1, 64);

@@ -87,16 +87,20 @@ typedef struct
   ProtocolMode mode;         /**< 当前控制模式 */
 } SlaveStatus;
 
+/* 前向声明 */
+struct BspUart;
+
 /**
  * @brief 协议层结构
  * @note 管理协议解析状态和缓冲区
  */
 typedef struct
 {
-  ProtocolState state;                          /**< 状态机状态 */
-  uint8         rx_buffer[PROTOCOL_FRAME_SIZE]; /**< 接收缓冲区 */
-  uint8         rx_index;                       /**< 接收索引 */
-  SlaveStatus   status;                         /**< 从机状态 */
+  struct BspUart *uart;                         /**< 串口设备指针 */
+  ProtocolState  state;                         /**< 状态机状态 */
+  uint8          rx_buffer[PROTOCOL_FRAME_SIZE]; /**< 接收缓冲区 */
+  uint8          rx_index;                      /**< 接收索引 */
+  SlaveStatus    status;                        /**< 从机状态 */
 } UartProtocol;
 
 /*==============================================================================
@@ -106,8 +110,9 @@ typedef struct
 /**
  * @brief 初始化协议层
  * @param protocol 协议结构体指针
+ * @param uart 串口设备指针
  */
-void uart_protocol_init(UartProtocol *protocol);
+void uart_protocol_init(UartProtocol *protocol, struct BspUart *uart);
 
 /**
  * @brief 协议轮询处理（主循环或FreeRTOS任务调用）

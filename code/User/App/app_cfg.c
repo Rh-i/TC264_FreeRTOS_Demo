@@ -17,7 +17,7 @@ void user_init(void)
   bsp_io_init();
 
   bsp_uart_all_init();
-  uart_protocol_init(&g_uart_protocol);
+  uart_protocol_init(&g_uart_protocol, &bsp_uart2);
 
   bsp_pwm_all_init();
   device_servo_all_init();
