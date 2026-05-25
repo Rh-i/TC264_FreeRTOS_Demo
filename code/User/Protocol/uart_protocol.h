@@ -30,17 +30,20 @@
 #define PROTOCOL_OFF_TAIL 14  /**< 帧尾偏移 */
 
 /* 默认值 */
-#define PROTOCOL_DEFAULT_SPEED 40 /**< 默认速度 cm/s */
+#define PROTOCOL_DEFAULT_SPEED     40    /**< 默认速度 cm/s */
+#define PROTOCOL_DEFAULT_SERVO_ANGLE 0   /**< 默认舵机角度 ° */
 
 /*==============================================================================
  * 命令码定义
  *============================================================================*/
 typedef enum
 {
-  PROTOCOL_CMD_SET_SPEED   = 0x01, /**< 设置目标速度 */
-  PROTOCOL_CMD_QUERY_SPEED = 0x02, /**< 查询当前速度 */
-  PROTOCOL_CMD_SPEED_TIME  = 0x03, /**< 速度-时间模式 */
-  PROTOCOL_CMD_STOP        = 0x04, /**< 紧急停止 */
+  PROTOCOL_CMD_SET_SPEED          = 0x01, /**< 设置目标速度 */
+  PROTOCOL_CMD_QUERY_SPEED        = 0x02, /**< 查询当前速度 */
+  PROTOCOL_CMD_SPEED_TIME         = 0x03, /**< 速度-时间模式 */
+  PROTOCOL_CMD_STOP               = 0x04, /**< 紧急停止 */
+  PROTOCOL_CMD_SET_SERVO_ANGLE    = 0x05, /**< 设置舵机角度 */
+  PROTOCOL_CMD_QUERY_SERVO_ANGLE  = 0x06, /**< 查询舵机角度 */
 } ProtocolCmd;
 
 /*==============================================================================
@@ -82,9 +85,10 @@ typedef enum
  */
 typedef struct
 {
-  int32        target_speed; /**< 目标速度 cm/s */
-  int32        target_time;  /**< 目标时间 ms */
-  ProtocolMode mode;         /**< 当前控制模式 */
+  int32        target_speed;   /**< 目标速度 cm/s */
+  int32        target_time;    /**< 目标时间 ms */
+  int32        target_angle;   /**< 目标舵机角度 ° */
+  ProtocolMode mode;          /**< 当前控制模式 */
 } SlaveStatus;
 
 /* 前向声明 */

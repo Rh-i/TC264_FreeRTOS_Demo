@@ -1,6 +1,12 @@
 /**
  * @file device_servo.c
+ * @author Rh (qq:750920400)
  * @brief 舵机设备驱动实现 - PWM 输出角度控制
+ * @version 0.1
+ * @date 2026-05-25
+ *
+ * @copyright Copyright (c) 2026
+ *
  */
 
 #include "device_servo.h"

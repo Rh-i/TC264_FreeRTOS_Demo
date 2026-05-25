@@ -1,10 +1,17 @@
 /**
  * @file bsp_uart.c
- * @brief UART设备驱动实现 - 串口收发，使用逐飞FIFO阻塞发送+中断接收
+ * @author Rh (qq:750920400)
+ * @brief 串口驱动实现。很简陋，无锁。接收是中断逐字节接收。发送是阻塞发送
+ * @version 0.1
+ * @date 2026-05-25
+ * 
+ * @copyright Copyright (c) 2026
+ * 
  */
 
 #include "bsp_uart.h"
 #include "isr_config.h"
+#include "hardware_config.h"
 
 #pragma section all "cpu0_dsram"
 
@@ -19,36 +26,7 @@ struct BspUart bsp_uart3;
 /*==============================================================================
  * 内部函数声明
  *============================================================================*/
-static void bsp_uart_rx_isr_handler(BspUart *uart);
 static void bsp_uart_rx_interrupt_enable(uart_index_enum uart_n);
-
-/* UART0 接收中断 */
-IFX_INTERRUPT(uart0_rx_isr, 0, UART0_RX_INT_PRIO)
-{
-  interrupt_global_enable(0);
-  bsp_uart_rx_isr_handler(&bsp_uart0);
-}
-
-/* UART1 接收中断 */
-IFX_INTERRUPT(uart1_rx_isr, 0, UART1_RX_INT_PRIO)
-{
-  interrupt_global_enable(0);
-  bsp_uart_rx_isr_handler(&bsp_uart1);
-}
-
-/* UART2 接收中断 */
-IFX_INTERRUPT(uart2_rx_isr, 0, UART2_RX_INT_PRIO)
-{
-  interrupt_global_enable(0);
-  bsp_uart_rx_isr_handler(&bsp_uart2);
-}
-
-/* UART3 接收中断 */
-IFX_INTERRUPT(uart3_rx_isr, 0, UART3_RX_INT_PRIO)
-{
-  interrupt_global_enable(0);
-  bsp_uart_rx_isr_handler(&bsp_uart3);
-}
 
 uint8 dat = 0;
 
@@ -56,7 +34,7 @@ uint8 dat = 0;
  * @brief UART接收中断处理函数
  * @param uart 串口结构体指针
  */
-static void bsp_uart_rx_isr_handler(BspUart *uart)
+void bsp_uart_rx_isr_handler(BspUart *uart)
 {
   /* 读取所有可用的数据并写入逐飞FIFO */
   while (uart_query_byte(uart->uart_index, &dat))
@@ -65,7 +43,7 @@ static void bsp_uart_rx_isr_handler(BspUart *uart)
   }
 
   // TODO 此处要根据串口协议使用的串口来进行修改
-  if (uart == &bsp_uart2 && fifo_used(&uart->rx_fifo) >= 16)
+  if (uart == &NUC_MCU_UART && fifo_used(&uart->rx_fifo) >= 16)
   {
     gpio_toggle_level(P20_9);
     /* 给出接收完成信号量 */

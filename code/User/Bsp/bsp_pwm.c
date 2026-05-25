@@ -1,8 +1,13 @@
 /**
  * @file bsp_pwm.c
- * @brief PWM 驱动实现 - 基于 GTM ATOM 的 PWM 输出
+ * @author Rh (qq:750920400)
+ * @brief 实现了pwm驱动，很简陋
+ * @version 0.1
+ * @date 2026-05-25
+ * 
+ * @copyright Copyright (c) 2026
+ * 
  */
-
 #include "bsp_pwm.h"
 
 #pragma section all "cpu0_dsram"
@@ -83,8 +88,8 @@ void bsp_pwm_all_stop(void)
  */
 void bsp_pwm_all_init(void)
 {
-  /* 舵机 PWM - ATOM0_CH3_P21_5, 330Hz, 初始占空比 4950 (中值1500μs) */
-  bsp_pwm_init(&bsp_pwm_servo1, ATOM0_CH3_P21_5, 330, 4950);
+  /* 舵机 PWM - ATOM0_CH3_P21_5, 330Hz, 初始占空比 4750 (中值1500μs) */
+  bsp_pwm_init(&bsp_pwm_servo1, ATOM0_CH3_P21_5, 330, 4750);
 
   /* 电机 PWM - ATOM1_CH0_P21_2, 1000Hz, 初始占空比 0 */
   bsp_pwm_init(&bsp_pwm_motor, ATOM1_CH0_P21_2, 1000, 0);

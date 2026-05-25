@@ -1,8 +1,3 @@
-/**
- * @file bsp_encoder.h
- * @brief 编码器驱动 - 基于 GPT12 Timer 的正交解码编码器
- */
-
 #ifndef BSP_ENCODER_H_
 #define BSP_ENCODER_H_
 

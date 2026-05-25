@@ -1,8 +1,3 @@
-/**
- * @file bsp_uart.h
- * @brief UART设备驱动 - 串口收发，使用逐飞FIFO阻塞发送+中断接收
- */
-
 #ifndef BSP_UART_H_
 #define BSP_UART_H_
 
@@ -37,6 +32,14 @@ typedef struct BspUart
   uint8             rx_buffer[128]; /**< FIFO挂载的缓冲区 */
   SemaphoreHandle_t rx_sem;         /**< 接收完成信号量 */
 } BspUart;
+
+
+/**
+ * @brief 串口中断回调
+ * @param uart 串口结构体指针
+ *
+ */
+void bsp_uart_rx_isr_handler(BspUart *uart);
 
 /**
  * @brief 初始化串口设备

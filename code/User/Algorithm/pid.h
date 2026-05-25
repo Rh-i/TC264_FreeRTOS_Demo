@@ -1,9 +1,3 @@
-/**
- * @file pid.h
- * @brief 基础单环PID控制器
- * @note 最简易稳定的PID实现
- */
-
 #ifndef PID_H_
 #define PID_H_
 

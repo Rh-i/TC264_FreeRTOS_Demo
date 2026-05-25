@@ -1,10 +1,15 @@
 /**
  * @file auto_ctrl.c
- * @brief 自动控制模块实现 - 根据串口协议数据控制电机
- * @note 从 uart_protocol 获取命令，驱动 device_motor 执行运动
- * @date 2026-05-24
+ * @author Rh (qq:750920400)
+ * @brief 自动控制模块实现 - 根据串口协议数据和设备层控制小车
+ * @version 0.1
+ * @date 2026-05-25
+ *
+ * @note 从 uart_protocol 获取命令，驱动 device_motor 和 device_servo 执行运动
+ *
+ * @copyright Copyright (c) 2026
+ *
  */
-
 #include "auto_ctrl.h"
 
 #pragma section all "cpu0_dsram"

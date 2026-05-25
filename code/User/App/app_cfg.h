@@ -1,8 +1,3 @@
-/**
- * @file app_cfg.h
- * @brief 应用配置头文件
- */
-
 #ifndef _APP_CFG_H_
 #define _APP_CFG_H_
 

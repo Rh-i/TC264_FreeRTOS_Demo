@@ -1,6 +1,8 @@
 #ifndef CPU0_MAIN_H
 #define CPU0_MAIN_H
 
+// 这里面的东西是给Clock使用的，保留
+
 #include "Cpu/Std/Ifx_Types.h"
 
 typedef struct

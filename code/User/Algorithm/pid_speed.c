@@ -1,9 +1,13 @@
 /**
  * @file pid_speed.c
- * @brief 速度环PID控制器实现
- * @note 基于基础PID，用于控制电机速度（cm/s）
+ * @author Rh (qq:750920400)
+ * @brief 基于pid计算的，速度环封装
+ * @version 0.1
+ * @date 2026-05-25
+ * 
+ * @copyright Copyright (c) 2026
+ * 
  */
-
 #include "pid_speed.h"
 
 #pragma section all "cpu0_dsram"
@@ -19,7 +23,7 @@ void SpeedPID_Init(SpeedPID *sp, float kp, float ki, float kd, float out_max)
 {
   // 初始化基础PID
   // 积分限幅设为输出限幅的20%
-  PID_Init(&sp->pid, kp, ki, kd, out_max, out_max * 0.2f);
+  PID_Init(&sp->pid, kp, ki, kd, out_max, out_max * 0.35f);
 
   sp->last_count   = 0;
   sp->delta_count  = 0;

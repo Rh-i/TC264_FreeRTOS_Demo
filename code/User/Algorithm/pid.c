@@ -1,7 +1,12 @@
 /**
  * @file pid.c
- * @brief 基础单环PID控制器实现
- * @note 最简易稳定的PID实现
+ * @author Rh (qq:750920400)
+ * @brief 简单单环pid实现
+ * @version 0.1
+ * @date 2026-05-25
+ * 
+ * @copyright Copyright (c) 2026
+ * 
  */
 
 #include "pid.h"

@@ -1,8 +1,13 @@
 /**
  * @file bsp_encoder.c
- * @brief 编码器驱动实现 - 基于 GPT12 Timer 的正交解码编码器
+ * @author Rh (qq:750920400)
+ * @brief 编码器初始化，很简陋
+ * @version 0.1
+ * @date 2026-05-25
+ * 
+ * @copyright Copyright (c) 2026
+ * 
  */
-
 #include "bsp_encoder.h"
 
 #pragma section all "cpu0_dsram"

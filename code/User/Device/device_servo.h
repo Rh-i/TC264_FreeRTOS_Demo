@@ -1,8 +1,3 @@
-/**
- * @file device_servo.h
- * @brief 舵机设备驱动 - PWM 输出角度控制
- */
-
 #ifndef DEVICE_SERVO_H_
 #define DEVICE_SERVO_H_
 

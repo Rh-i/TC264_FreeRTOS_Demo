@@ -1,8 +1,3 @@
-/**
- * @file bsp_io.h
- * @brief IO设备驱动 - 按键、蜂鸣器、LED
- */
-
 #ifndef BSP_IO_H_
 #define BSP_IO_H_
 

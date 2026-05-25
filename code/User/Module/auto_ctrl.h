@@ -1,10 +1,3 @@
-/**
- * @file auto_ctrl.h
- * @brief 自动控制模块 - 根据串口协议数据控制电机
- * @note 从 uart_protocol 获取命令，驱动 device_motor 执行运动
- * @date 2026-05-24
- */
-
 #ifndef AUTO_CTRL_H_
 #define AUTO_CTRL_H_
 

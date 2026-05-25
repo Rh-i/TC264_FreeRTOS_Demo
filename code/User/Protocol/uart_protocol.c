@@ -1,9 +1,16 @@
 /**
  * @file uart_protocol.c
+ * @author Rh (qq:750920400)
  * @brief UART串口协议从机实现 - 协议解析、命令处理、响应发送
+ * @version 0.1
+ * @date 2026-05-25
+ *
+ * @copyright Copyright (c) 2026
+ *
  */
 
 #include "uart_protocol.h"
+#include "hardware_config.h"
 
 /*==============================================================================
  * 内部函数声明
@@ -12,6 +19,7 @@ static uint32 protocol_calculate_checksum(const uint8 *data, uint32 len);
 static uint8  protocol_parse_frame(UartProtocol *protocol);
 static void   protocol_send_response(UartProtocol *protocol, uint8 cmd, uint8 status);
 static void   protocol_send_query_speed(UartProtocol *protocol);
+static void   protocol_send_query_servo_angle(UartProtocol *protocol);
 
 /*==============================================================================
  * 全局实例（使用UART3）
@@ -36,6 +44,7 @@ void uart_protocol_init(UartProtocol *protocol, struct BspUart *uart)
   /* 初始化从机状态 */
   protocol->status.target_speed = PROTOCOL_DEFAULT_SPEED;
   protocol->status.target_time  = 0;
+  protocol->status.target_angle = PROTOCOL_DEFAULT_SERVO_ANGLE;
   protocol->status.mode         = PROTOCOL_MODE_IDLE;
 }
 
@@ -197,6 +206,23 @@ static uint8_t protocol_parse_frame(UartProtocol *protocol)
       return 1;
       break;
 
+    case PROTOCOL_CMD_SET_SERVO_ANGLE:
+      /* 设置舵机角度：数据长度4字节，int32，范围 -35~+35° */
+      if (data_len >= 4)
+      {
+        /* 小端格式读取：低字节在前 */
+        protocol->status.target_angle = (int32)frame[PROTOCOL_OFF_DATA] | ((int32)frame[PROTOCOL_OFF_DATA + 1] << 8) | ((int32)frame[PROTOCOL_OFF_DATA + 2] << 16) | ((int32)frame[PROTOCOL_OFF_DATA + 3] << 24);
+      }
+      protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
+      return 0;
+      break;
+
+    case PROTOCOL_CMD_QUERY_SERVO_ANGLE:
+      /* 查询舵机角度：回复当前角度 */
+      protocol_send_query_servo_angle(protocol);
+      return 0;
+      break;
+
 
     default:
       /* 未知命令，无响应 */
@@ -213,6 +239,7 @@ static uint8_t protocol_parse_frame(UartProtocol *protocol)
  */
 static void protocol_send_response(UartProtocol *protocol, uint8 cmd, uint8 status)
 {
+#ifndef PROTOCOL_DISABLE_RESPONSE
   uint8  frame[PROTOCOL_FRAME_SIZE];
   uint32 i;
   uint8  checksum;
@@ -240,6 +267,11 @@ static void protocol_send_response(UartProtocol *protocol, uint8 cmd, uint8 stat
 
   /* 发送 */
   bsp_uart_send_buffer(protocol->uart, frame, PROTOCOL_FRAME_SIZE);
+#else
+  (void)protocol;
+  (void)cmd;
+  (void)status;
+#endif
 }
 
 /**
@@ -248,6 +280,7 @@ static void protocol_send_response(UartProtocol *protocol, uint8 cmd, uint8 stat
  */
 static void protocol_send_query_speed(UartProtocol *protocol)
 {
+#ifndef PROTOCOL_DISABLE_RESPONSE
   uint8  frame[PROTOCOL_FRAME_SIZE];
   uint32 i;
   uint8  checksum;
@@ -284,4 +317,55 @@ static void protocol_send_query_speed(UartProtocol *protocol)
 
   /* 发送 */
   bsp_uart_send_buffer(protocol->uart, frame, PROTOCOL_FRAME_SIZE);
+#else
+  (void)protocol;
+#endif
+}
+
+/**
+ * @brief 发送查询舵机角度响应
+ * @param protocol 协议结构体指针
+ */
+static void protocol_send_query_servo_angle(UartProtocol *protocol)
+{
+#ifndef PROTOCOL_DISABLE_RESPONSE
+  uint8  frame[PROTOCOL_FRAME_SIZE];
+  uint32 i;
+  uint8  checksum;
+  int32  angle;
+
+  /* 获取当前舵机角度（从协议状态中获取） */
+  angle = protocol->status.target_angle;
+
+  /* 组装帧 */
+  frame[0] = PROTOCOL_HEAD_0;
+  frame[1] = PROTOCOL_HEAD_1;
+  frame[2] = PROTOCOL_CMD_QUERY_SERVO_ANGLE;
+  frame[3] = 4; /* 数据长度4 */
+
+  /* 填充角度数据（小端） */
+  frame[PROTOCOL_OFF_DATA]     = (uint8)(angle & 0xFF);
+  frame[PROTOCOL_OFF_DATA + 1] = (uint8)((angle >> 8) & 0xFF);
+  frame[PROTOCOL_OFF_DATA + 2] = (uint8)((angle >> 16) & 0xFF);
+  frame[PROTOCOL_OFF_DATA + 3] = (uint8)((angle >> 24) & 0xFF);
+
+  /* 数据区剩余清零 */
+  for (i = 4; i < PROTOCOL_DATA_MAX; i++)
+  {
+    frame[PROTOCOL_OFF_DATA + i] = 0;
+  }
+
+  /* 计算校验和 */
+  checksum                  = protocol_calculate_checksum(frame, PROTOCOL_OFF_CHECK);
+  frame[PROTOCOL_OFF_CHECK] = checksum;
+
+  /* 帧尾 */
+  frame[PROTOCOL_OFF_TAIL]     = PROTOCOL_TAIL_0;
+  frame[PROTOCOL_OFF_TAIL + 1] = PROTOCOL_TAIL_1;
+
+  /* 发送 */
+  bsp_uart_send_buffer(protocol->uart, frame, PROTOCOL_FRAME_SIZE);
+#else
+  (void)protocol;
+#endif
 }

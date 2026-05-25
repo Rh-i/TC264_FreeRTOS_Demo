@@ -1,8 +1,14 @@
 /**
  * @file device_motor.c
+ * @author Rh (qq:750920400)
  * @brief 电机设备驱动实现
+ * @version 0.1
+ * @date 2026-05-25
+ * 
  * @note 支持两种运动模式：纯速度、速度+时间
- * @date 2026-05-24
+ * 
+ * @copyright Copyright (c) 2026
+ * 
  */
 
 #include "device_motor.h"
@@ -281,20 +287,10 @@ void device_motor_all_init(void)
                     &bsp_encoder_tim2,
                     &bsp_pwm_motor,
                     P22_3,
-                    15.0f,    /* speed_kp */
-                    3.0f,     /* speed_ki */
-                    5.0f,     /* speed_kd */
-                    10000);   /* out_max */
-  pit_ms_init(CCU61_CH1, 20); // 开启处理电机pid的20ms一次的中断初始化
-}
-
-IFX_INTERRUPT(cc61_pit_ch1_isr, 0, CCU6_1_CH1_ISR_PRIORITY)
-{
-  interrupt_global_enable(0); // 开启中断嵌套
-
-  device_motor_update(&g_motor); // 20ms处理一次电机pid
-
-  pit_clear_flag(CCU61_CH1);
+                    45.0f,  /* speed_kp */
+                    1.6f,   /* speed_ki */
+                    22.0f,  /* speed_kd */
+                    10000); /* out_max */
 }
 
 #pragma section all restore

@@ -1,10 +1,3 @@
-/**
- * @file device_motor.h
- * @brief 电机设备驱动
- * @note 支持两种运动模式：纯速度、速度+时间
- * @date 2026-05-24
- */
-
 #ifndef DEVICE_MOTOR_H_
 #define DEVICE_MOTOR_H_
 

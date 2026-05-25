@@ -150,14 +150,15 @@ void test_task(void *pvParameters)
     // bsp_encoder_clear_count(&bsp_encoder_tim2) ;
     /* 电机编码器测试 */
 
-    /* 电机pid测试 - 已由 auto_ctrl 接管，注释掉以避免冲突 */
+    /* 电机pid测试 */
     // device_motor_set_speed_time(&g_motor, 100, 1000);
     // vTaskDelay(2000);
     // device_motor_set_speed_time(&g_motor, -60, 1000);
     // vTaskDelay(2000);
-    /* 电机pid测试 */
 
-    /*  */
+    // printf("0,-80,80,%d\n",(int32_t)SpeedPID_GetSpeed(&g_motor.speed_pid));
+    // vTaskDelay(10);
+    /* 电机pid测试 */
   }
 }
 
@@ -180,7 +181,7 @@ int core0_main(void)
 
   xTaskCreate(uart3_protocol_task, "uart3_protocol", 1024, NULL, 4, NULL); // 优先级越大越高 0~9
 
-  //  xTaskCreate(test_task, "test_task", 512, NULL, 4, NULL); // 优先级越大越高 0~9
+  xTaskCreate(test_task, "test_task", 512, NULL, 4, NULL); // 优先级越大越高 0~9
 
 
   start_freertos();

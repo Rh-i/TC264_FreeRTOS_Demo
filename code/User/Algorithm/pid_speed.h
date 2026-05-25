@@ -1,9 +1,3 @@
-/**
- * @file pid_speed.h
- * @brief 速度环PID控制器
- * @note 基于基础PID，用于控制电机速度（cm/s）
- */
-
 #ifndef PID_SPEED_H_
 #define PID_SPEED_H_
 

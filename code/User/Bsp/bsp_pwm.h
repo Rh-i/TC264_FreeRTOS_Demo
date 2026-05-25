@@ -1,8 +1,3 @@
-/**
- * @file bsp_pwm.h
- * @brief PWM 驱动 - 基于 GTM ATOM 的 PWM 输出
- */
-
 #ifndef BSP_PWM_H_
 #define BSP_PWM_H_
 

@@ -1,8 +1,13 @@
 /**
  * @file bsp_io.c
+ * @author Rh (qq:750920400)
  * @brief IO设备驱动实现 - 按键、蜂鸣器、LED
+ * @version 0.1
+ * @date 2026-05-25
+ *
+ * @copyright Copyright (c) 2026
+ *
  */
-
 #include "bsp_io.h"
 
 #pragma section all "cpu0_dsram"
@@ -22,7 +27,8 @@ Led led_1_dev;
 Led led_2_dev;
 
 /* LED设备 - P21_5 */
-// Led led_3_dev; // 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
+// 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
+// Led led_3_dev;
 
 /* LED设备 - P21_4 */
 Led led_4_dev;
@@ -64,22 +70,7 @@ void bsp_io_init(void)
   led_init_gpio(&led_4_dev);
   buzzer_init_gpio(&buzzer_dev);
 
-  pit_ms_init(CCU61_CH0, 1); // 开启处理key_scan的1ms一次的中断初始化
   /********** IO **********/
-}
-
-/**
- * @brief key使用到的中断回调 1ms触发一次
- *
- */
-IFX_INTERRUPT(cc61_pit_ch0_isr, 0, CCU6_1_CH0_ISR_PRIORITY)
-{
-  interrupt_global_enable(0); // 开启中断嵌套
-  pit_clear_flag(CCU61_CH0);
-
-  key_scan(&key_a_dev);
-  key_scan(&key_b_dev);
-  key_scan(&key_c_dev);
 }
 
 
