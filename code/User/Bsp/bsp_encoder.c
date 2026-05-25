@@ -8,6 +8,7 @@
  * @copyright Copyright (c) 2026
  *
  */
+
 #include "bsp_encoder.h"
 
 #pragma section all "cpu0_dsram"

@@ -14,7 +14,7 @@
 
 #pragma section all "cpu0_dsram"
 
-// 串口设备定义 
+// 串口设备定义
 struct BspUart bsp_uart0;
 struct BspUart bsp_uart1;
 struct BspUart bsp_uart2;
@@ -35,7 +35,7 @@ uint8 dat = 0;
  */
 void bsp_uart_rx_isr_handler(BspUart *uart)
 {
-  // 读取所有可用的数据并写入逐飞FIFO 
+  // 读取所有可用的数据并写入逐飞FIFO
   while (uart_query_byte(uart->uart_index, &dat))
   {
     fifo_write_buffer(&uart->rx_fifo, &dat, 1);
@@ -44,7 +44,7 @@ void bsp_uart_rx_isr_handler(BspUart *uart)
   if (uart == &NUC_MCU_UART && fifo_used(&uart->rx_fifo) >= 16)
   {
     gpio_toggle_level(P20_9);
-    // 给出接收完成信号量 
+    // 给出接收完成信号量
     xSemaphoreGiveFromISR(uart->rx_sem, NULL);
   }
 }
@@ -78,17 +78,17 @@ void bsp_uart_init(BspUart *uart, uart_index_enum uart_index, uint32 baud, uart_
   uart->rx_pin     = rx_pin;
   uart->baudrate   = baud;
 
-  // 初始化逐飞FIFO用于接收数据 
+  // 初始化逐飞FIFO用于接收数据
   fifo_init(&uart->rx_fifo, FIFO_DATA_8BIT, uart->rx_buffer, (uint32)rx_buf_size);
 
-  // 创建二值信号量 
+  // 创建二值信号量
   uart->rx_sem = xSemaphoreCreateBinary();
   configASSERT(uart->rx_sem != NULL);
 
-  // 初始化逐飞串口驱动 
+  // 初始化逐飞串口驱动
   uart_init(uart_index, baud, tx_pin, rx_pin);
 
-  // 启用接收中断 
+  // 启用接收中断
   bsp_uart_rx_interrupt_enable(uart_index);
 }
 

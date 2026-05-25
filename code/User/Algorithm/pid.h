@@ -56,4 +56,4 @@ float PID_Calculate(PID *pid, float target, float feedback);
  */
 void PID_Reset(PID *pid);
 
-#endif // __PID_H__ 
+#endif // __PID_H__

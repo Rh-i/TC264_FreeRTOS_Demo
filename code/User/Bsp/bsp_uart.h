@@ -7,10 +7,10 @@
 #include "zf_common_headfile.h"
 #include "zf_driver_uart.h"
 
-// 前向声明 
+// 前向声明
 struct BspUart;
 
-// 串口设备定义 
+// 串口设备定义
 extern struct BspUart bsp_uart0;
 extern struct BspUart bsp_uart1;
 extern struct BspUart bsp_uart2;

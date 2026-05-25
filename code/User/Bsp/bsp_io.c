@@ -33,7 +33,7 @@ Led led_2_dev;
 // LED设备 - P21_4
 Led led_4_dev;
 
-// 蜂鸣器设备 - P22_1 
+// 蜂鸣器设备 - P22_1
 Buzzer buzzer_dev;
 
 #pragma section all restore
@@ -50,13 +50,13 @@ void bsp_io_init(void)
   key_init(&key_b_dev, P23_1, 7);
   key_init(&key_c_dev, P32_4, 7);
 
-  // 初始化LED 
+  // 初始化LED
   led_init(&led_1_dev, P20_9, true);
   led_init(&led_2_dev, P20_8, true);
   // led_init(&led_3_dev, P21_5, true); // 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
   led_init(&led_4_dev, P21_4, true);
 
-  // 初始化蜂鸣器 
+  // 初始化蜂鸣器
   buzzer_init(&buzzer_dev, P22_1);
 
   // 初始化GPIO
@@ -123,7 +123,7 @@ void key_init_gpio(Key *key)
  */
 void key_scan(Key *key)
 {
-  // 按键按下检测 
+  // 按键按下检测
   if (gpio_get_level(key->pin) == 0)
   {
     key->filter_state++;
@@ -246,7 +246,7 @@ void buzzer_init(Buzzer *buzzer, gpio_pin_enum buzzer_pin)
  */
 void buzzer_deinit(Buzzer *buzzer)
 {
-  (void)buzzer; 
+  (void)buzzer;
 }
 
 /**

@@ -46,7 +46,7 @@ static uint32 get_system_time_ms(void)
  */
 static void motor_output_pwm(DeviceMotor *motor)
 {
-  // 方向控制 
+  // 方向控制
   if (motor->output > 0)
   {
     gpio_set_level(motor->dir_pin, MOTOR_DIR_REVERSE);
@@ -61,13 +61,13 @@ static void motor_output_pwm(DeviceMotor *motor)
     gpio_set_level(motor->dir_pin, MOTOR_DIR_REVERSE);
   }
 
-  // 限幅处理 
+  // 限幅处理
   if (motor->output > (int32)motor->max_output)
   {
     motor->output = motor->max_output;
   }
 
-  // 输出PWM 
+  // 输出PWM
   bsp_pwm_set_duty(motor->pwm, (uint32)motor->output);
 }
 
@@ -85,12 +85,12 @@ static uint8 check_motion_completed(DeviceMotor *motor)
       break;
 
     case MOTOR_MODE_SPEED:
-      // 纯速度模式持续运行，直到被停止 
+      // 纯速度模式持续运行，直到被停止
       completed = 0;
       break;
 
     case MOTOR_MODE_SPEED_TIME:
-      // 速度+时间模式：到达指定时间后完成 
+      // 速度+时间模式：到达指定时间后完成
       {
         uint32 elapsed = get_system_time_ms() - motor->motion.start_time;
         if (elapsed >= motor->motion.target_time)
@@ -125,7 +125,7 @@ void device_motor_init(DeviceMotor *motor, BspEncoder *encoder, BspPwm *pwm, gpi
   motor->output       = 0;
   motor->actual_speed = 0;
 
-  // 初始化运动状态 
+  // 初始化运动状态
   motor->motion.mode         = MOTOR_MODE_STOP;
   motor->motion.target_speed = 0;
   motor->motion.target_time  = 0;
@@ -133,10 +133,10 @@ void device_motor_init(DeviceMotor *motor, BspEncoder *encoder, BspPwm *pwm, gpi
   motor->motion.is_active    = 0;
   motor->motion.is_completed = 0;
 
-  // 初始化速度环PID 
+  // 初始化速度环PID
   SpeedPID_Init(&motor->speed_pid, speed_kp, speed_ki, speed_kd, (float)out_max);
 
-  // 初始化方向控制引脚 
+  // 初始化方向控制引脚
   gpio_init(dir_pin, GPO, GPIO_LOW, GPO_PUSH_PULL);
 }
 
@@ -190,30 +190,30 @@ uint8 device_motor_update(DeviceMotor *motor)
 {
   int16 delta_count;
 
-  // 读取编码器获取增量 
+  // 读取编码器获取增量
   delta_count = (int16)bsp_encoder_get_count(motor->encoder);
   bsp_encoder_clear_count(motor->encoder);
 
-  // 电机未使能则停止 
+  // 电机未使能则停止
   if (motor->enabled == 0)
   {
     device_motor_stop(motor);
     return 1;
   }
 
-  // 检查运动是否完成 
+  // 检查运动是否完成
   if (motor->motion.is_active)
   {
     if (check_motion_completed(motor))
     {
-      // 运动完成，真正停止电机 
+      // 运动完成，真正停止电机
       device_motor_stop(motor);
 
       return 1;
     }
   }
 
-  // 根据运动模式计算PID输出 
+  // 根据运动模式计算PID输出
   switch (motor->motion.mode)
   {
     case MOTOR_MODE_STOP:
@@ -222,13 +222,13 @@ uint8 device_motor_update(DeviceMotor *motor)
 
     case MOTOR_MODE_SPEED:
     case MOTOR_MODE_SPEED_TIME:
-      // 速度模式：使用速度环PID  
+      // 速度模式：使用速度环PID
       {
         float pwm_out = SpeedPID_Calculate(&motor->speed_pid,
                                            (float)motor->motion.target_speed,
                                            delta_count);
         motor->output = (int32)pwm_out;
-        // 更新实际速度 
+        // 更新实际速度
         motor->actual_speed = motor->speed_pid.speed_cm_s;
       }
       break;
@@ -238,7 +238,7 @@ uint8 device_motor_update(DeviceMotor *motor)
       break;
   }
 
-  // 输出PWM 
+  // 输出PWM
   motor_output_pwm(motor);
 
   return 0;
