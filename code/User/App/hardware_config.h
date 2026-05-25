@@ -13,7 +13,7 @@
 #define __HARDWARE_CONFIG_H__
 
 // 上下位机通讯使用串口
-#define NUC_MCU_UART bsp_uart3
+#define NUC_MCU_UART bsp_uart0
 
 // 上下位机通讯串口是否启用响应帧
 // #define PROTOCOL_DISABLE_RESPONSE

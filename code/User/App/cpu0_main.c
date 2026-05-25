@@ -18,6 +18,7 @@
 #include "task.h"
 
 #include "app_cfg.h"
+#include "hardware_config.h"
 
 #pragma section all "cpu0_dsram"
 
@@ -126,63 +127,21 @@ void uart3_protocol_task(void *pvParameters)
 }
 
 
-void test_task(void *pvParameters)
-{
-  (void)pvParameters;
-
-  // char msg[64];
-
-  while (1)
-  {
-    // 电机和舵机测试
-    // bsp_pwm_set_duty(&bsp_pwm_motor,1000);
-
-    // bsp_pwm_set_duty(&bsp_pwm_servo1,4750); // 机械中值 0°
-    // device_servo_set_angle(&g_servo, -35);
-    // device_servo_set_angle(&g_servo,35);
-    // 电机和舵机测试
-
-
-    // 电机编码器测试
-    // int count = bsp_encoder_get_count(&bsp_encoder_tim2);
-    // sprintf(msg, "cnt: %d\n", count);
-    // bsp_uart_send_string(&bsp_uart0,msg);
-    // bsp_encoder_clear_count(&bsp_encoder_tim2) ;
-    // 电机编码器测试
-
-    // 电机pid测试
-    // device_motor_set_speed_time(&g_motor, 100, 1000);
-    // vTaskDelay(2000);
-    // device_motor_set_speed_time(&g_motor, -60, 1000);
-    // vTaskDelay(2000);
-
-    // printf("0,-80,80,%d\n",(int32_t)SpeedPID_GetSpeed(&g_motor.speed_pid));
-    // vTaskDelay(10);
-    // 电机pid测试
-  }
-}
-
 /**
  * @brief CPU0主函数
  */
 int core0_main(void)
 {
-  clock_init(); // 获取时钟频率
-
+  clock_init();           // 获取时钟频率
   cpu_wait_event_ready(); // 等待所有核心初始化完毕
-
-  user_init(); // 用户的初始化
-
+  user_init();            // 用户的初始化
 
   xTaskCreate(led_task, "led", 64, NULL, 2, NULL);    // 优先级越大越高 0~9
   xTaskCreate(key1_task, "key1", 256, NULL, 3, NULL); // 优先级越大越高 0~9
   xTaskCreate(key2_task, "key2", 256, NULL, 3, NULL); // 优先级越大越高 0~9
   xTaskCreate(key3_task, "key3", 256, NULL, 3, NULL); // 优先级越大越高 0~9
 
-  xTaskCreate(uart3_protocol_task, "uart3_protocol", 1024, NULL, 4, NULL); // 优先级越大越高 0~9
-
-  xTaskCreate(test_task, "test_task", 512, NULL, 4, NULL); // 优先级越大越高 0~9
-
+  xTaskCreate(uart3_protocol_task, "u3_p", 1024, NULL, 4, NULL); // 优先级越大越高 0~9
 
   start_freertos();
 
