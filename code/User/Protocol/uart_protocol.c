@@ -11,6 +11,7 @@
 
 #include "uart_protocol.h"
 #include "hardware_config.h"
+#include "bsp_io.h"
 
 /*==============================================================================
  * 内部函数声明
@@ -220,6 +221,27 @@ static uint8_t protocol_parse_frame(UartProtocol *protocol)
     case PROTOCOL_CMD_QUERY_SERVO_ANGLE:
       // 查询舵机角度：回复当前角度
       protocol_send_query_servo_angle(protocol);
+      return 0;
+      break;
+
+    case PROTOCOL_CMD_KEY_A_SEM:
+      protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
+      // 给出key_a信号量
+      xSemaphoreGive(key_get_semaphore(&key_a_dev));
+      return 0;
+      break;
+
+    case PROTOCOL_CMD_KEY_B_SEM:
+      protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
+      // 给出key_b信号量
+      xSemaphoreGive(key_get_semaphore(&key_b_dev));
+      return 0;
+      break;
+
+    case PROTOCOL_CMD_KEY_C_SEM:
+      protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
+      // 给出key_c信号量
+      xSemaphoreGive(key_get_semaphore(&key_c_dev));
       return 0;
       break;
 

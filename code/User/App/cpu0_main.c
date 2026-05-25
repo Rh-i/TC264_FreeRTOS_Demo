@@ -105,6 +105,7 @@ void key3_task(void *pvParameters)
 /**
  * @brief 上下位机通讯串口接收处理任务，串口3
  * @note  接收的是中断接收存入fifo的数据，进行解包处理
+ *        解包失败响300ms的蜂鸣器
  *
  * @param pvParameters
  */
@@ -121,7 +122,10 @@ void uart3_protocol_task(void *pvParameters)
     }
     else
     {
-      gpio_toggle_level(P20_9);
+      // 蜂鸣器响300ms
+      buzzer_on(&buzzer_dev);
+      vTaskDelay(300);
+      buzzer_off(&buzzer_dev);
     }
   }
 }

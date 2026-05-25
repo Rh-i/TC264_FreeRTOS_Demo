@@ -44,6 +44,9 @@ typedef enum
   PROTOCOL_CMD_STOP              = 0x04, // 紧急停止
   PROTOCOL_CMD_SET_SERVO_ANGLE   = 0x05, // 设置舵机角度
   PROTOCOL_CMD_QUERY_SERVO_ANGLE = 0x06, // 查询舵机角度
+  PROTOCOL_CMD_KEY_A_SEM         = 0x07, // 给出key_a信号量
+  PROTOCOL_CMD_KEY_B_SEM         = 0x08, // 给出key_b信号量
+  PROTOCOL_CMD_KEY_C_SEM         = 0x09, // 给出key_c信号量
 } ProtocolCmd;
 
 /*==============================================================================

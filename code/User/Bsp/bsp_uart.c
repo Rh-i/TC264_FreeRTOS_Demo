@@ -43,7 +43,6 @@ void bsp_uart_rx_isr_handler(BspUart *uart)
 
   if (uart == &NUC_MCU_UART && fifo_used(&uart->rx_fifo) >= 16)
   {
-    gpio_toggle_level(P20_9);
     // 给出接收完成信号量
     xSemaphoreGiveFromISR(uart->rx_sem, NULL);
   }
