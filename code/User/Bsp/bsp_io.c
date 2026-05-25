@@ -11,29 +11,29 @@
 #include "bsp_io.h"
 
 #pragma section all "cpu0_dsram"
-/* 按键设备 - P22_0 */
+// 按键设备 - P22_0
 Key key_a_dev;
 
-/* 按键设备 - P23_1 */
+// 按键设备 - P23_1
 Key key_b_dev;
 
-/* 按键设备 - P32_4 */
+// 按键设备 - P32_4
 Key key_c_dev;
 
-/* LED设备 - P20_9 */
+// LED设备 - P20_9
 Led led_1_dev;
 
-/* LED设备 - P20_8 */
+// LED设备 - P20_8
 Led led_2_dev;
 
-/* LED设备 - P21_5 */
+// LED设备 - P21_5
 // 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
 // Led led_3_dev;
 
-/* LED设备 - P21_4 */
+// LED设备 - P21_4
 Led led_4_dev;
 
-/* 蜂鸣器设备 - P22_1 */
+// 蜂鸣器设备 - P22_1 
 Buzzer buzzer_dev;
 
 #pragma section all restore
@@ -45,22 +45,21 @@ Buzzer buzzer_dev;
  */
 void bsp_io_init(void)
 {
-  /********** IO **********/
-  /* 初始化按键 */
+  // 初始化按键
   key_init(&key_a_dev, P22_0, 7);
   key_init(&key_b_dev, P23_1, 7);
   key_init(&key_c_dev, P32_4, 7);
 
-  /* 初始化LED */
+  // 初始化LED 
   led_init(&led_1_dev, P20_9, true);
   led_init(&led_2_dev, P20_8, true);
   // led_init(&led_3_dev, P21_5, true); // 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
   led_init(&led_4_dev, P21_4, true);
 
-  /* 初始化蜂鸣器 */
+  // 初始化蜂鸣器 
   buzzer_init(&buzzer_dev, P22_1);
 
-  /* 初始化GPIO */
+  // 初始化GPIO
   key_init_gpio(&key_a_dev);
   key_init_gpio(&key_b_dev);
   key_init_gpio(&key_c_dev);
@@ -69,8 +68,6 @@ void bsp_io_init(void)
   // led_init_gpio(&led_3_dev); // 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
   led_init_gpio(&led_4_dev);
   buzzer_init_gpio(&buzzer_dev);
-
-  /********** IO **********/
 }
 
 
@@ -126,7 +123,7 @@ void key_init_gpio(Key *key)
  */
 void key_scan(Key *key)
 {
-  /* 按键按下检测 */
+  // 按键按下检测 
   if (gpio_get_level(key->pin) == 0)
   {
     key->filter_state++;
@@ -249,7 +246,7 @@ void buzzer_init(Buzzer *buzzer, gpio_pin_enum buzzer_pin)
  */
 void buzzer_deinit(Buzzer *buzzer)
 {
-  (void)buzzer; /* 不需要释放资源 */
+  (void)buzzer; 
 }
 
 /**

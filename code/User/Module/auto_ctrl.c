@@ -52,10 +52,10 @@ void auto_ctrl_disable(void)
 {
   g_auto_ctrl.state = AUTO_CTRL_STATE_DISABLED;
 
-  /* 停止电机 */
+  // 停止电机
   device_motor_stop(&g_motor);
 
-  /* 设置协议层为 IDLE 模式 */
+  // 设置协议层为 IDLE 模式
   SlaveStatus *status = uart_protocol_get_status(&g_uart_protocol);
   if (status != NULL)
   {
@@ -72,34 +72,34 @@ void auto_ctrl_update(void)
 {
   SlaveStatus *status;
 
-  /* 未启用则不处理 */
+  // 未启用则不处理
   if (g_auto_ctrl.state != AUTO_CTRL_STATE_ENABLED)
   {
     return;
   }
 
-  /* 获取协议层状态 */
+  // 获取协议层状态
   status = uart_protocol_get_status(&g_uart_protocol);
   if (status == NULL)
   {
     return;
   }
 
-  /* 根据模式控制电机 */
+  // 根据模式控制电机
   switch (status->mode)
   {
     case PROTOCOL_MODE_IDLE:
-      /* 空闲模式，停止电机 */
+      // 空闲模式，停止电机
       device_motor_stop(&g_motor);
       break;
 
     case PROTOCOL_MODE_SPEED:
-      /* 速度模式，设置目标速度 */
+      // 速度模式，设置目标速度
       device_motor_set_speed(&g_motor, status->target_speed);
       break;
 
     case PROTOCOL_MODE_SPEED_TIME:
-      /* 速度-时间模式，设置速度和时间 */
+      // 速度-时间模式，设置速度和时间
       device_motor_set_speed_time(&g_motor, status->target_speed, (uint32)status->target_time);
       break;
 
@@ -107,7 +107,7 @@ void auto_ctrl_update(void)
       break;
   }
 
-  /* 更新 prev_busy 状态 */
+  // 更新 prev_busy 状态
   g_auto_ctrl.prev_busy = (uint8)(device_motor_is_completed(&g_motor) == 0);
 }
 

@@ -4,9 +4,9 @@
  * @brief cpu1的主函数
  * @version 0.1
  * @date 2026-05-25
- * 
+ *
  * @copyright Copyright (c) 2026
- * 
+ *
  */
 
 #include "zf_common_headfile.h"
@@ -21,7 +21,7 @@ void core1_main(void)
   cpu_wait_event_ready(); // 等待所有核心初始化完毕
   while (1)
   {
-    // printf("ENCODER_QUADDEC counter \t%d .\r\n", encoder_data_quaddec);     // 输出编码器计数信息
+
   }
 }
 

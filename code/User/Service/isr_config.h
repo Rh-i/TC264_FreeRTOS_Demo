@@ -4,13 +4,13 @@
  * @brief 此文件为中断服务处理设置位置，可以设置优先级和哪个cpu处理
  * @version 0.1
  * @date 2026-05-25
- * 
+ *
  * @copyright Copyright (c) 2026
- * 
+ *
  */
 
-#ifndef _isr_config_h
-#define _isr_config_h
+#ifndef __ISR_CONFIG_H__
+#define __ISR_CONFIG_H__
 
 // 中断优先级不能设置为相同值，所有中断优先级都必须设置为不一样的值
 
@@ -85,4 +85,4 @@
 #define UART3_ER_INT_PRIO 21              // 定义串口3错误中断优先级 优先级范围1-255 越大优先级越高 与平时使用的单片机不一样
 
 
-#endif
+#endif // __ISR_CONFIG_H__

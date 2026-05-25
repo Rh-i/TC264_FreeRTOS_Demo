@@ -4,9 +4,9 @@
  * @brief 实现了pwm驱动，很简陋
  * @version 0.1
  * @date 2026-05-25
- * 
+ *
  * @copyright Copyright (c) 2026
- * 
+ *
  */
 #include "bsp_pwm.h"
 
@@ -16,9 +16,9 @@
  * PWM 设备定义
  *============================================================================*/
 
-/* 示例 PWM 设备 */
-struct BspPwm bsp_pwm_servo1; /* 舵机 PWM */
-struct BspPwm bsp_pwm_motor;  /* 电机 PWM */
+// PWM 设备 
+struct BspPwm bsp_pwm_servo1; // 舵机 PWM 
+struct BspPwm bsp_pwm_motor;  // 电机 PWM 
 
 #pragma section all restore
 
@@ -39,7 +39,7 @@ void bsp_pwm_init(BspPwm *pwm, pwm_channel_enum channel, uint32 freq, uint32 dut
   pwm->frequency = freq;
   pwm->duty      = duty;
 
-  /* 初始化逐飞 PWM 驱动 */
+  // 初始化逐飞 PWM 驱动 
   pwm_init(channel, freq, duty);
 }
 
@@ -88,9 +88,9 @@ void bsp_pwm_all_stop(void)
  */
 void bsp_pwm_all_init(void)
 {
-  /* 舵机 PWM - ATOM0_CH3_P21_5, 330Hz, 初始占空比 4750 (中值1500μs) */
+  // 舵机 PWM - ATOM0_CH3_P21_5, 330Hz, 初始占空比 4750 (中值1500μs) 
   bsp_pwm_init(&bsp_pwm_servo1, ATOM0_CH3_P21_5, 330, 4750);
 
-  /* 电机 PWM - ATOM1_CH0_P21_2, 1000Hz, 初始占空比 0 */
+  // 电机 PWM - ATOM1_CH0_P21_2, 1000Hz, 初始占空比 0 
   bsp_pwm_init(&bsp_pwm_motor, ATOM1_CH0_P21_2, 1000, 0);
 }

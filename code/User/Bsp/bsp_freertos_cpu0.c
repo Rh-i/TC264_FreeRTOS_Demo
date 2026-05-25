@@ -4,9 +4,9 @@
  * @brief 启动FreeRTOS,以及相关的定时器、时钟中断配置
  * @version 0.1
  * @date 2026-05-25
- * 
+ *
  * @copyright Copyright (c) 2026
- * 
+ *
  */
 
 #include "Compilers.h"
@@ -63,9 +63,9 @@ IFX_INTERRUPT(OsTasks_TickProvider, 0, configKERNEL_INTERRUPT_PRIORITY)
  */
 void start_freertos(void)
 {
-  /* Set the Kernel interrupt and timer interrupt */
+  // Set the Kernel interrupt and timer interrupt
   OsTasks_setupTimerInterrupt(&MODULE_STM0);
 
-  /* Start the tasks running. */
+  // Start the tasks running.
   vTaskStartScheduler();
 }

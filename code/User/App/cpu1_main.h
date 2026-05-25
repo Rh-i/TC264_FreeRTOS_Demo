@@ -1,4 +1,4 @@
-#ifndef CPU1_MAIN_H
-#define CPU1_MAIN_H
+#ifndef __CPU1_MAIN_H__
+#define __CPU1_MAIN_H__
 
-#endif // CPU1_MAIN_H
+#endif // __CPU1_MAIN_H__

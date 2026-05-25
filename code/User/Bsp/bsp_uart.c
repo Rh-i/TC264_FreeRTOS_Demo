@@ -4,18 +4,17 @@
  * @brief 串口驱动实现。很简陋，无锁。接收是中断逐字节接收。发送是阻塞发送
  * @version 0.1
  * @date 2026-05-25
- * 
+ *
  * @copyright Copyright (c) 2026
- * 
+ *
  */
 
 #include "bsp_uart.h"
-#include "isr_config.h"
 #include "hardware_config.h"
 
 #pragma section all "cpu0_dsram"
 
-/* 串口设备定义 */
+// 串口设备定义 
 struct BspUart bsp_uart0;
 struct BspUart bsp_uart1;
 struct BspUart bsp_uart2;
@@ -36,17 +35,16 @@ uint8 dat = 0;
  */
 void bsp_uart_rx_isr_handler(BspUart *uart)
 {
-  /* 读取所有可用的数据并写入逐飞FIFO */
+  // 读取所有可用的数据并写入逐飞FIFO 
   while (uart_query_byte(uart->uart_index, &dat))
   {
     fifo_write_buffer(&uart->rx_fifo, &dat, 1);
   }
 
-  // TODO 此处要根据串口协议使用的串口来进行修改
   if (uart == &NUC_MCU_UART && fifo_used(&uart->rx_fifo) >= 16)
   {
     gpio_toggle_level(P20_9);
-    /* 给出接收完成信号量 */
+    // 给出接收完成信号量 
     xSemaphoreGiveFromISR(uart->rx_sem, NULL);
   }
 }
@@ -80,17 +78,17 @@ void bsp_uart_init(BspUart *uart, uart_index_enum uart_index, uint32 baud, uart_
   uart->rx_pin     = rx_pin;
   uart->baudrate   = baud;
 
-  /* 初始化逐飞FIFO用于接收数据 */
+  // 初始化逐飞FIFO用于接收数据 
   fifo_init(&uart->rx_fifo, FIFO_DATA_8BIT, uart->rx_buffer, (uint32)rx_buf_size);
 
-  /* 创建二值信号量 */
+  // 创建二值信号量 
   uart->rx_sem = xSemaphoreCreateBinary();
   configASSERT(uart->rx_sem != NULL);
 
-  /* 初始化逐飞串口驱动 */
+  // 初始化逐飞串口驱动 
   uart_init(uart_index, baud, tx_pin, rx_pin);
 
-  /* 启用接收中断 */
+  // 启用接收中断 
   bsp_uart_rx_interrupt_enable(uart_index);
 }
 
@@ -100,7 +98,7 @@ void bsp_uart_init(BspUart *uart, uart_index_enum uart_index, uint32 baud, uart_
  */
 void bsp_uart_deinit(BspUart *uart)
 {
-  (void)uart; /* 逐飞FIFO无需释放 */
+  (void)uart; // 逐飞FIFO无需释放
 }
 
 /**
@@ -174,16 +172,16 @@ BaseType_t bsp_uart_wait(BspUart *uart, TickType_t timeout)
  */
 void bsp_uart_all_init(void)
 {
-  /* 串口初始化 - 使用默认配置示例 */
-  /* UART0: 波特率115200, TX=P14_0, RX=P14_1, FIFO缓冲区64字节 */
+  // 串口初始化 - 使用默认配置示例
+  // UART0: 波特率115200, TX=P14_0, RX=P14_1, FIFO缓冲区64字节
   bsp_uart_init(&bsp_uart0, UART_0, 115200, UART0_TX_P14_0, UART0_RX_P14_1, 64);
 
-  /* UART1: 波特率115200, TX=P15_0, RX=P15_1, FIFO缓冲区64字节 */
+  // UART1: 波特率115200, TX=P15_0, RX=P15_1, FIFO缓冲区64字节
   bsp_uart_init(&bsp_uart1, UART_1, 115200, UART1_TX_P15_0, UART1_RX_P15_1, 64);
 
-  /* UART2: 波特率115200, TX=P02_0, RX=P02_1, FIFO缓冲区64字节 */
+  // UART2: 波特率115200, TX=P02_0, RX=P02_1, FIFO缓冲区64字节
   bsp_uart_init(&bsp_uart2, UART_2, 115200, UART2_TX_P14_2, UART2_RX_P14_3, 64);
 
-  /* UART3: 波特率115200, TX=P00_0, RX=P00_1, FIFO缓冲区64字节 */
+  // UART3: 波特率115200, TX=P00_0, RX=P00_1, FIFO缓冲区64字节
   bsp_uart_init(&bsp_uart3, UART_3, 115200, UART3_TX_P00_0, UART3_RX_P00_1, 64);
 }

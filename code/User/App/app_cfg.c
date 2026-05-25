@@ -24,8 +24,9 @@ void user_init(void)
   bsp_uart_all_init();                                 // 初始化四个串口）
   uart_protocol_init(&g_uart_protocol, &NUC_MCU_UART); // 初始化上下位机串口协议
 
-  bsp_pwm_all_init();      // 初始化舵机和电机的pwm
-  device_servo_all_init(); // 初始化舵机
+  bsp_pwm_all_init();               // 初始化舵机和电机的pwm
+  device_servo_all_init();          // 初始化舵机
+  device_servo_enable(&g_servo, 1); // 使能舵机
 
   bsp_encoder_all_init();           // 初始化编码器
   device_motor_all_init();          // 初始化电机

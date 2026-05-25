@@ -1,5 +1,5 @@
-#ifndef PID_H_
-#define PID_H_
+#ifndef __PID_H__
+#define __PID_H__
 
 #include "zf_common_headfile.h"
 
@@ -9,21 +9,21 @@
  *============================================================================*/
 typedef struct
 {
-  float kp; /**< 比例系数 */
-  float ki; /**< 积分系数 */
-  float kd; /**< 微分系数 */
+  float kp; // 比例系数
+  float ki; // 积分系数
+  float kd; // 微分系数
 
-  float target;   /**< 目标值 */
-  float feedback; /**< 反馈值 */
-  float error;    /**< 误差 */
+  float target;   // 目标值
+  float feedback; // 反馈值
+  float error;    // 误差
 
-  float integral;     /**< 积分累计 */
-  float integral_max; /**< 积分限幅 */
+  float integral;     // 积分累计
+  float integral_max; // 积分限幅
 
-  float output;     /**< PID输出 */
-  float output_max; /**< 输出限幅 */
+  float output;     // PID输出
+  float output_max; // 输出限幅
 
-  float last_error; /**< 上次误差 */
+  float last_error; // 上次误差
 } PID;
 
 /*==============================================================================
@@ -56,4 +56,4 @@ float PID_Calculate(PID *pid, float target, float feedback);
  */
 void PID_Reset(PID *pid);
 
-#endif /* PID_H_ */
+#endif // __PID_H__ 

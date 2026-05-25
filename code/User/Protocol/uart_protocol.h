@@ -3,8 +3,8 @@
  * @brief UART串口协议 - 从机实现，基于固定16字节帧格式
  */
 
-#ifndef UART_PROTOCOL_H_
-#define UART_PROTOCOL_H_
+#ifndef __UART_PROTOCOL_H__
+#define __UART_PROTOCOL_H__
 
 #include "bsp_uart.h"
 
@@ -12,38 +12,38 @@
  * 常量定义
  *============================================================================*/
 
-/* 帧格式常量 */
-#define PROTOCOL_FRAME_SIZE 16 /**< 固定帧长度 */
-#define PROTOCOL_DATA_MAX 9    /**< 最大数据长度 */
+// 帧格式常量
+#define PROTOCOL_FRAME_SIZE 16 // 固定帧长度
+#define PROTOCOL_DATA_MAX 9    // 最大数据长度
 
-/* 帧头帧尾 */
-#define PROTOCOL_HEAD_0 0xAA /**< 帧头字节1 */
-#define PROTOCOL_HEAD_1 0x55 /**< 帧头字节2 */
-#define PROTOCOL_TAIL_0 0xBB /**< 帧尾字节1 */
-#define PROTOCOL_TAIL_1 0x66 /**< 帧尾字节2 */
+// 帧头帧尾
+#define PROTOCOL_HEAD_0 0xAA // 帧头字节1
+#define PROTOCOL_HEAD_1 0x55 // 帧头字节2
+#define PROTOCOL_TAIL_0 0xBB // 帧尾字节1
+#define PROTOCOL_TAIL_1 0x66 // 帧尾字节2
 
-/* 帧内偏移 */
-#define PROTOCOL_OFF_CMD 2    /**< 命令码偏移 */
-#define PROTOCOL_OFF_LEN 3    /**< 数据长度偏移 */
-#define PROTOCOL_OFF_DATA 4   /**< 数据区偏移 */
-#define PROTOCOL_OFF_CHECK 13 /**< 校验字节偏移 */
-#define PROTOCOL_OFF_TAIL 14  /**< 帧尾偏移 */
+// 帧内偏移
+#define PROTOCOL_OFF_CMD 2    // 命令码偏移
+#define PROTOCOL_OFF_LEN 3    // 数据长度偏移
+#define PROTOCOL_OFF_DATA 4   // 数据区偏移
+#define PROTOCOL_OFF_CHECK 13 // 校验字节偏移
+#define PROTOCOL_OFF_TAIL 14  // 帧尾偏移
 
-/* 默认值 */
-#define PROTOCOL_DEFAULT_SPEED     40    /**< 默认速度 cm/s */
-#define PROTOCOL_DEFAULT_SERVO_ANGLE 0   /**< 默认舵机角度 ° */
+// 默认值
+#define PROTOCOL_DEFAULT_SPEED 40      // 默认速度 cm/s
+#define PROTOCOL_DEFAULT_SERVO_ANGLE 0 // 默认舵机角度 °
 
 /*==============================================================================
  * 命令码定义
  *============================================================================*/
 typedef enum
 {
-  PROTOCOL_CMD_SET_SPEED          = 0x01, /**< 设置目标速度 */
-  PROTOCOL_CMD_QUERY_SPEED        = 0x02, /**< 查询当前速度 */
-  PROTOCOL_CMD_SPEED_TIME         = 0x03, /**< 速度-时间模式 */
-  PROTOCOL_CMD_STOP               = 0x04, /**< 紧急停止 */
-  PROTOCOL_CMD_SET_SERVO_ANGLE    = 0x05, /**< 设置舵机角度 */
-  PROTOCOL_CMD_QUERY_SERVO_ANGLE  = 0x06, /**< 查询舵机角度 */
+  PROTOCOL_CMD_SET_SPEED         = 0x01, // 设置目标速度
+  PROTOCOL_CMD_QUERY_SPEED       = 0x02, // 查询当前速度
+  PROTOCOL_CMD_SPEED_TIME        = 0x03, // 速度-时间模式
+  PROTOCOL_CMD_STOP              = 0x04, // 紧急停止
+  PROTOCOL_CMD_SET_SERVO_ANGLE   = 0x05, // 设置舵机角度
+  PROTOCOL_CMD_QUERY_SERVO_ANGLE = 0x06, // 查询舵机角度
 } ProtocolCmd;
 
 /*==============================================================================
@@ -51,9 +51,9 @@ typedef enum
  *============================================================================*/
 typedef enum
 {
-  PROTOCOL_MODE_IDLE       = 0x00, /**< 空闲模式 */
-  PROTOCOL_MODE_SPEED      = 0x01, /**< 速度模式 */
-  PROTOCOL_MODE_SPEED_TIME = 0x03, /**< 速度-时间模式 */
+  PROTOCOL_MODE_IDLE       = 0x00, // 空闲模式
+  PROTOCOL_MODE_SPEED      = 0x01, // 速度模式
+  PROTOCOL_MODE_SPEED_TIME = 0x03, // 速度-时间模式
 } ProtocolMode;
 
 /*==============================================================================
@@ -61,8 +61,8 @@ typedef enum
  *============================================================================*/
 typedef enum
 {
-  PROTOCOL_STATUS_OK  = 0x00, /**< 成功 */
-  PROTOCOL_STATUS_ERR = 0x01, /**< 通用错误 */
+  PROTOCOL_STATUS_OK  = 0x00, // 成功
+  PROTOCOL_STATUS_ERR = 0x01, // 通用错误
 } ProtocolStatus;
 
 /*==============================================================================
@@ -70,9 +70,9 @@ typedef enum
  *============================================================================*/
 typedef enum
 {
-  PROTOCOL_STATE_IDLE   = 0, /**< 等待帧头0xAA */
-  PROTOCOL_STATE_HEADER = 1, /**< 等待帧头0x55 */
-  PROTOCOL_STATE_DATA   = 2, /**< 接收数据 */
+  PROTOCOL_STATE_IDLE   = 0, // 等待帧头0xAA
+  PROTOCOL_STATE_HEADER = 1, // 等待帧头0x55
+  PROTOCOL_STATE_DATA   = 2, // 接收数据
 } ProtocolState;
 
 /*==============================================================================
@@ -85,13 +85,13 @@ typedef enum
  */
 typedef struct
 {
-  int32        target_speed;   /**< 目标速度 cm/s */
-  int32        target_time;    /**< 目标时间 ms */
-  int32        target_angle;   /**< 目标舵机角度 ° */
-  ProtocolMode mode;          /**< 当前控制模式 */
+  int32        target_speed; // 目标速度 cm/s
+  int32        target_time;  // 目标时间 ms
+  int32        target_angle; // 目标舵机角度 °
+  ProtocolMode mode;         // 当前控制模式
 } SlaveStatus;
 
-/* 前向声明 */
+// 前向声明
 struct BspUart;
 
 /**
@@ -100,11 +100,11 @@ struct BspUart;
  */
 typedef struct
 {
-  struct BspUart *uart;                         /**< 串口设备指针 */
-  ProtocolState  state;                         /**< 状态机状态 */
-  uint8          rx_buffer[PROTOCOL_FRAME_SIZE]; /**< 接收缓冲区 */
-  uint8          rx_index;                      /**< 接收索引 */
-  SlaveStatus    status;                        /**< 从机状态 */
+  struct BspUart *uart;                           // 串口设备指针
+  ProtocolState   state;                          // 状态机状态
+  uint8           rx_buffer[PROTOCOL_FRAME_SIZE]; // 接收缓冲区
+  uint8           rx_index;                       // 接收索引
+  SlaveStatus     status;                         // 从机状态
 } UartProtocol;
 
 /*==============================================================================
@@ -136,4 +136,4 @@ SlaveStatus *uart_protocol_get_status(UartProtocol *protocol);
  *============================================================================*/
 extern UartProtocol g_uart_protocol;
 
-#endif /* UART_PROTOCOL_H_ */
+#endif // __UART_PROTOCOL_H__

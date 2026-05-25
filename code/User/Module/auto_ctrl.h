@@ -1,5 +1,5 @@
-#ifndef AUTO_CTRL_H_
-#define AUTO_CTRL_H_
+#ifndef __AUTO_CTRL_H__
+#define __AUTO_CTRL_H__
 
 #include "FreeRTOS.h"
 #include "device_motor.h"
@@ -15,8 +15,8 @@
  */
 typedef enum
 {
-  AUTO_CTRL_STATE_DISABLED = 0, /**< 自动控制未启用 */
-  AUTO_CTRL_STATE_ENABLED  = 1, /**< 自动控制已启用 */
+  AUTO_CTRL_STATE_DISABLED = 0, // 自动控制未启用
+  AUTO_CTRL_STATE_ENABLED  = 1, // 自动控制已启用
 } AutoCtrlState;
 
 /*==============================================================================
@@ -28,9 +28,9 @@ typedef enum
  */
 typedef struct
 {
-  AutoCtrlState state;          /**< 当前状态 */
-  uint8         prev_busy;      /**< 上次运动是否进行中（用于检测完成） */
-  uint8         is_initialized; /**< 初始化标志 */
+  AutoCtrlState state;          // 当前状态
+  uint8         prev_busy;      // 上次运动是否进行中（用于检测完成）
+  uint8         is_initialized; // 初始化标志
 } AutoCtrl;
 
 /*==============================================================================
@@ -71,4 +71,4 @@ uint8 auto_ctrl_is_enabled(void);
  *============================================================================*/
 extern AutoCtrl g_auto_ctrl;
 
-#endif /* AUTO_CTRL_H_ */
+#endif // __AUTO_CTRL_H__

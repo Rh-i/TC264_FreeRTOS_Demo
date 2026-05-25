@@ -1,5 +1,5 @@
-#ifndef DEVICE_SERVO_H_
-#define DEVICE_SERVO_H_
+#ifndef __DEVICE_SERVO_H__
+#define __DEVICE_SERVO_H__
 
 #include "bsp_pwm.h"
 #include "zf_common_headfile.h"
@@ -10,14 +10,14 @@
  *============================================================================*/
 typedef struct DeviceServo
 {
-  BspPwm *pwm;       /**< PWM 设备指针 */
-  uint32  duty_min;  /**< 最小占空比 */
-  uint32  duty_max;  /**< 最大占空比 */
-  uint32  duty_mid;  /**< 中值占空比（对应 0°） */
-  int32   angle;     /**< 当前角度值 */
-  int32   angle_min; /**< 最小角度 */
-  int32   angle_max; /**< 最大角度 */
-  uint8   enabled;   /**< 使能标志 */
+  BspPwm *pwm;       // PWM 设备指针
+  uint32  duty_min;  // 最小占空比
+  uint32  duty_max;  // 最大占空比
+  uint32  duty_mid;  // 中值占空比（对应 0°）
+  int32   angle;     // 当前角度值
+  int32   angle_min; // 最小角度
+  int32   angle_max; // 最大角度
+  uint8   enabled;   // 使能标志
 } DeviceServo;
 
 /*==============================================================================
@@ -78,4 +78,4 @@ extern struct DeviceServo g_servo;
  */
 void device_servo_all_init(void);
 
-#endif /* DEVICE_SERVO_H_ */
+#endif // __DEVICE_SERVO_H__

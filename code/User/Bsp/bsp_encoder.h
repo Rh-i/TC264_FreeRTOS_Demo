@@ -1,5 +1,5 @@
-#ifndef BSP_ENCODER_H_
-#define BSP_ENCODER_H_
+#ifndef __BSP_ENCODER_H__
+#define __BSP_ENCODER_H__
 
 #include "zf_common_headfile.h"
 #include "zf_driver_encoder.h"
@@ -10,10 +10,10 @@
  *============================================================================*/
 typedef struct BspEncoder
 {
-  encoder_index_enum    encoder_index; /**< 编码器模块号 */
-  encoder_channel1_enum channel_a;     /**< A 相引脚 */
-  encoder_channel2_enum channel_b;     /**< B 相引脚 */
-  int16                 count;         /**< 当前计数值 */
+  encoder_index_enum    encoder_index; // 编码器模块号
+  encoder_channel1_enum channel_a;     // A 相引脚
+  encoder_channel2_enum channel_b;     // B 相引脚
+  int16                 count;         // 当前计数值
 } BspEncoder;
 
 extern struct BspEncoder bsp_encoder_tim2;
@@ -49,4 +49,4 @@ void bsp_encoder_clear_count(BspEncoder *enc);
  */
 void bsp_encoder_all_init(void);
 
-#endif /* BSP_ENCODER_H_ */
+#endif // __BSP_ENCODER_H__

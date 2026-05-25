@@ -1,5 +1,5 @@
-#ifndef CPU0_MAIN_H
-#define CPU0_MAIN_H
+#ifndef __CPU0_MAIN_H__
+#define __CPU0_MAIN_H__
 
 // 这里面的东西是给Clock使用的，保留
 
@@ -7,18 +7,19 @@
 
 typedef struct
 {
-  float32 sysFreq; /**< \brief Actual SPB frequency */
-  float32 cpuFreq; /**< \brief Actual CPU frequency */
-  float32 pllFreq; /**< \brief Actual PLL frequency */
-  float32 stmFreq; /**< \brief Actual STM frequency */
+  float32 sysFreq; // Actual SPB frequency
+  float32 cpuFreq; // Actual CPU frequency
+  float32 pllFreq; // Actual PLL frequency
+  float32 stmFreq; // Actual STM frequency
 } AppInfo;
 
 typedef struct
 {
-  AppInfo info; /**< \brief Info object */
+  // Info object
+  AppInfo info;
 } App_Cpu0;
 
 
 IFX_EXTERN App_Cpu0 g_AppCpu0;
 
-#endif
+#endif // __CPU0_MAIN_H__

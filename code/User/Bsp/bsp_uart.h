@@ -1,5 +1,5 @@
-#ifndef BSP_UART_H_
-#define BSP_UART_H_
+#ifndef __BSP_UART_H__
+#define __BSP_UART_H__
 
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -7,10 +7,10 @@
 #include "zf_common_headfile.h"
 #include "zf_driver_uart.h"
 
-/* 前向声明 */
+// 前向声明 
 struct BspUart;
 
-/* 串口设备定义 */
+// 串口设备定义 
 extern struct BspUart bsp_uart0;
 extern struct BspUart bsp_uart1;
 extern struct BspUart bsp_uart2;
@@ -24,13 +24,13 @@ extern struct BspUart bsp_uart3;
  *============================================================================*/
 typedef struct BspUart
 {
-  uart_index_enum   uart_index;     /**< 串口模块号 */
-  uart_tx_pin_enum  tx_pin;         /**< 发送引脚 */
-  uart_rx_pin_enum  rx_pin;         /**< 接收引脚 */
-  uint32            baudrate;       /**< 波特率 */
-  fifo_struct       rx_fifo;        /**< 逐飞FIFO结构体，用于接收数据 */
-  uint8             rx_buffer[128]; /**< FIFO挂载的缓冲区 */
-  SemaphoreHandle_t rx_sem;         /**< 接收完成信号量 */
+  uart_index_enum   uart_index;     // 串口模块号
+  uart_tx_pin_enum  tx_pin;         // 发送引脚
+  uart_rx_pin_enum  rx_pin;         // 接收引脚
+  uint32            baudrate;       // 波特率
+  fifo_struct       rx_fifo;        // 逐飞FIFO结构体，用于接收数据
+  uint8             rx_buffer[128]; // FIFO挂载的缓冲区
+  SemaphoreHandle_t rx_sem;         // 接收完成信号量
 } BspUart;
 
 
@@ -109,4 +109,4 @@ BaseType_t bsp_uart_wait(BspUart *uart, TickType_t timeout);
  */
 void bsp_uart_all_init();
 
-#endif /* BSP_UART_H_ */
+#endif // __BSP_UART_H__

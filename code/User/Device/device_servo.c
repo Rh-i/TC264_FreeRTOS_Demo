@@ -18,7 +18,7 @@
  * 全局舵机设备实例
  *============================================================================*/
 
-/* 全局舵机设备 - ATOM0_CH3_P21_5 PWM */
+// 全局舵机设备 - ATOM0_CH3_P21_5 PWM
 struct DeviceServo g_servo;
 
 #pragma section all restore
@@ -42,14 +42,13 @@ void device_servo_init(DeviceServo *servo, BspPwm *pwm, uint32 duty_min, uint32 
   servo->duty_max  = duty_max;
   servo->duty_mid  = duty_mid;
   servo->angle     = 0;
-  servo->angle_min = -35; /* 角度范围 -35° ~ +35°，以机械中值为基准 */
+  servo->angle_min = -35; // 角度范围 -35° ~ +35°，以机械中值为基准
   servo->angle_max = 35;
   servo->enabled   = 0;
 
-  /* 设置初始占空比为中值 */
+  // 设置初始占空比为中值
   bsp_pwm_set_duty(pwm, duty_mid);
 
-  device_servo_enable(servo, 1);
   device_servo_reset(servo);
 }
 
@@ -58,7 +57,7 @@ void device_servo_init(DeviceServo *servo, BspPwm *pwm, uint32 duty_min, uint32 
  * @param servo 舵机设备指针
  * @param angle 目标角度
  *
- * @todo ai给的转换有问题，现求又麻烦，所以写死了一个线性坐标转换，
+ * @todo 写死的一个线性坐标转换，缺点是移植会有点麻烦
  *
  */
 void device_servo_set_angle(DeviceServo *servo, int32 angle)
@@ -70,7 +69,7 @@ void device_servo_set_angle(DeviceServo *servo, int32 angle)
     return;
   }
 
-  /* 角度限幅 */
+  // 角度限幅
   if (angle > servo->angle_max)
   {
     angle = servo->angle_max;
@@ -82,13 +81,13 @@ void device_servo_set_angle(DeviceServo *servo, int32 angle)
 
   servo->angle = angle;
 
-  /* 计算占空比 - 线性映射角度到占空比 */
-  /* 公式: duty = 4750 + (angle×3079+42) / 84 */
-  /* -84° → 1670, 0° → 4750, +84° → 7828 */
+  // 计算占空比 - 线性映射角度到占空比
+  // 公式: duty = 4750 + (angle×3079+42) / 84
+  // -84° → 1670, 0° → 4750, +84° → 7828
 
   duty = 4750 + (angle * 3079 + 42) / 84;
 
-  /* 占空比限幅 */
+  // 占空比限幅
   if (duty > servo->duty_max)
   {
     duty = servo->duty_max;
@@ -108,7 +107,7 @@ void device_servo_set_angle(DeviceServo *servo, int32 angle)
  */
 void device_servo_set_duty(DeviceServo *servo, uint32 duty)
 {
-  /* 占空比限幅 */
+  // 占空比限幅
   if (duty > servo->duty_max)
   {
     duty = servo->duty_max;
@@ -158,15 +157,15 @@ void device_servo_reset(DeviceServo *servo)
  */
 void device_servo_all_init(void)
 {
-  /* 初始化全局舵机设备 - CS-3120舵机参数 */
-  /* 330Hz周期 = 1000000/330 ≈ 3030μs */
-  /* 机械中值: 4750 */
-  /* 角度范围 ±35° */
-  /* -35° → duty = 4750 + (-35×3079+42)/84 = 3468 */
-  /* +35° → duty = 4750 + (35×3079+42)/84 = 6034 */
+  // 初始化全局舵机设备 - CS-3120舵机参数
+  // 330Hz周期 = 1000000/330 ≈ 3030μs
+  // 机械中值: 4750
+  // 角度范围 ±35°
+  // -35° → duty = 4750 + (-35×3079+42)/84 = 3468
+  // +35° → duty = 4750 + (35×3079+42)/84 = 6034
   device_servo_init(&g_servo,
                     &bsp_pwm_servo1,
-                    3468,  /* 左侧35°占空比 */
-                    6034,  /* 右侧35°占空比 */
-                    4750); /* 机械中值占空比 */
+                    3468,  // 左侧35°占空比
+                    6034,  // 右侧35°占空比
+                    4750); // 机械中值占空比
 }

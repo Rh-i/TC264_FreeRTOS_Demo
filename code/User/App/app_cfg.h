@@ -1,5 +1,5 @@
-#ifndef _APP_CFG_H_
-#define _APP_CFG_H_
+#ifndef __APP_CFG_H__
+#define __APP_CFG_H__
 
 #include "bsp_io.h"
 
@@ -19,4 +19,4 @@
  */
 void user_init(void);
 
-#endif // _APP_CFG_H_
+#endif // __APP_CFG_H__

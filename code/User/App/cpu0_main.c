@@ -134,23 +134,23 @@ void test_task(void *pvParameters)
 
   while (1)
   {
-    /* 电机和舵机测试 */
+    // 电机和舵机测试 
     // bsp_pwm_set_duty(&bsp_pwm_motor,1000);
 
     // bsp_pwm_set_duty(&bsp_pwm_servo1,4750); // 机械中值 0°
     // device_servo_set_angle(&g_servo, -35);
     // device_servo_set_angle(&g_servo,35);
-    /* 电机和舵机测试 */
+    // 电机和舵机测试 
 
 
-    /* 电机编码器测试 */
+    // 电机编码器测试 
     // int count = bsp_encoder_get_count(&bsp_encoder_tim2);
     // sprintf(msg, "cnt: %d\n", count);
     // bsp_uart_send_string(&bsp_uart0,msg);
     // bsp_encoder_clear_count(&bsp_encoder_tim2) ;
-    /* 电机编码器测试 */
+    // 电机编码器测试 
 
-    /* 电机pid测试 */
+    // 电机pid测试 
     // device_motor_set_speed_time(&g_motor, 100, 1000);
     // vTaskDelay(2000);
     // device_motor_set_speed_time(&g_motor, -60, 1000);
@@ -158,7 +158,7 @@ void test_task(void *pvParameters)
 
     // printf("0,-80,80,%d\n",(int32_t)SpeedPID_GetSpeed(&g_motor.speed_pid));
     // vTaskDelay(10);
-    /* 电机pid测试 */
+    // 电机pid测试 
   }
 }
 
@@ -188,7 +188,7 @@ int core0_main(void)
 
   while (1)
   {
-    /* 空循环 */
+    // 空循环 
   }
 }
 

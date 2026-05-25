@@ -4,9 +4,9 @@
  * @brief 简单单环pid实现
  * @version 0.1
  * @date 2026-05-25
- * 
+ *
  * @copyright Copyright (c) 2026
- * 
+ *
  */
 
 #include "pid.h"

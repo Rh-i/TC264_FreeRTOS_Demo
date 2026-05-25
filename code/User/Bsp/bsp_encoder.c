@@ -4,9 +4,9 @@
  * @brief 编码器初始化，很简陋
  * @version 0.1
  * @date 2026-05-25
- * 
+ *
  * @copyright Copyright (c) 2026
- * 
+ *
  */
 #include "bsp_encoder.h"
 
@@ -16,7 +16,7 @@
  * 编码器设备定义
  *============================================================================*/
 
-/* 示例编码器设备 - TIM2 正交解码 */
+// 示例编码器设备 - TIM2 正交解码
 struct BspEncoder bsp_encoder_tim2;
 
 #pragma section all restore
@@ -39,7 +39,7 @@ void bsp_encoder_init(BspEncoder *enc, encoder_index_enum encoder_n, encoder_cha
   enc->channel_b     = ch_b;
   enc->count         = 0;
 
-  /* 初始化正交解码模式 */
+  // 初始化正交解码模式
   encoder_quad_init(encoder_n, ch_a, ch_b);
 }
 
@@ -70,7 +70,7 @@ void bsp_encoder_clear_count(BspEncoder *enc)
  */
 void bsp_encoder_all_init(void)
 {
-  /* TIM2 正交解码编码器初始化 */
+  // TIM2 正交解码编码器初始化
   bsp_encoder_init(&bsp_encoder_tim2,
                    TIM2_ENCODER,
                    TIM2_ENCODER_CH1_P00_7,
