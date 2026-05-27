@@ -16,18 +16,31 @@
 
 /**
  * @brief 电机舵机控制中断 20ms一次
- *
+ * @note  根据 r9ds_ctrl 模式分发控制权：
+ *        NONE   → 遥控器接管，立即刹停 + 舵机回中
+ *        MANUAL → 遥控器接管，CH1 油门 + CH2 转向
+ *        AUTO   → 串口协议接管，舵机跟随协议目标角度
  */
 IFX_INTERRUPT(cc61_pit_ch1_isr, 0, CCU6_1_CH1_ISR_PRIORITY)
 {
   // 开启中断嵌套
   interrupt_global_enable(0);
 
-  // 计算并发送电机pid
-  device_motor_update(&g_motor);
+  R9DS_CtrlMode mode = r9ds_ctrl_get_mode();
 
-  // 控制舵机角度
-  device_servo_set_angle(&g_servo, g_uart_protocol.status.target_angle);
+  if (mode == R9DS_CTRL_MODE_NONE || mode == R9DS_CTRL_MODE_MANUAL)
+  {
+    // 遥控器控制 — 内部处理电机速度/停止 + 舵机角度
+    r9ds_ctrl_update();
+  }
+  else // R9DS_CTRL_MODE_AUTO
+  {
+    // 自动模式 — 舵机跟随串口协议目标角度
+    device_servo_set_angle(&g_servo, g_uart_protocol.status.target_angle);
+  }
+
+  // 始终运行电机 PID（STOP 模式下 PWM=0，SPEED 模式下 PID 闭环）
+  device_motor_update(&g_motor);
 
   pit_clear_flag(CCU61_CH1);
 }

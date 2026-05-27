@@ -118,7 +118,11 @@ void uart3_protocol_task(void *pvParameters)
     if (uart_protocol_poll(&g_uart_protocol))
     {
       // 如果解包到了数据，那我处理。这个不会重复解包
-      auto_ctrl_update();
+      // 非自动模式时不允许自动控制覆盖遥控器
+      if (r9ds_ctrl_get_mode() == R9DS_CTRL_MODE_AUTO)
+      {
+        auto_ctrl_update();
+      }
     }
     else
     {

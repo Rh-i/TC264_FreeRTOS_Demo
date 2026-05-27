@@ -24,6 +24,7 @@ void user_init(void)
   bsp_uart_all_init();                                 // 初始化四个串口（默认8N1/115200）
   uart_protocol_init(&g_uart_protocol, &NUC_MCU_UART); // 初始化上下位机串口协议
   device_r9ds_all_init();                              // R9DS 遥控器接收机初始化（UART1为SBUS模式100000/9E2）
+  r9ds_ctrl_init();                                    // 遥控器控制模块初始化（默认自动模式）
 
   bsp_pwm_all_init(); // 初始化舵机和电机的pwm
 

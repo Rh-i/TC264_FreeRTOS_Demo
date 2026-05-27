@@ -14,6 +14,7 @@
 #include "device_r9ds.h"
 
 #include "auto_ctrl.h"
+#include "r9ds_ctrl.h"
 
 /**
  * @brief 用户所有的初始化
