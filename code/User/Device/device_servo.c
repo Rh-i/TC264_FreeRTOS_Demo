@@ -56,8 +56,7 @@ void device_servo_init(DeviceServo *servo, BspPwm *pwm, uint32 duty_min, uint32 
  * @brief 设置舵机角度
  * @param servo 舵机设备指针
  * @param angle 目标角度
- *
- * @todo 写死的一个线性坐标转换，缺点是移植会有点麻烦
+ * @note 角度范围由一个一次函数线性映射到占空比范围，如果需要改范围，需要改变映射函数
  *
  */
 void device_servo_set_angle(DeviceServo *servo, int32 angle)
