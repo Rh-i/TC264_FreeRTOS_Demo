@@ -13,23 +13,23 @@
        <EditorPersist>
         <__.0>
          <BookmarkList></BookmarkList>
-         <CaretPos>4202</CaretPos>
+         <CaretPos>896</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Bsp\bsp_uart.c</FileName>
          <FileType>1</FileType>
-         <ScrollPos>112</ScrollPos>
+         <ScrollPos>31</ScrollPos>
         </__.0>
         <__.10>
          <BookmarkList></BookmarkList>
-         <CaretPos>4910</CaretPos>
+         <CaretPos>15141</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\libraries\zf_common\zf_common_fifo.c</FileName>
          <FileType>1</FileType>
-         <ScrollPos>70</ScrollPos>
+         <ScrollPos>299</ScrollPos>
         </__.10>
         <__.11>
          <BookmarkList></BookmarkList>
-         <CaretPos>68268</CaretPos>
+         <CaretPos>68303</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\libraries\infineon_libraries\iLLD\TC26B\Tricore\Ccu6\Std\IfxCcu6.h</FileName>
          <FileType>1</FileType>
@@ -37,11 +37,11 @@
         </__.11>
         <__.12>
          <BookmarkList></BookmarkList>
-         <CaretPos>1018</CaretPos>
+         <CaretPos>1042</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Service\isr.c</FileName>
          <FileType>1</FileType>
-         <ScrollPos>0</ScrollPos>
+         <ScrollPos>22</ScrollPos>
         </__.12>
         <__.13>
          <BookmarkList></BookmarkList>
@@ -69,7 +69,7 @@
         </__.15>
         <__.16>
          <BookmarkList></BookmarkList>
-         <CaretPos>9601</CaretPos>
+         <CaretPos>8818</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\Device\device_r9ds.c</FileName>
          <FileType>1</FileType>
@@ -83,21 +83,29 @@
          <FileType>1</FileType>
          <ScrollPos>59</ScrollPos>
         </__.17>
-        <__.1>
+        <__.18>
          <BookmarkList></BookmarkList>
-         <CaretPos>537</CaretPos>
+         <CaretPos>13823</CaretPos>
          <Encoding>6</Encoding>
-         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\user\cpu0_main.cpp</FileName>
-         <FileType>7</FileType>
-         <ScrollPos>0</ScrollPos>
-        </__.1>
-        <__.2>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\libraries\zf_driver\zf_driver_uart.c</FileName>
+         <FileType>1</FileType>
+         <ScrollPos>325</ScrollPos>
+        </__.18>
+        <__.1>
          <BookmarkList></BookmarkList>
          <CaretPos>3062</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\user\cpu0_main.c</FileName>
          <FileType>1</FileType>
          <ScrollPos>111</ScrollPos>
+        </__.1>
+        <__.2>
+         <BookmarkList></BookmarkList>
+         <CaretPos>537</CaretPos>
+         <Encoding>6</Encoding>
+         <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\user\cpu0_main.cpp</FileName>
+         <FileType>7</FileType>
+         <ScrollPos>0</ScrollPos>
         </__.2>
         <__.3>
          <BookmarkList></BookmarkList>
@@ -109,7 +117,7 @@
         </__.3>
         <__.4>
          <BookmarkList></BookmarkList>
-         <CaretPos>2590</CaretPos>
+         <CaretPos>2519</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\App\cpu0_main.c</FileName>
          <FileType>1</FileType>
@@ -141,11 +149,11 @@
         </__.7>
         <__.8>
          <BookmarkList></BookmarkList>
-         <CaretPos>154172</CaretPos>
+         <CaretPos>154924</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\OS\FreeRTOS\tasks.c</FileName>
          <FileType>1</FileType>
-         <ScrollPos>3638</ScrollPos>
+         <ScrollPos>3653</ScrollPos>
         </__.8>
         <__.9>
          <BookmarkList></BookmarkList>
@@ -241,17 +249,21 @@
         <ViewType>Document</ViewType>
        </__.17>
        <__.18>
-        <ViewId>1</ViewId>
-        <ViewType>Output_Progress</ViewType>
+        <ViewId>23</ViewId>
+        <ViewType>Document</ViewType>
        </__.18>
        <__.19>
-        <ViewId>0</ViewId>
-        <ViewType>Symbols</ViewType>
+        <ViewId>1</ViewId>
+        <ViewType>Output_Progress</ViewType>
        </__.19>
        <__.1>
         <ViewId>2</ViewId>
         <ViewType>Locals</ViewType>
        </__.1>
+       <__.20>
+        <ViewId>0</ViewId>
+        <ViewType>Symbols</ViewType>
+       </__.20>
        <__.2>
         <ViewId>3</ViewId>
         <ViewType>CustomWatch</ViewType>
@@ -339,6 +351,11 @@
         <ViewId>22</ViewId>
         <ViewType>Document</ViewType>
        </__.14>
+       <__.15>
+        <RelativePath>..\..\..\libraries\zf_driver\zf_driver_uart.c</RelativePath>
+        <ViewId>23</ViewId>
+        <ViewType>Document</ViewType>
+       </__.15>
        <__.1>
         <RelativePath>..\..\..\code\OS\FreeRTOS\tasks.c</RelativePath>
         <ViewId>8</ViewId>
@@ -505,7 +522,7 @@
       <PrimaryDocumentPaneId>5</PrimaryDocumentPaneId>
       <Frames>
        <__.0>
-        <FocusedViewId>4</FocusedViewId>
+        <FocusedViewId>22</FocusedViewId>
         <FrameState>3</FrameState>
         <IsPrimary>true</IsPrimary>
         <Bounds>
@@ -561,7 +578,7 @@
                <IsPinned>false</IsPinned>
                <IsTabbed>true</IsTabbed>
                <Orientation>None</Orientation>
-               <TopTabViewId>20</TopTabViewId>
+               <TopTabViewId>22</TopTabViewId>
                <ViewId>-1</ViewId>
                <Children>
                 <__.0>
@@ -624,6 +641,16 @@
                  <TopTabViewId>-1</TopTabViewId>
                  <ViewId>22</ViewId>
                 </__.14>
+                <__.15>
+                 <DockType>Document</DockType>
+                 <Extent>1</Extent>
+                 <IsDocumentPane>false</IsDocumentPane>
+                 <IsPinned>false</IsPinned>
+                 <IsTabbed>false</IsTabbed>
+                 <Orientation>None</Orientation>
+                 <TopTabViewId>-1</TopTabViewId>
+                 <ViewId>23</ViewId>
+                </__.15>
                 <__.1>
                  <DockType>Document</DockType>
                  <Extent>1</Extent>

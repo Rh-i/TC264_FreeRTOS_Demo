@@ -472,7 +472,7 @@ void uart_sbus_init(uart_index_enum uartn, uint32 baud, uart_tx_pin_enum tx_pin,
 
   uart_config.frame.stopBit    = IfxAsclin_StopBit_2;       // 停止位
   uart_config.frame.parityType = IfxAsclin_ParityType_even; // 偶校验
-  uart_config.frame.dataLength = IfxAsclin_DataLength_9;
+  uart_config.frame.dataLength = IfxAsclin_DataLength_8;
   uart_config.frame.parityBit  = TRUE; // 启动校验
 
   IfxAsclin_Asc_Pins pins; // 设置引脚

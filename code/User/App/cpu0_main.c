@@ -136,8 +136,8 @@ void test_task(void *pvParameters)
   while (1)
   {
     // 这里可以放一些测试代码，比如打印R9DS通道数据
-    printf("R9DS CH0: %d, CH1: %d, CH2: %d, CH3: %d\n", g_r9ds.rc.ch0, g_r9ds.rc.ch1, g_r9ds.rc.ch2, g_r9ds.rc.ch3);
-    vTaskDelay(1000);
+    printf("CH0: %d, CH1: %d, CH2: %d, CH3: %d, S1: %d, S2: %d, S3: %d, SW1: %d, SW2: %d, SW3: %d\n", g_r9ds.rc.ch0, g_r9ds.rc.ch1, g_r9ds.rc.ch2, g_r9ds.rc.ch3, g_r9ds.rc.s1, g_r9ds.rc.s2, g_r9ds.rc.s3, g_r9ds.rc.sw1, g_r9ds.rc.sw2, g_r9ds.rc.sw3);
+    vTaskDelay(100);
   }
 }
 
@@ -157,7 +157,7 @@ int core0_main(void)
   xTaskCreate(key3_task, "key3", 256, NULL, 3, NULL); // 优先级越大越高 0~9
 
   xTaskCreate(uart3_protocol_task, "u3_p", 1024, NULL, 4, NULL); // 优先级越大越高 0~9
-  xTaskCreate(test_task, "test_task", 512, NULL, 5, NULL); // 优先级越大越高 0~9
+  xTaskCreate(test_task, "test_task", 512, NULL, 5, NULL);       // 优先级越大越高 0~9
 
   start_freertos();
 
