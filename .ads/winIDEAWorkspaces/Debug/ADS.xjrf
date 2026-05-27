@@ -592,7 +592,7 @@
         <Count>0</Count>
         <Enabled>true</Enabled>
         <Expression></Expression>
-        <Location>&quot;..\..\..\code\User\App\cpu0_main.c&quot;::178</Location>
+        <Location>&quot;..\..\..\code\User\Service\isr.c&quot;::74</Location>
         <ProcessFilter></ProcessFilter>
        </__.0>
        <__.1>
@@ -604,7 +604,7 @@
         <Count>0</Count>
         <Enabled>true</Enabled>
         <Expression></Expression>
-        <Location>&quot;..\..\..\code\User\Bsp\bsp_uart.c&quot;::43</Location>
+        <Location>&quot;..\..\..\code\User\App\cpu0_main.c&quot;::139</Location>
         <ProcessFilter></ProcessFilter>
        </__.1>
       </BPs>

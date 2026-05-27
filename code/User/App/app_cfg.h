@@ -11,6 +11,7 @@
 
 #include "device_motor.h"
 #include "device_servo.h"
+#include "device_r9ds.h"
 
 #include "auto_ctrl.h"
 

@@ -69,8 +69,9 @@ static void bsp_uart_rx_interrupt_enable(uart_index_enum uart_n)
  * @param tx_pin 发送引脚
  * @param rx_pin 接收引脚
  * @param rx_buf_size FIFO缓冲区大小
+ * @param uart_cfg 帧格式配置（UART_CFG_8N1 默认 / UART_CFG_8E2 SBUS协议）
  */
-void bsp_uart_init(BspUart *uart, uart_index_enum uart_index, uint32 baud, uart_tx_pin_enum tx_pin, uart_rx_pin_enum rx_pin, size_t rx_buf_size)
+void bsp_uart_init(BspUart *uart, uart_index_enum uart_index, uint32 baud, uart_tx_pin_enum tx_pin, uart_rx_pin_enum rx_pin, size_t rx_buf_size, UartConfig_enum uart_cfg)
 {
   uart->uart_index = uart_index;
   uart->tx_pin     = tx_pin;
@@ -84,10 +85,17 @@ void bsp_uart_init(BspUart *uart, uart_index_enum uart_index, uint32 baud, uart_
   uart->rx_sem = xSemaphoreCreateBinary();
   configASSERT(uart->rx_sem != NULL);
 
-  // 初始化逐飞串口驱动
-  uart_init(uart_index, baud, tx_pin, rx_pin);
-
-  // 启用接收中断
+  // 初始化逐飞串口驱动（根据帧格式选择不同的初始化函数）
+  if (uart_cfg == UART_CFG_9E2)
+  {
+    // SBUS 模式：帧格式配置在 init 前完成，确保波特率分频器按 12bits/帧 正确计算
+    uart_sbus_init(uart_index, baud, tx_pin, rx_pin);
+  }
+  else
+  {
+    uart_init(uart_index, baud, tx_pin, rx_pin);
+    // 启用接收中断
+  }
   bsp_uart_rx_interrupt_enable(uart_index);
 }
 
@@ -173,14 +181,14 @@ void bsp_uart_all_init(void)
 {
   // 串口初始化 - 使用默认配置示例
   // UART0: 波特率115200, TX=P14_0, RX=P14_1, FIFO缓冲区64字节
-  bsp_uart_init(&bsp_uart0, UART_0, 115200, UART0_TX_P14_0, UART0_RX_P14_1, 64);
+  bsp_uart_init(&bsp_uart0, UART_0, 115200, UART0_TX_P14_0, UART0_RX_P14_1, 64, UART_CFG_8N1);
 
-  // UART1: 波特率115200, TX=P15_0, RX=P15_1, FIFO缓冲区64字节
-  bsp_uart_init(&bsp_uart1, UART_1, 115200, UART1_TX_P15_0, UART1_RX_P15_1, 64);
+  // UART1: 波特率100000, TX=P15_0, RX=P15_1, FIFO缓冲区128字节
+  bsp_uart_init(&bsp_uart1, UART_1, 100000, UART1_TX_P15_0, UART1_RX_P15_1, 256, UART_CFG_9E2);
 
   // UART2: 波特率115200, TX=P02_0, RX=P02_1, FIFO缓冲区64字节
-  bsp_uart_init(&bsp_uart2, UART_2, 115200, UART2_TX_P14_2, UART2_RX_P14_3, 64);
+  bsp_uart_init(&bsp_uart2, UART_2, 115200, UART2_TX_P14_2, UART2_RX_P14_3, 64, UART_CFG_8N1);
 
   // UART3: 波特率115200, TX=P00_0, RX=P00_1, FIFO缓冲区64字节
-  bsp_uart_init(&bsp_uart3, UART_3, 115200, UART3_TX_P00_0, UART3_RX_P00_1, 64);
+  bsp_uart_init(&bsp_uart3, UART_3, 115200, UART3_TX_P00_0, UART3_RX_P00_1, 64, UART_CFG_8N1);
 }

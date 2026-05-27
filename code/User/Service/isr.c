@@ -1,7 +1,7 @@
 /**
  * @file isr.c
  * @author Rh (qq:750920400)
- * @brief 所有的中断回调函数都在这（除了freertos计数时钟的中断 其优先级为1）
+ * @brief 所有的中断回调函数都在这（除了freertos计数时钟的中断，其优先级为1）
  * @version 0.1
  * @date 2026-05-25
  *
@@ -12,7 +12,7 @@
 #include "app_cfg.h"
 #include "isr_config.h"
 #include "zf_common_headfile.h"
-
+#include "device_r9ds.h"
 
 /**
  * @brief 电机舵机控制中断 20ms一次
@@ -35,6 +35,7 @@ IFX_INTERRUPT(cc61_pit_ch1_isr, 0, CCU6_1_CH1_ISR_PRIORITY)
 
 /**
  * @brief key使用到的中断回调 1ms触发一次
+ * @note  同时负责 R9DS 遥控器 SBUS 帧解析（与 key 扫描共用 1ms 中断）
  *
  */
 IFX_INTERRUPT(cc61_pit_ch0_isr, 0, CCU6_1_CH0_ISR_PRIORITY)
@@ -45,6 +46,8 @@ IFX_INTERRUPT(cc61_pit_ch0_isr, 0, CCU6_1_CH0_ISR_PRIORITY)
   key_scan(&key_a_dev); // 扫描按键
   key_scan(&key_b_dev); // 扫描按键
   key_scan(&key_c_dev); // 扫描按键
+
+  device_r9ds_update(&g_r9ds); // R9DS SBUS 帧解析
 
   pit_clear_flag(CCU61_CH0);
 }

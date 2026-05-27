@@ -17,6 +17,16 @@ extern struct BspUart bsp_uart2;
 extern struct BspUart bsp_uart3;
 
 /*==============================================================================
+ * 串口帧格式配置枚举
+ * @brief 用于指定串口的数据位/校验位/停止位组合
+ *============================================================================*/
+typedef enum
+{
+  UART_CFG_8N1 = 0, // 8数据位 无校验 1停止位（默认）
+  UART_CFG_9E2 = 1, // 8数据位 偶校验  2停止位（SBUS协议）
+} UartConfig_enum;
+
+/*==============================================================================
  * 串口结构体
  * @brief 负责串口通信，使用逐飞FIFO阻塞发送和接收
  * @details 发送时使用逐飞库的FIFO实现阻塞发送，接收时通过中断将数据
@@ -49,8 +59,9 @@ void bsp_uart_rx_isr_handler(BspUart *uart);
  * @param tx_pin 发送引脚
  * @param rx_pin 接收引脚
  * @param rx_buf_size FIFO缓冲区大小
+ * @param uart_cfg 帧格式配置（UART_CFG_8N1 默认 / UART_CFG_8E2 SBUS协议）
  */
-void bsp_uart_init(BspUart *uart, uart_index_enum uart_index, uint32 baud, uart_tx_pin_enum tx_pin, uart_rx_pin_enum rx_pin, size_t rx_buf_size);
+void bsp_uart_init(BspUart *uart, uart_index_enum uart_index, uint32 baud, uart_tx_pin_enum tx_pin, uart_rx_pin_enum rx_pin, size_t rx_buf_size, UartConfig_enum uart_cfg);
 
 /**
  * @brief 析构函数，释放FIFO资源（逐飞FIFO无需显式释放）
