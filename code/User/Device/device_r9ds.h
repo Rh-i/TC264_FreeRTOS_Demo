@@ -35,11 +35,12 @@ typedef struct
  *============================================================================*/
 typedef struct DeviceR9DS
 {
-  BspUart      *uart;              // 串口设备指针（需配置为 SBUS 模式 100000/8E2）
-  R9DS_Channels rc;                // 遥控器通道数据
-  uint16        ch_offset[4];      // 通道零飘偏移量 {ch0, ch1, ch2, ch3}
-  uint8         is_online;         // 遥控器在线标志
-  uint32        offline_check_cnt; // 离线检测计数
+  BspUart           *uart;              // 串口设备指针（需配置为 SBUS 模式 100000/8E2）
+  R9DS_Channels      rc;                // 遥控器通道数据
+  uint16             ch_offset[4];      // 通道零飘偏移量 {ch0, ch1, ch2, ch3}
+  uint8              is_online;         // 遥控器在线标志（保留兼容）
+  uint32             offline_check_cnt; // 离线检测计数（保留兼容）
+  uint32 offline_tick;      // 距上次有效帧的毫秒计数，≥1000=离线
 } DeviceR9DS;
 
 /*==============================================================================

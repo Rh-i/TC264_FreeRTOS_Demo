@@ -260,6 +260,7 @@ void device_r9ds_init(DeviceR9DS *dev, BspUart *uart, const uint16 *ch_offset)
   // 离线状态初始化
   dev->is_online         = 0;
   dev->offline_check_cnt = 0;
+  dev->offline_tick      = 1000; // 初始视为离线（未收到任何帧）
 }
 
 /**
@@ -269,6 +270,12 @@ void device_r9ds_init(DeviceR9DS *dev, BspUart *uart, const uint16 *ch_offset)
  */
 void device_r9ds_update(DeviceR9DS *dev)
 {
+  // 每 1ms 递增离线计时器（由 1ms ISR 调用），上限 2000 防止溢出
+  if (dev->offline_tick < 10000)
+  {
+    dev->offline_tick++;
+  }
+
   // 必须有至少一帧的数据才动手，不够就等下次中断
   if (bsp_uart_available(dev->uart) < SBUS_FRAME_SIZE)
   {
@@ -298,6 +305,7 @@ void device_r9ds_update(DeviceR9DS *dev)
         r9ds_sbus_extract_channels(frame, channels);
         r9ds_map_channels(dev, channels);
         r9ds_check_online(dev, frame[23]);
+        dev->offline_tick = 0; // 收到有效帧，重置离线计时器
         return; // 成功解析一帧，退出
       }
       // 帧尾不匹配：25 字节已消耗，while 条件会判断是否还有 >= 25 字节继续搜
@@ -308,11 +316,13 @@ void device_r9ds_update(DeviceR9DS *dev)
 }
 
 /**
- * @brief 获取在线状态
+ * @brief 获取在线状态（基于 1.5s 无数据超时）
+ * @note 由 1ms ISR 驱动 offline_tick 递增，收到有效帧时清零。
+ *       连续 1.5s（1500ms）未收到有效 SBUS 帧即判定为离线。
  */
 uint8 device_r9ds_is_online(DeviceR9DS *dev)
 {
-  return dev->is_online;
+  return (dev->offline_tick < 1500U) ? 1 : 0;
 }
 
 /**
