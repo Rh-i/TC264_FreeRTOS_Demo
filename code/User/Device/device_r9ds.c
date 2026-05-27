@@ -306,7 +306,7 @@ void device_r9ds_update(DeviceR9DS *dev)
         r9ds_map_channels(dev, channels);
         r9ds_check_online(dev, frame[23]);
         dev->offline_tick = 0; // 收到有效帧，重置离线计时器
-        return; // 成功解析一帧，退出
+        return;                // 成功解析一帧，退出
       }
       // 帧尾不匹配：25 字节已消耗，while 条件会判断是否还有 >= 25 字节继续搜
     }
@@ -332,7 +332,6 @@ uint8 device_r9ds_is_online(DeviceR9DS *dev)
  */
 void device_r9ds_all_init(void)
 {
-  // 注意：bsp_uart_all_init 已在上层 user_init 中调用，此处仅对 R9DS 端口重新配置
   const uint16 r9ds_offset[] = R9DS_CH_OFFSET_DEFAULT;
   device_r9ds_init(&g_r9ds, &bsp_uart1, r9ds_offset);
 }
