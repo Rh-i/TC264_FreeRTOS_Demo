@@ -117,7 +117,7 @@
         </__.3>
         <__.4>
          <BookmarkList></BookmarkList>
-         <CaretPos>2519</CaretPos>
+         <CaretPos>2899</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\App\cpu0_main.c</FileName>
          <FileType>1</FileType>
@@ -522,7 +522,7 @@
       <PrimaryDocumentPaneId>5</PrimaryDocumentPaneId>
       <Frames>
        <__.0>
-        <FocusedViewId>22</FocusedViewId>
+        <FocusedViewId>4</FocusedViewId>
         <FrameState>3</FrameState>
         <IsPrimary>true</IsPrimary>
         <Bounds>
@@ -578,7 +578,7 @@
                <IsPinned>false</IsPinned>
                <IsTabbed>true</IsTabbed>
                <Orientation>None</Orientation>
-               <TopTabViewId>22</TopTabViewId>
+               <TopTabViewId>20</TopTabViewId>
                <ViewId>-1</ViewId>
                <Children>
                 <__.0>

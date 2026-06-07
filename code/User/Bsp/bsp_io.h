@@ -5,7 +5,7 @@
 #include "semphr.h"
 #include "zf_common_headfile.h"
 
-void bsp_io_init();
+void bsp_io_init(void);
 
 // Ç°ÏòÉùÃ÷
 struct Key;

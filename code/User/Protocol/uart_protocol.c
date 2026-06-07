@@ -16,7 +16,7 @@
 /*==============================================================================
  * 内部函数声明
  *============================================================================*/
-static uint32 protocol_calculate_checksum(const uint8 *data, uint32 len);
+static uint8 protocol_calculate_checksum(const uint8 *data, uint32 len);
 static uint8  protocol_parse_frame(UartProtocol *protocol);
 static void   protocol_send_response(UartProtocol *protocol, uint8 cmd, uint8 status);
 static void   protocol_send_query_speed(UartProtocol *protocol);
@@ -131,7 +131,7 @@ SlaveStatus *uart_protocol_get_status(UartProtocol *protocol)
  * @param len 要校验的字节数
  * @return 校验和
  */
-static uint32 protocol_calculate_checksum(const uint8 *data, uint32 len)
+static uint8 protocol_calculate_checksum(const uint8 *data, uint32 len)
 {
   uint32 i;
   uint32 sum = 0;
@@ -141,7 +141,7 @@ static uint32 protocol_calculate_checksum(const uint8 *data, uint32 len)
     sum += data[i];
   }
 
-  uint32 out = sum & 0xFF;
+  uint8 out = (uint8)(sum & 0xFF);
 
   // printf("out:%d\n", out);
 

@@ -582,20 +582,6 @@
     </Mode>
     <Op_System>
      <Debug>
-      <BPs>
-       <__.0>
-        <ActionEnabled>false</ActionEnabled>
-        <ActionParams></ActionParams>
-        <ActionScript></ActionScript>
-        <ActionShow>false</ActionShow>
-        <Condition>false</Condition>
-        <Count>0</Count>
-        <Enabled>true</Enabled>
-        <Expression></Expression>
-        <Location>&quot;..\..\..\code\User\Service\isr.c&quot;::50</Location>
-        <ProcessFilter></ProcessFilter>
-       </__.0>
-      </BPs>
       <Processes>
        <__.0>
         <URL>App/SMP</URL>

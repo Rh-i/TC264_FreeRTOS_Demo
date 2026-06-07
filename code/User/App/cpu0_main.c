@@ -13,12 +13,13 @@
 
 #include "zf_common_headfile.h"
 
-#include "FreeRTOS.h"
 #include "bsp_freertos_cpu0.h"
+#include "FreeRTOS.h"
 #include "task.h"
 
 #include "app_cfg.h"
 #include "hardware_config.h"
+#include "test.h"
 
 #pragma section all "cpu0_dsram"
 
@@ -55,6 +56,9 @@ void key1_task(void *pvParameters)
 
     // 翻转LED1
     led_toggle(&led_1_dev);
+
+    // 通知测试模块（TEST_BOARD 关闭时为空宏）
+    test_key_notify(TEST_CMD_MOTOR);
   }
 }
 
@@ -77,6 +81,9 @@ void key2_task(void *pvParameters)
 
     // 翻转LED2
     led_toggle(&led_2_dev);
+
+    // 通知测试模块（TEST_BOARD 关闭时为空宏）
+    test_key_notify(TEST_CMD_ENCODER);
   }
 }
 
@@ -99,6 +106,9 @@ void key3_task(void *pvParameters)
 
     // 翻转LED3
     // led_toggle(&led_3_dev); // 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
+
+    // 通知测试模块（TEST_BOARD 关闭时为空宏）
+    test_key_notify(TEST_CMD_SERVO);
   }
 }
 
@@ -128,20 +138,9 @@ void uart3_protocol_task(void *pvParameters)
     {
       // 蜂鸣器响300ms
       buzzer_on(&buzzer_dev);
-      vTaskDelay(300);
+      vTaskDelay(1000);
       buzzer_off(&buzzer_dev);
     }
-  }
-}
-
-void test_task(void *pvParameters)
-{
-  (void)pvParameters;
-  while (1)
-  {
-    // 这里可以放一些测试代码，比如打印R9DS通道数据
-    printf("CH0: %d, CH1: %d, CH2: %d, CH3: %d, S1: %d, S2: %d, S3: %d, SW1: %d, SW2: %d, SW3: %d\n", g_r9ds.rc.ch0, g_r9ds.rc.ch1, g_r9ds.rc.ch2, g_r9ds.rc.ch3, g_r9ds.rc.s1, g_r9ds.rc.s2, g_r9ds.rc.s3, g_r9ds.rc.sw1, g_r9ds.rc.sw2, g_r9ds.rc.sw3);
-    vTaskDelay(100);
   }
 }
 
@@ -160,8 +159,13 @@ int core0_main(void)
   xTaskCreate(key2_task, "key2", 256, NULL, 3, NULL); // 优先级越大越高 0~9
   xTaskCreate(key3_task, "key3", 256, NULL, 3, NULL); // 优先级越大越高 0~9
 
-  xTaskCreate(uart3_protocol_task, "u3_p", 1024, NULL, 4, NULL); // 优先级越大越高 0~9
-  xTaskCreate(test_task, "test_task", 512, NULL, 5, NULL);       // 优先级越大越高 0~9
+  TaskHandle_t uart3_handle = NULL;
+  xTaskCreate(uart3_protocol_task, "u3_p", 1024, NULL, 4, &uart3_handle);
+
+  #ifdef TEST_BOARD
+  test_init(uart3_handle); // 创建测试队列（需在调度器启动前）
+  xTaskCreate(test_task, "test_task", 512, NULL, 5, NULL); // 优先级越大越高 0~9
+  #endif
 
   start_freertos();
 

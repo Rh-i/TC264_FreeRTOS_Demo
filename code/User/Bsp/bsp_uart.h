@@ -118,6 +118,6 @@ BaseType_t bsp_uart_wait(BspUart *uart, TickType_t timeout);
 /**
  * @brief 总初始化数据
  */
-void bsp_uart_all_init();
+void bsp_uart_all_init(void);
 
 #endif // __BSP_UART_H__

@@ -10,9 +10,11 @@
  */
 
 #include "app_cfg.h"
-#include "isr_config.h"
-#include "zf_common_headfile.h"
 #include "device_r9ds.h"
+#include "isr_config.h"
+#include "test.h"
+#include "zf_common_headfile.h"
+
 
 /**
  * @brief 电机舵机控制中断 20ms一次
@@ -26,21 +28,29 @@ IFX_INTERRUPT(cc61_pit_ch1_isr, 0, CCU6_1_CH1_ISR_PRIORITY)
   // 开启中断嵌套
   interrupt_global_enable(0);
 
-  R9DS_CtrlMode mode = r9ds_ctrl_get_mode();
-
-  if (mode == R9DS_CTRL_MODE_NONE || mode == R9DS_CTRL_MODE_MANUAL)
+#ifdef TEST_BOARD
+  if (!g_test_mode_active)
   {
-    // 遥控器控制 — 内部处理电机速度/停止 + 舵机角度
-    r9ds_ctrl_update();
-  }
-  else // R9DS_CTRL_MODE_AUTO
-  {
-    // 自动模式 — 舵机跟随串口协议目标角度
-    device_servo_set_angle(&g_servo, g_uart_protocol.status.target_angle);
-  }
+#endif
 
-  // 始终运行电机 PID（STOP 模式下 PWM=0，SPEED 模式下 PID 闭环）
-  device_motor_update(&g_motor);
+    R9DS_CtrlMode mode = r9ds_ctrl_get_mode();
+
+    if (mode == R9DS_CTRL_MODE_NONE || mode == R9DS_CTRL_MODE_MANUAL)
+    {
+      // 遥控器控制 — 内部处理电机速度/停止 + 舵机角度
+      r9ds_ctrl_update();
+    }
+    else // R9DS_CTRL_MODE_AUTO
+    {
+      // 自动模式 — 舵机跟随串口协议目标角度
+      device_servo_set_angle(&g_servo, g_uart_protocol.status.target_angle);
+    }
+    // 始终运行电机 PID（STOP 模式下 PWM=0，SPEED 模式下 PID 闭环）
+    device_motor_update(&g_motor);
+#ifdef TEST_BOARD
+  }
+  // 测试模式激活时：跳过自动控制和电机 PID，由 test_task 全权接管
+#endif
 
   pit_clear_flag(CCU61_CH1);
 }

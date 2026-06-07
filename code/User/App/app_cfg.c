@@ -44,7 +44,7 @@ void user_init(void)
 
 int fputc(int ch, FILE *stream)
 {
-  uart_write_byte(UART_0, (char)ch);
+  uart_write_byte(UART_3, (char)ch);
   return (ch);
 }
 
