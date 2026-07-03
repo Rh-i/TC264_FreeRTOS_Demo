@@ -1,18 +1,18 @@
 # TC264 完全模型组 · 自然选择 INVC — 2026（第21届）
 
-> **作者** 姜云瀚（24计科） · **硬件继承** 王天宇（22电气） · **车模** 百度 I 型 · **MCU** Infineon AURIX TC264
+> **作者** 姜云瀚（24计科） · **代码+硬件继承** 王天宇（22电气） · **车模** 百度 I 型 · **MCU** Infineon AURIX TC264
 
 ---
 
 ## TODO
 
 - [ ] CPU1 移植 FreeRTOS + 双核 IPC 通讯（硬件锁或 FreeRTOS 多核 API）
-- [ ] 下一版 MCU 预研：Infineon CYT4BB7 三核 FreeRTOS，CMake + Ozone 烧录，重新画板
+- [ ] 下一版 MCU 可能？：Infineon CYT4BB7 三核 FreeRTOS，CMake + Ozone 烧录，重新画板
 - [ ] `zf_clock.c` 双核时钟适配
 
 ## 已知问题
 
-1. **遥控模式直接断电疯车**：SBUS 帧解析在丢帧边界条件下可能未判定离线，需要每次关机时，把`rc.s3`3段开关，拨到除了手动之外的模式。也就是把正面第三个拨杆拉下来再断电
+1. **遥控模式直接断电疯车**：SBUS 帧解析在丢帧边界条件下可能未判定离线，需要每次关机时，把`rc.s3`3段开关，拨到除了手动之外的模式。也就是把正面第三个拨杆拉下到底再断电
 
 ---
 
@@ -43,7 +43,7 @@ TC264_FreeRTOS_Demo/
 │       ├── Device/               # 设备抽象 (电机 / 舵机 / R9DS-SBUS)
 │       ├── Module/               # 控制逻辑 (r9ds_ctrl 遥控 / auto_ctrl 自动)
 │       ├── Protocol/             # 上下位机 UART 协议 (16字节帧)
-│       └── Service/              # ISR 中断服务
+│       └── Service/              # ISR 中断服务 和 FreeRTOS的配置文件
 ├── doc/                          # 串口协议 / ADS 手册 / 嘉立创文件
 ├── libraries/                    # 英飞凌官方库 + 逐飞通用/驱动库
 └── Lcf_Tasking_Tricore_Tc.lsl    # 链接器脚本
@@ -62,9 +62,9 @@ TC264_FreeRTOS_Demo/
 | 任务 | Pri | 触发方式 | 功能 |
 |------|:---:|----------|------|
 | `led_task` | 2 | 500ms 周期 | LED4 固定闪烁 |
-| `key1_task` | 3 | Key A 信号量 | 蜂鸣器 100ms + LED1 翻转 + 通知测试模块 |
-| `key2_task` | 3 | Key B 信号量 | 蜂鸣器 100ms + LED2 翻转 + 通知测试模块 |
-| `key3_task` | 3 | Key C 信号量 | 蜂鸣器 100ms + 通知测试模块 |
+| `key1_task` | 3 | Key A 信号量 | 蜂鸣器 100ms + LED1 翻转 + 通知测试模块，被复用到上位机发送特定消息也执行 |
+| `key2_task` | 3 | Key B 信号量 | 蜂鸣器 100ms + LED2 翻转 + 通知测试模块，被复用到上位机发送特定消息也执行 |
+| `key3_task` | 3 | Key C 信号量 | 蜂鸣器 100ms + 通知测试模块，被复用到上位机发送特定消息也执行 |
 | `uart3_protocol_task` | 4 | UART3 RX 信号量 | 协议解包 → 自动控制更新；解包失败蜂鸣 1000ms |
 | `test_task` | 5 | 测试队列 | **TEST_BOARD 开启**：板级测试菜单 → 电机/编码器/舵机测试；**关闭**：空循环 |
 

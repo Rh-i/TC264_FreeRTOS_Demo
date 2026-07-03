@@ -11,13 +11,13 @@
 #include "bsp_io.h"
 
 #pragma section all "cpu0_dsram"
-// 按键设备 - P22_0
+// 按键设备 - P13_0
 Key key_a_dev;
 
-// 按键设备 - P23_1
+// 按键设备 - P13_1
 Key key_b_dev;
 
-// 按键设备 - P32_4
+// 按键设备 - P13_2
 Key key_c_dev;
 
 // LED设备 - P20_9
@@ -46,9 +46,9 @@ Buzzer buzzer_dev;
 void bsp_io_init(void)
 {
   // 初始化按键
-  key_init(&key_a_dev, P22_0, 7);
-  key_init(&key_b_dev, P23_1, 7);
-  key_init(&key_c_dev, P32_4, 7);
+  key_init(&key_a_dev, P13_0, 7);
+  key_init(&key_b_dev, P13_1, 7);
+  key_init(&key_c_dev, P13_2, 7);
 
   // 初始化LED
   led_init(&led_1_dev, P20_9, true);
