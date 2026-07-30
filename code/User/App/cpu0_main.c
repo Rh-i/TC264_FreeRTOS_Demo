@@ -13,8 +13,8 @@
 
 #include "zf_common_headfile.h"
 
-#include "bsp_freertos_cpu0.h"
 #include "FreeRTOS.h"
+#include "bsp_freertos_cpu0.h"
 #include "task.h"
 
 #include "app_cfg.h"
@@ -43,6 +43,8 @@ void led_task(void *pvParameters)
  */
 void key1_task(void *pvParameters)
 {
+  uint8_t buffer[16] = {0xaa, 0x55, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0xBB, 0x66};
+
   (void)pvParameters;
   while (1)
   {
@@ -57,6 +59,10 @@ void key1_task(void *pvParameters)
     // 翻转LED1
     led_toggle(&led_1_dev);
 
+    vTaskDelay(500);
+
+    bsp_uart_send_buffer(&bsp_uart3, buffer, 16);
+
     // 通知测试模块（TEST_BOARD 关闭时为空宏）
     test_key_notify(TEST_CMD_MOTOR);
   }
@@ -68,6 +74,8 @@ void key1_task(void *pvParameters)
  */
 void key2_task(void *pvParameters)
 {
+  uint8_t buffer[16] = {0xaa, 0x55, 0x0b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, 0xBB, 0x66};
+
   (void)pvParameters;
   while (1)
   {
@@ -82,6 +90,10 @@ void key2_task(void *pvParameters)
     // 翻转LED2
     led_toggle(&led_2_dev);
 
+    vTaskDelay(500);
+
+    bsp_uart_send_buffer(&bsp_uart3, buffer, 16);
+
     // 通知测试模块（TEST_BOARD 关闭时为空宏）
     test_key_notify(TEST_CMD_ENCODER);
   }
@@ -94,6 +106,8 @@ void key2_task(void *pvParameters)
 void key3_task(void *pvParameters)
 {
   (void)pvParameters;
+
+
   while (1)
   {
     // 等待key_c信号量
@@ -106,6 +120,8 @@ void key3_task(void *pvParameters)
 
     // 翻转LED3
     // led_toggle(&led_3_dev); // 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
+
+    // 预留硬件盲盒
 
     // 通知测试模块（TEST_BOARD 关闭时为空宏）
     test_key_notify(TEST_CMD_SERVO);
@@ -134,13 +150,6 @@ void uart3_protocol_task(void *pvParameters)
         auto_ctrl_update();
       }
     }
-    else
-    {
-      // 蜂鸣器响300ms
-      buzzer_on(&buzzer_dev);
-      vTaskDelay(1000);
-      buzzer_off(&buzzer_dev);
-    }
   }
 }
 
@@ -149,19 +158,19 @@ void uart3_protocol_task(void *pvParameters)
  * @brief 舵机PWM调试任务 — 自动模式下每秒打印舵机占空比
  * @param pvParameters 任务参数
  */
-//void debug_servo_duty_task(void *pvParameters)
+// void debug_servo_duty_task(void *pvParameters)
 //{
-//  (void)pvParameters;
-//  while (1)
-//  {
-//    // if (r9ds_ctrl_get_mode() == R9DS_CTRL_MODE_AUTO)
-//    // {
-//      uint32 duty = bsp_pwm_get_duty(g_servo.pwm);
-//      printf("[SERVO] AUTO mode, duty=%lu\r\n", duty);
-//    // }
-//    vTaskDelay(1000);
-//  }
-//}
+//   (void)pvParameters;
+//   while (1)
+//   {
+//     // if (r9ds_ctrl_get_mode() == R9DS_CTRL_MODE_AUTO)
+//     // {
+//       uint32 duty = bsp_pwm_get_duty(g_servo.pwm);
+//       printf("[SERVO] AUTO mode, duty=%lu\r\n", duty);
+//     // }
+//     vTaskDelay(1000);
+//   }
+// }
 
 /**
  * @brief CPU0主函数
@@ -180,10 +189,10 @@ int core0_main(void)
   TaskHandle_t uart3_handle = NULL;
   xTaskCreate(uart3_protocol_task, "u3_p", 2048, NULL, 4, &uart3_handle);
 
-  #ifdef TEST_BOARD
-  test_init(uart3_handle); // 创建测试队列（需在调度器启动前）
+#ifdef TEST_BOARD
+  test_init(uart3_handle);                                 // 创建测试队列（需在调度器启动前）
   xTaskCreate(test_task, "test_task", 512, NULL, 5, NULL); // 优先级越大越高 0~9
-  #endif
+#endif
   //  xTaskCreate(debug_servo_duty_task, "dbg_svo", 256, NULL, 5, NULL); // 舵机PWM调试打印
 
   start_freertos();

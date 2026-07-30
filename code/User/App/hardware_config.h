@@ -16,7 +16,7 @@
 #define NUC_MCU_UART bsp_uart3
 
 // 上下位机通讯串口是否启用响应帧
-// #define PROTOCOL_DISABLE_RESPONSE
+#define PROTOCOL_DISABLE_RESPONSE
 
 /*==============================================================================
  * 电路板测试宏

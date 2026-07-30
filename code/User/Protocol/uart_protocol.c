@@ -70,21 +70,11 @@ uint8_t uart_protocol_poll(UartProtocol *protocol)
     return 0;
   }
 
-  // 读取1字节到缓冲区
-  bsp_uart_recv(protocol->uart, protocol->rx_buffer, 1);
+  // 读取2字节到缓冲区
+  bsp_uart_recv(protocol->uart, protocol->rx_buffer, 2);
 
   // 检查帧头0xAA
-  if (protocol->rx_buffer[0] != PROTOCOL_HEAD_0)
-  {
-    // 帧头不匹配，丢弃这1字节，继续扫描
-    return 0;
-  }
-
-  // 读取1字节到缓冲区
-  bsp_uart_recv(protocol->uart, &protocol->rx_buffer[1], 1);
-
-  // 检查帧头0x55
-  if (protocol->rx_buffer[1] != PROTOCOL_HEAD_1)
+  if (protocol->rx_buffer[0] != PROTOCOL_HEAD_0 || protocol->rx_buffer[1] != PROTOCOL_HEAD_1)
   {
     // 帧头不匹配，丢弃这1字节，继续扫描
     return 0;
@@ -180,7 +170,7 @@ static uint8_t protocol_parse_frame(UartProtocol *protocol)
     case PROTOCOL_CMD_QUERY_SPEED:
       // 查询速度：回复当前速度
       protocol_send_query_speed(protocol);
-      return 0;
+      return 1;
       break;
 
     case PROTOCOL_CMD_SPEED_TIME:
@@ -215,13 +205,13 @@ static uint8_t protocol_parse_frame(UartProtocol *protocol)
         protocol->status.target_angle = (int32)frame[PROTOCOL_OFF_DATA] | ((int32)frame[PROTOCOL_OFF_DATA + 1] << 8) | ((int32)frame[PROTOCOL_OFF_DATA + 2] << 16) | ((int32)frame[PROTOCOL_OFF_DATA + 3] << 24);
       }
       protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
-      return 0;
+      return 1;
       break;
 
     case PROTOCOL_CMD_QUERY_SERVO_ANGLE:
       // 查询舵机角度：回复当前角度
       protocol_send_query_servo_angle(protocol);
-      return 0;
+      return 1;
       break;
 
     case PROTOCOL_CMD_KEY_A_SEM:
