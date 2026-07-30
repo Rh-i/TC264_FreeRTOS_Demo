@@ -146,6 +146,24 @@ void uart3_protocol_task(void *pvParameters)
 
 
 /**
+ * @brief 舵机PWM调试任务 — 自动模式下每秒打印舵机占空比
+ * @param pvParameters 任务参数
+ */
+//void debug_servo_duty_task(void *pvParameters)
+//{
+//  (void)pvParameters;
+//  while (1)
+//  {
+//    // if (r9ds_ctrl_get_mode() == R9DS_CTRL_MODE_AUTO)
+//    // {
+//      uint32 duty = bsp_pwm_get_duty(g_servo.pwm);
+//      printf("[SERVO] AUTO mode, duty=%lu\r\n", duty);
+//    // }
+//    vTaskDelay(1000);
+//  }
+//}
+
+/**
  * @brief CPU0主函数
  */
 int core0_main(void)
@@ -160,12 +178,13 @@ int core0_main(void)
   xTaskCreate(key3_task, "key3", 256, NULL, 3, NULL); // 优先级越大越高 0~9
 
   TaskHandle_t uart3_handle = NULL;
-  xTaskCreate(uart3_protocol_task, "u3_p", 1024, NULL, 4, &uart3_handle);
+  xTaskCreate(uart3_protocol_task, "u3_p", 2048, NULL, 4, &uart3_handle);
 
   #ifdef TEST_BOARD
   test_init(uart3_handle); // 创建测试队列（需在调度器启动前）
   xTaskCreate(test_task, "test_task", 512, NULL, 5, NULL); // 优先级越大越高 0~9
   #endif
+  //  xTaskCreate(debug_servo_duty_task, "dbg_svo", 256, NULL, 5, NULL); // 舵机PWM调试打印
 
   start_freertos();
 
