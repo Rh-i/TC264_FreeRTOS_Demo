@@ -13,8 +13,8 @@
 
 #include "zf_common_headfile.h"
 
-#include "FreeRTOS.h"
 #include "bsp_freertos_cpu0.h"
+#include "FreeRTOS.h"
 #include "task.h"
 
 #include "app_cfg.h"
@@ -43,7 +43,9 @@ void led_task(void *pvParameters)
  */
 void key1_task(void *pvParameters)
 {
-  uint8_t buffer[16] = {0xaa, 0x55, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0xBB, 0x66};
+  // key1任务执行上报帧：AA 55 0A 00 + 9字节数据 + 校验09 + BB 66
+  uint8_t buffer[16] = {
+    PROTOCOL_HEAD_0, PROTOCOL_HEAD_1, PROTOCOL_CMD_KEY_A_DONE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, PROTOCOL_TAIL_0, PROTOCOL_TAIL_1};
 
   (void)pvParameters;
   while (1)
@@ -58,9 +60,7 @@ void key1_task(void *pvParameters)
 
     // 翻转LED1
     led_toggle(&led_1_dev);
-
     vTaskDelay(500);
-
     bsp_uart_send_buffer(&bsp_uart3, buffer, 16);
 
     // 通知测试模块（TEST_BOARD 关闭时为空宏）
@@ -74,7 +74,9 @@ void key1_task(void *pvParameters)
  */
 void key2_task(void *pvParameters)
 {
-  uint8_t buffer[16] = {0xaa, 0x55, 0x0b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, 0xBB, 0x66};
+  // key2任务执行上报帧：AA 55 0B 00 + 9字节数据 + 校验0A + BB 66
+  uint8_t buffer[16] = {
+    PROTOCOL_HEAD_0, PROTOCOL_HEAD_1, PROTOCOL_CMD_KEY_B_DONE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0A, PROTOCOL_TAIL_0, PROTOCOL_TAIL_1};
 
   (void)pvParameters;
   while (1)
@@ -105,8 +107,11 @@ void key2_task(void *pvParameters)
  */
 void key3_task(void *pvParameters)
 {
-  (void)pvParameters;
+  // key3任务执行上报帧：AA 55 0C 00 + 9字节数据 + 校验0B + BB 66
+  uint8_t buffer[16] = {
+    PROTOCOL_HEAD_0, PROTOCOL_HEAD_1, PROTOCOL_CMD_KEY_C_DONE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0B, PROTOCOL_TAIL_0, PROTOCOL_TAIL_1};
 
+  (void)pvParameters;
 
   while (1)
   {
@@ -120,6 +125,10 @@ void key3_task(void *pvParameters)
 
     // 翻转LED3
     // led_toggle(&led_3_dev); // 此处led3，被舵机pwm占用，不能初始化，也不能作为小灯
+
+    vTaskDelay(500);
+
+    bsp_uart_send_buffer(&bsp_uart3, buffer, 16);
 
     // 预留硬件盲盒
 
