@@ -288,8 +288,8 @@ void device_motor_all_init(void)
                     &bsp_pwm_motor,
                     P22_3,
                     45.0f,  // speed_kp
-                    1.6f,   // speed_ki
-                    22.0f,  // speed_kd
+                    3.6f,   // speed_ki
+                    3.0f,  // speed_kd
                     10000); // out_max
 }
 
