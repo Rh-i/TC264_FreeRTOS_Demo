@@ -9,18 +9,19 @@
  *
  */
 
-#include "uart_protocol.h"
-#include "hardware_config.h"
 #include "bsp_io.h"
+#include "hardware_config.h"
+#include "uart_protocol.h"
+
 
 /*==============================================================================
  * 内部函数声明
  *============================================================================*/
 static uint8 protocol_calculate_checksum(const uint8 *data, uint32 len);
-static uint8  protocol_parse_frame(UartProtocol *protocol);
-static void   protocol_send_response(UartProtocol *protocol, uint8 cmd, uint8 status);
-static void   protocol_send_query_speed(UartProtocol *protocol);
-static void   protocol_send_query_servo_angle(UartProtocol *protocol);
+static uint8 protocol_parse_frame(UartProtocol *protocol);
+static void  protocol_send_response(UartProtocol *protocol, uint8 cmd, uint8 status);
+static void  protocol_send_query_speed(UartProtocol *protocol);
+static void  protocol_send_query_servo_angle(UartProtocol *protocol);
 
 /*==============================================================================
  * 全局实例（使用UART3）
@@ -51,54 +52,87 @@ void uart_protocol_init(UartProtocol *protocol, struct BspUart *uart)
 
 /**
  * @brief 协议轮询处理（主循环或FreeRTOS任务调用）
+ * @note  逐字节状态机扫描帧头：失步时每次只丢弃1字节，避免2字节步长导致的连环丢帧；
+ *        唤醒后循环解析，直到FIFO中数据不足一帧，避免积压
  * @param protocol 协议结构体指针
+ * @return 本次轮询解析出的帧数（非0表示有新数据需要auto_ctrl处理）
  */
 uint8_t uart_protocol_poll(UartProtocol *protocol)
 {
-  uint32 available;
+  uint8 byte;
+  uint8 processed = 0;
 
-  // 等待接收信号量
+  // 等待接收信号量（阻塞；唤醒后循环消费FIFO直至不足一帧）
   if (bsp_uart_wait(protocol->uart, portMAX_DELAY) != pdTRUE)
   {
     return 0;
   }
 
-  // 检查是否有16字节
-  available = bsp_uart_available(protocol->uart);
-  if (available < PROTOCOL_FRAME_SIZE)
+  for (;;)
   {
-    return 0;
+    switch (protocol->state)
+    {
+      case PROTOCOL_STATE_IDLE: // 等待帧头0xAA（逐字节丢弃）
+        if (bsp_uart_available(protocol->uart) < 1)
+        {
+          return processed;
+        }
+        bsp_uart_recv(protocol->uart, &byte, 1);
+        if (byte == PROTOCOL_HEAD_0)
+        {
+          protocol->rx_buffer[0] = byte;
+          protocol->state        = PROTOCOL_STATE_HEADER;
+        }
+        break;
+
+      case PROTOCOL_STATE_HEADER: // 等待帧头0x55
+        if (bsp_uart_available(protocol->uart) < 1)
+        {
+          return processed;
+        }
+        bsp_uart_recv(protocol->uart, &byte, 1);
+        if (byte == PROTOCOL_HEAD_1)
+        {
+          protocol->rx_buffer[1] = byte;
+          protocol->state        = PROTOCOL_STATE_DATA;
+        }
+        else if (byte == PROTOCOL_HEAD_0)
+        {
+          // 再次遇到0xAA：可能是下一帧帧头，保留并继续等待0x55
+          protocol->rx_buffer[0] = byte;
+        }
+        else
+        {
+          // 既非0x55也非0xAA，回到IDLE重新扫描
+          protocol->state = PROTOCOL_STATE_IDLE;
+        }
+        break;
+
+      case PROTOCOL_STATE_DATA: // 等待剩余14字节
+        if (bsp_uart_available(protocol->uart) < (PROTOCOL_FRAME_SIZE - 2))
+        {
+          return processed;
+        }
+        bsp_uart_recv(protocol->uart, &protocol->rx_buffer[2], PROTOCOL_FRAME_SIZE - 2);
+        protocol->state = PROTOCOL_STATE_IDLE; // 无论校验结果，均回到帧头扫描
+
+        // 检查帧尾0xBB 0x66
+        if (protocol->rx_buffer[PROTOCOL_OFF_TAIL] != PROTOCOL_TAIL_0 || protocol->rx_buffer[PROTOCOL_OFF_TAIL + 1] != PROTOCOL_TAIL_1)
+        {
+          break; // 帧尾不匹配，丢弃整帧
+        }
+
+        // 计算并校验校验和（前13字节）
+        if (protocol->rx_buffer[PROTOCOL_OFF_CHECK] != protocol_calculate_checksum(protocol->rx_buffer, PROTOCOL_OFF_CHECK))
+        {
+          break; // 校验失败，丢弃整帧
+        }
+
+        // 帧校验通过，解析数据（累积处理标志）
+        processed = (uint8)(processed | protocol_parse_frame(protocol));
+        break;
+    }
   }
-
-  // 读取2字节到缓冲区
-  bsp_uart_recv(protocol->uart, protocol->rx_buffer, 2);
-
-  // 检查帧头0xAA
-  if (protocol->rx_buffer[0] != PROTOCOL_HEAD_0 || protocol->rx_buffer[1] != PROTOCOL_HEAD_1)
-  {
-    // 帧头不匹配，丢弃这1字节，继续扫描
-    return 0;
-  }
-
-  // 帧头匹配，读取剩余14字节
-  bsp_uart_recv(protocol->uart, &protocol->rx_buffer[2], 14);
-
-  // 检查帧尾0xBB 0x66
-  if (protocol->rx_buffer[PROTOCOL_OFF_TAIL] != PROTOCOL_TAIL_0 || protocol->rx_buffer[PROTOCOL_OFF_TAIL + 1] != PROTOCOL_TAIL_1)
-  {
-    // 帧尾不匹配，丢弃并返回
-    return 0;
-  }
-
-  // 计算并校验校验和（前13字节）
-  if (protocol->rx_buffer[PROTOCOL_OFF_CHECK] != protocol_calculate_checksum(protocol->rx_buffer, PROTOCOL_OFF_CHECK))
-  {
-    // 校验失败，丢弃并返回
-    return 0;
-  }
-
-  // 帧校验通过，解析数据
-  return protocol_parse_frame(protocol);
 }
 
 /**

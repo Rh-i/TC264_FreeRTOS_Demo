@@ -81,8 +81,8 @@
 
 #define UART3_INT_SERVICE IfxSrc_Tos_cpu0 // 定义串口3中断服务类型，即中断是由谁响应处理
 #define UART3_TX_INT_PRIO 19              // 定义串口3发送中断优先级 优先级范围1-255 越大优先级越高 与平时使用的单片机不一样
-#define UART3_RX_INT_PRIO 20              // 定义串口3接收中断优先级 优先级范围1-255 越大优先级越高 与平时使用的单片机不一样
-#define UART3_ER_INT_PRIO 21              // 定义串口3错误中断优先级 优先级范围1-255 越大优先级越高 与平时使用的单片机不一样
+#define UART3_RX_INT_PRIO 30              // 定义串口3接收中断优先级 高于CCU6(24/25)防止硬件FIFO溢出丢字节；须<=31才能调用FromISR API
+#define UART3_ER_INT_PRIO 31              // 定义串口3错误中断优先级 优先级范围1-255 越大优先级越高 与平时使用的单片机不一样
 
 
 #endif // __ISR_CONFIG_H__

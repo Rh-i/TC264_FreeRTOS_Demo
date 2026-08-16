@@ -21,7 +21,7 @@ void user_init(void)
 {
   bsp_io_init(); // 初始化io设备 （led key buzzer）
 
-  bsp_uart_all_init();                                 // 初始化四个串口（默认8N1/115200）
+  bsp_uart_all_init();                                 // 初始化四个串口（UART0/2调试口115200，UART3上位机921600，UART1为SBUS 100000）
   uart_protocol_init(&g_uart_protocol, &NUC_MCU_UART); // 初始化上下位机串口协议
   device_r9ds_all_init();                              // R9DS 遥控器接收机初始化（UART1为SBUS模式100000/9E2）
   r9ds_ctrl_init();                                    // 遥控器控制模块初始化（默认自动模式）
@@ -44,7 +44,10 @@ void user_init(void)
 
 int fputc(int ch, FILE *stream)
 {
-  uart_write_byte(UART_3, (char)ch);
+  (void)stream;
+  // 通过bsp层发送，与其他发送方（响应帧/上报帧）共用互斥锁，防止字节交错
+  // 注意：mutex只能在任务上下文获取，禁止在中断里调用printf
+  bsp_uart_send_byte(&bsp_uart3, (uint8)ch);
   return (ch);
 }
 

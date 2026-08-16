@@ -16,7 +16,7 @@
 #define NUC_MCU_UART bsp_uart3
 
 // 上下位机通讯串口是否启用响应帧
-#define PROTOCOL_DISABLE_RESPONSE
+// #define PROTOCOL_DISABLE_RESPONSE
 
 /*==============================================================================
  * 电路板测试宏
@@ -24,6 +24,6 @@
  *        三个按键分别触发电机PWM/编码器/舵机测试
  *        验证完成后注释此宏，重新编译恢复正常功能
  *============================================================================*/
-//#define TEST_BOARD
+// #define TEST_BOARD
 
 #endif // __HARDWARE_CONFIG_H__

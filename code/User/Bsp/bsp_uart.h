@@ -34,13 +34,15 @@ typedef enum
  *============================================================================*/
 typedef struct BspUart
 {
-  uart_index_enum   uart_index;     // 串口模块号
-  uart_tx_pin_enum  tx_pin;         // 发送引脚
-  uart_rx_pin_enum  rx_pin;         // 接收引脚
-  uint32            baudrate;       // 波特率
-  fifo_struct       rx_fifo;        // 逐飞FIFO结构体，用于接收数据
-  uint8             rx_buffer[128]; // FIFO挂载的缓冲区
-  SemaphoreHandle_t rx_sem;         // 接收完成信号量
+  uart_index_enum   uart_index;        // 串口模块号
+  uart_tx_pin_enum  tx_pin;            // 发送引脚
+  uart_rx_pin_enum  rx_pin;            // 接收引脚
+  uint32            baudrate;          // 波特率
+  fifo_struct       rx_fifo;           // 逐飞FIFO结构体，用于接收数据
+  uint8             rx_buffer[256];    // FIFO挂载的缓冲区（各串口初始化时传入的buf_size不得超过256）
+  SemaphoreHandle_t rx_sem;            // 接收完成信号量
+  SemaphoreHandle_t tx_mutex;          // 发送互斥锁：防止多任务并发发送导致帧字节交错
+  volatile uint32   rx_overflow_count; // RX FIFO写满丢弃字节计数（诊断丢包用）
 } BspUart;
 
 
