@@ -117,11 +117,11 @@
         </__.3>
         <__.4>
          <BookmarkList></BookmarkList>
-         <CaretPos>2900</CaretPos>
+         <CaretPos>4246</CaretPos>
          <Encoding>6</Encoding>
          <FileName>D:\Users\admin\Desktop\znc\workspace\TC264_FreeRTOS_Demo\code\User\App\cpu0_main.c</FileName>
          <FileType>1</FileType>
-         <ScrollPos>112</ScrollPos>
+         <ScrollPos>135</ScrollPos>
         </__.4>
         <__.5>
          <BookmarkList></BookmarkList>
@@ -818,10 +818,6 @@
       </FindInFilesDialogData>
      </GlobalData>
      <History>
-      <ComboBox>
-       <ComboBoxes>
-       </ComboBoxes>
-      </ComboBox>
      </History>
      <Options>
       <CallstackWindow>

@@ -192,8 +192,8 @@ static uint8_t protocol_parse_frame(UartProtocol *protocol)
       // 设置速度：数据长度4字节，int32
       if (data_len >= 4)
       {
-        // 小端格式读取：低字节在前
-        protocol->status.target_speed = (int32)frame[PROTOCOL_OFF_DATA] | ((int32)frame[PROTOCOL_OFF_DATA + 1] << 8) | ((int32)frame[PROTOCOL_OFF_DATA + 2] << 16) | ((int32)frame[PROTOCOL_OFF_DATA + 3] << 24);
+        // 小端格式读取：低字节在前（无符号组装后转int32，避免有符号<<24溢出UB）
+        protocol->status.target_speed = (int32)((uint32)frame[PROTOCOL_OFF_DATA] | ((uint32)frame[PROTOCOL_OFF_DATA + 1] << 8) | ((uint32)frame[PROTOCOL_OFF_DATA + 2] << 16) | ((uint32)frame[PROTOCOL_OFF_DATA + 3] << 24));
       }
       protocol->status.mode = PROTOCOL_MODE_SPEED;
       protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
@@ -202,18 +202,18 @@ static uint8_t protocol_parse_frame(UartProtocol *protocol)
       break;
 
     case PROTOCOL_CMD_QUERY_SPEED:
-      // 查询速度：回复当前速度
+      // 查询速度：回复当前速度（不改模式，返回0避免误触发电机 auto_ctrl）
       protocol_send_query_speed(protocol);
-      return 1;
+      return 0;
       break;
 
     case PROTOCOL_CMD_SPEED_TIME:
       // 速度-时间模式：数据长度8字节，速度4字节+时间4字节
       if (data_len >= 8)
       {
-        // 小端格式读取：低字节在前
-        protocol->status.target_speed = (int32)frame[PROTOCOL_OFF_DATA] | ((int32)frame[PROTOCOL_OFF_DATA + 1] << 8) | ((int32)frame[PROTOCOL_OFF_DATA + 2] << 16) | ((int32)frame[PROTOCOL_OFF_DATA + 3] << 24);
-        protocol->status.target_time  = (int32)frame[PROTOCOL_OFF_DATA + 4] | ((int32)frame[PROTOCOL_OFF_DATA + 5] << 8) | ((int32)frame[PROTOCOL_OFF_DATA + 6] << 16) | ((int32)frame[PROTOCOL_OFF_DATA + 7] << 24);
+        // 小端格式读取：低字节在前（无符号组装后转int32，避免有符号<<24溢出UB）
+        protocol->status.target_speed = (int32)((uint32)frame[PROTOCOL_OFF_DATA] | ((uint32)frame[PROTOCOL_OFF_DATA + 1] << 8) | ((uint32)frame[PROTOCOL_OFF_DATA + 2] << 16) | ((uint32)frame[PROTOCOL_OFF_DATA + 3] << 24));
+        protocol->status.target_time  = (int32)((uint32)frame[PROTOCOL_OFF_DATA + 4] | ((uint32)frame[PROTOCOL_OFF_DATA + 5] << 8) | ((uint32)frame[PROTOCOL_OFF_DATA + 6] << 16) | ((uint32)frame[PROTOCOL_OFF_DATA + 7] << 24));
       }
       protocol->status.mode = PROTOCOL_MODE_SPEED_TIME;
       protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
@@ -235,17 +235,19 @@ static uint8_t protocol_parse_frame(UartProtocol *protocol)
       // 设置舵机角度：数据长度4字节，int32，范围 -35~+35°
       if (data_len >= 4)
       {
-        // 小端格式读取：低字节在前
-        protocol->status.target_angle = (int32)frame[PROTOCOL_OFF_DATA] | ((int32)frame[PROTOCOL_OFF_DATA + 1] << 8) | ((int32)frame[PROTOCOL_OFF_DATA + 2] << 16) | ((int32)frame[PROTOCOL_OFF_DATA + 3] << 24);
+        // 小端格式读取：低字节在前（无符号组装后转int32，避免有符号<<24溢出UB）
+        protocol->status.target_angle = (int32)((uint32)frame[PROTOCOL_OFF_DATA] | ((uint32)frame[PROTOCOL_OFF_DATA + 1] << 8) | ((uint32)frame[PROTOCOL_OFF_DATA + 2] << 16) | ((uint32)frame[PROTOCOL_OFF_DATA + 3] << 24));
       }
       protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
-      return 1;
+      // 返回0：舵机角度由20ms中断的 device_servo_set_angle 直接应用，无需触发 auto_ctrl；
+      // 且不改变 mode，避免残留的 SPEED_TIME 模式导致电机速度时间被重新执行
+      return 0;
       break;
 
     case PROTOCOL_CMD_QUERY_SERVO_ANGLE:
-      // 查询舵机角度：回复当前角度
+      // 查询舵机角度：回复当前角度（不改模式，返回0避免误触发电机 auto_ctrl）
       protocol_send_query_servo_angle(protocol);
-      return 1;
+      return 0;
       break;
 
     case PROTOCOL_CMD_KEY_A_SEM:
