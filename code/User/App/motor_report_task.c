@@ -29,11 +29,11 @@
 #define MOTOR_REPORT_CHANNELS 5   // 上报通道数：目标速度*2、实际速度、PWM输出、PID误差
 
 // 波形配置：设定电机目标速度为 正弦波 / 方波，供 vofa 看跟随波形调 PID
-#define MOTOR_REPORT_WAVE_AMP 90.0f      // 波形幅值 (cm/s)
-#define MOTOR_REPORT_WAVE_PERIOD_MS 2000 // 波形周期 (ms)
+#define MOTOR_REPORT_WAVE_AMP 50.0f      // 波形幅值 (cm/s)
+#define MOTOR_REPORT_WAVE_PERIOD_MS 3000 // 波形周期 (ms)
 
 // 波形模式：0=方波，1=正弦波
-#define MOTOR_REPORT_WAVE_SINE 0
+#define MOTOR_REPORT_WAVE_SINE 1
 
 /*==============================================================================
  * vofa JustFloat 帧尾 0x7F800000 (小端 {0x00,0x00,0x80,0x7f})

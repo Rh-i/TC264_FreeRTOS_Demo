@@ -192,7 +192,7 @@ int core0_main(void)
   user_init();            // 用户的初始化
 
   xTaskCreate(led_task, "led", 64, NULL, 2, NULL);                // 优先级越大越高 0~9
-  // xTaskCreate(motor_report_task, "mtr_rep", 1024, NULL, 2, NULL); // 电机数据vofa上报
+  xTaskCreate(motor_report_task, "mtr_rep", 1024, NULL, 2, NULL); // 电机数据vofa上报
   xTaskCreate(key1_task, "key1", 256, NULL, 3, NULL);             // 优先级越大越高 0~9
   xTaskCreate(key2_task, "key2", 256, NULL, 3, NULL);             // 优先级越大越高 0~9
   xTaskCreate(key3_task, "key3", 256, NULL, 3, NULL);             // 优先级越大越高 0~9
