@@ -287,9 +287,9 @@ void device_motor_all_init(void)
                     &bsp_encoder_tim2,
                     &bsp_pwm_motor,
                     P22_3,
-                    45.0f,  // speed_kp
-                    3.6f,   // speed_ki
-                    3.0f,  // speed_kd
+                    24.0f,  // speed_kp
+                    5.2f,   // speed_ki
+                    10.0f,  // speed_kd
                     10000); // out_max
 }
 

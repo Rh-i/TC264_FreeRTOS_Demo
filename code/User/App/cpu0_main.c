@@ -19,6 +19,7 @@
 
 #include "app_cfg.h"
 #include "hardware_config.h"
+#include "motor_report_task.h"
 #include "test.h"
 
 #pragma section all "cpu0_dsram"
@@ -190,10 +191,12 @@ int core0_main(void)
   cpu_wait_event_ready(); // 等待所有核心初始化完毕
   user_init();            // 用户的初始化
 
-  xTaskCreate(led_task, "led", 64, NULL, 2, NULL);    // 优先级越大越高 0~9
-  xTaskCreate(key1_task, "key1", 256, NULL, 3, NULL); // 优先级越大越高 0~9
-  xTaskCreate(key2_task, "key2", 256, NULL, 3, NULL); // 优先级越大越高 0~9
-  xTaskCreate(key3_task, "key3", 256, NULL, 3, NULL); // 优先级越大越高 0~9
+  xTaskCreate(led_task, "led", 64, NULL, 2, NULL);                // 优先级越大越高 0~9
+  // xTaskCreate(motor_report_task, "mtr_rep", 1024, NULL, 2, NULL); // 电机数据vofa上报
+  xTaskCreate(key1_task, "key1", 256, NULL, 3, NULL);             // 优先级越大越高 0~9
+  xTaskCreate(key2_task, "key2", 256, NULL, 3, NULL);             // 优先级越大越高 0~9
+  xTaskCreate(key3_task, "key3", 256, NULL, 3, NULL);             // 优先级越大越高 0~9
+
 
   TaskHandle_t uart3_handle = NULL;
   xTaskCreate(uart3_protocol_task, "u3_p", 2048, NULL, 4, &uart3_handle);

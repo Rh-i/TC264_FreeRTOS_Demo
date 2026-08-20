@@ -24,6 +24,8 @@ typedef struct
   float output_max; // 输出限幅
 
   float last_error; // 上次误差
+
+  float integral_sep_threshold; // 积分分离阈值：|error| < 该值时才启用积分
 } PID;
 
 /*==============================================================================
@@ -55,5 +57,12 @@ float PID_Calculate(PID *pid, float target, float feedback);
  * @param pid PID结构体指针
  */
 void PID_Reset(PID *pid);
+
+/**
+ * @brief 设置积分分离阈值
+ * @param pid PID结构体指针
+ * @param threshold 积分分离阈值（误差绝对值小于该值才启用积分；<=0 表示禁用积分分离，始终积分）
+ */
+void PID_SetIntegralSeparate(PID *pid, float threshold);
 
 #endif // __PID_H__

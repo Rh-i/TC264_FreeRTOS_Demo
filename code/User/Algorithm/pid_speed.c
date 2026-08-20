@@ -23,7 +23,7 @@ void SpeedPID_Init(SpeedPID *sp, float kp, float ki, float kd, float out_max)
 {
   // 初始化基础PID
   // 积分限幅设为输出限幅的20%
-  PID_Init(&sp->pid, kp, ki, kd, out_max, out_max * 0.35f);
+  PID_Init(&sp->pid, kp, ki, kd, out_max, out_max * 0.30f);
 
   sp->last_count   = 0;
   sp->delta_count  = 0;
