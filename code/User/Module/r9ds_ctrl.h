@@ -52,7 +52,7 @@ void r9ds_ctrl_init(void);
 R9DS_CtrlMode r9ds_ctrl_get_mode(void);
 
 /**
- * @brief 遥控器控制更新（20ms ISR 调用）
+ * @brief 遥控器控制更新（5ms ISR 调用）
  * @note 内部根据当前模式执行：
  *       NONE   → device_motor_stop + device_servo_reset
  *       MANUAL → CH1 油门控制电机 / CH2 转向控制舵机 / S1 滑行或刹停

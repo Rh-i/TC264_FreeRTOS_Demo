@@ -24,7 +24,7 @@ typedef struct
 #define ENCODER_RESOLUTION 2000   // 编码器分辨率 脉冲/圈
 #define WHEEL_DIAMETER_MM 62      // 轮子直径 mm
 #define WHEEL_PERIMETER_CM 19.48f // 轮子周长 cm (π×62/10)
-#define CONTROL_PERIOD_MS 20      // 控制周期 20ms
+#define CONTROL_PERIOD_MS 5       // 控制周期 5ms
 
 /*==============================================================================
  * 函数声明
@@ -46,7 +46,7 @@ void SpeedPID_Init(SpeedPID *sp, float kp, float ki, float kd, float out_max);
  * @param target_speed 目标速度 cm/s
  * @param delta_count 编码器增量（外部传入）
  * @return PWM输出值
- * @note 每20ms调用一次
+ * @note 每5ms调用一次
  */
 float SpeedPID_Calculate(SpeedPID *sp, float target_speed, int16 delta_count);
 

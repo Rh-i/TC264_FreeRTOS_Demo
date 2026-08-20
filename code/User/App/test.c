@@ -263,7 +263,7 @@ void test_task(void *pvParameters)
     vTaskSuspend(g_uart3_task_handle);
   }
 
-  // 激活测试模式标志（20ms ISR 检查此标志，跳过自动控制）
+  // 激活测试模式标志（5ms ISR 检查此标志，跳过自动控制）
   g_test_mode_active = 1;
 
   // 打印测试菜单

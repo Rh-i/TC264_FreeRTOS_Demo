@@ -5,7 +5,7 @@
  * @version 0.1
  * @date 2026-05-27
  *
- * @note 由 20ms ISR (cc61_pit_ch1_isr) 周期性调用 r9ds_ctrl_update()
+ * @note 由 5ms ISR (cc61_pit_ch1_isr) 周期性调用 r9ds_ctrl_update()
  *       S3 模式判定在应用层（本模块内部），离线自动回退到 AUTO
  *
  * @copyright Copyright (c) 2026
@@ -198,7 +198,7 @@ R9DS_CtrlMode r9ds_ctrl_get_mode(void)
 }
 
 /**
- * @brief 遥控器控制更新 — 20ms ISR 中调用
+ * @brief 遥控器控制更新 — 5ms ISR 中调用
  */
 void r9ds_ctrl_update(void)
 {

@@ -44,7 +44,7 @@ typedef enum
 
 /**
  * @brief 测试模式激活标志
- * @note 当为 1 时，20ms ISR 跳过自动控制和电机 PID，由 test_task 全权接管
+ * @note 当为 1 时，5ms ISR 跳过自动控制和电机 PID，由 test_task 全权接管
  */
 extern volatile uint8 g_test_mode_active;
 

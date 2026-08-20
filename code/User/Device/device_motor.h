@@ -39,8 +39,13 @@ typedef struct
 } MotorMotionState;
 
 /*==============================================================================
+ * PID 套切换阈值
+ *============================================================================*/
+#define MOTOR_PID_SWITCH_SPEED 35 // PID 切换阈值 (cm/s)：|target| < 35 用低速套，否则高速套
+
+/*==============================================================================
  * 电机设备定义
- * @brief 包含编码器、PWM输出、方向控制、速度环PID控制器的完整电机设备
+ * @brief 包含编码器、PWM输出、方向控制、双套速度环PID控制器的完整电机设备
  *============================================================================*/
 typedef struct DeviceMotor
 {
@@ -48,7 +53,10 @@ typedef struct DeviceMotor
   BspPwm       *pwm;     // PWM设备指针
   gpio_pin_enum dir_pin; // 方向控制引脚
 
-  SpeedPID speed_pid; // 速度环PID
+  SpeedPID  speed_pid_low;   // 低速环 PID（|target| < 切换阈值）
+  SpeedPID  speed_pid_high;  // 高速环 PID（|target| >= 切换阈值）
+  SpeedPID *speed_pid;       // 当前激活的 PID 指针（指向低速或高速套）
+  uint8     speed_pid_index; // 当前激活序号：0=低速，1=高速
 
   MotorMotionState motion; // 运动状态
 
@@ -68,12 +76,15 @@ typedef struct DeviceMotor
  * @param encoder 编码器设备指针
  * @param pwm PWM设备指针
  * @param dir_pin 方向控制引脚
- * @param speed_kp 速度环比例系数
- * @param speed_ki 速度环积分系数
- * @param speed_kd 速度环微分系数
+ * @param kp_low 低速环比例系数
+ * @param ki_low 低速环积分系数
+ * @param kd_low 低速环微分系数
+ * @param kp_high 高速环比例系数
+ * @param ki_high 高速环积分系数
+ * @param kd_high 高速环微分系数
  * @param out_max 输出限幅(PWM占空比)
  */
-void device_motor_init(DeviceMotor *motor, BspEncoder *encoder, BspPwm *pwm, gpio_pin_enum dir_pin, float speed_kp, float speed_ki, float speed_kd, uint32 out_max);
+void device_motor_init(DeviceMotor *motor, BspEncoder *encoder, BspPwm *pwm, gpio_pin_enum dir_pin, float kp_low, float ki_low, float kd_low, float kp_high, float ki_high, float kd_high, uint32 out_max);
 
 /**
  * @brief 设置电机目标速度（纯速度模式）
@@ -100,7 +111,7 @@ void device_motor_stop(DeviceMotor *motor);
  * @brief 更新电机状态
  * @param motor 电机设备指针
  * @return 1表示运动完成，0表示运动进行中
- * @note 每20ms调用一次
+ * @note 每5ms调用一次
  */
 uint8 device_motor_update(DeviceMotor *motor);
 

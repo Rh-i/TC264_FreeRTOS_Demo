@@ -33,16 +33,16 @@ void SpeedPID_Init(SpeedPID *sp, float kp, float ki, float kd, float out_max)
 
 /**
  * @brief 速度环PID计算
- * @note 每20ms调用一次
+ * @note 每5ms调用一次
  *
  * 速度计算公式:
  * speed_cm_s = delta_count × WHEEL_PERIMETER_CM / ENCODER_RESOLUTION / (CONTROL_PERIOD_MS/1000)
- *            = delta_count × 19.48 / 2000 / 0.02
- *            = delta_count × 0.487 cm/s
+ *            = delta_count × 19.48 / 2000 / 0.005
+ *            = delta_count × 1.948 cm/s
  *
  * @param sp SpeedPID结构体指针
  * @param target_speed 目标速度 cm/s
- * @param delta_count 编码器增量（外部传入，20ms周期内的脉冲数）
+ * @param delta_count 编码器增量（外部传入，5ms周期内的脉冲数）
  */
 float SpeedPID_Calculate(SpeedPID *sp, float target_speed, int16 delta_count)
 {

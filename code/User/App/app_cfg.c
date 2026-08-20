@@ -38,7 +38,7 @@ void user_init(void)
   auto_ctrl_init();   // 自动控制初始化
   auto_ctrl_enable(); // 启动自动控制
 
-  pit_ms_init(CCU61_CH1, 20); // 开启处理电机pid的20ms一次的中断初始化
+  pit_ms_init(CCU61_CH1, 5); // 开启处理电机pid的5ms一次的中断初始化
   pit_ms_init(CCU61_CH0, 1);  // 开启处理key_scan的1ms一次的中断初始化
 }
 

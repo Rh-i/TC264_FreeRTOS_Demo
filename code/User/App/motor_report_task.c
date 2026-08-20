@@ -25,15 +25,15 @@
 /*==============================================================================
  * 配置宏
  *============================================================================*/
-#define MOTOR_REPORT_PERIOD_MS 20 // 上报周期(ms)，与 20ms 控制周期对齐，波形平滑
-#define MOTOR_REPORT_CHANNELS 5   // 上报通道数：目标速度*2、实际速度、PWM输出、PID误差
+#define MOTOR_REPORT_PERIOD_MS 5 // 上报周期(ms)，与 5ms 控制周期对齐，波形平滑
+#define MOTOR_REPORT_CHANNELS 6   // 上报通道数：目标速度*2、实际速度、PWM输出、PID误差、PID套号
 
 // 波形配置：设定电机目标速度为 正弦波 / 方波，供 vofa 看跟随波形调 PID
-#define MOTOR_REPORT_WAVE_AMP 50.0f      // 波形幅值 (cm/s)
-#define MOTOR_REPORT_WAVE_PERIOD_MS 3000 // 波形周期 (ms)
+#define MOTOR_REPORT_WAVE_AMP 80.0f      // 波形幅值 (cm/s)
+#define MOTOR_REPORT_WAVE_PERIOD_MS 5000 // 波形周期 (ms)
 
 // 波形模式：0=方波，1=正弦波
-#define MOTOR_REPORT_WAVE_SINE 1
+#define MOTOR_REPORT_WAVE_SINE 0
 
 /*==============================================================================
  * vofa JustFloat 帧尾 0x7F800000 (小端 {0x00,0x00,0x80,0x7f})
@@ -59,6 +59,7 @@
  *   ch2 实际速度 speed_cm_s    (cm/s)
  *   ch3 PWM输出  output        (占空比 0~10000)
  *   ch4 PID误差  pid.error     (cm/s)
+ *   ch5 PID套号  speed_pid_index (0=低速, 1=高速)
  *
  * @param pvParameters 任务参数（未使用）
  */
@@ -86,15 +87,16 @@ void motor_report_task(void *pvParameters)
     target = ((t_ms % MOTOR_REPORT_WAVE_PERIOD_MS) < (MOTOR_REPORT_WAVE_PERIOD_MS / 2)) ? MOTOR_REPORT_WAVE_AMP : -MOTOR_REPORT_WAVE_AMP;
 #endif
 
-    // 下发目标电机速度（速度取整）；20ms 中断里的 device_motor_update 会按此闭环
+    // 下发目标电机速度（速度取整）；5ms 中断里的 device_motor_update 会按此闭环
     device_motor_set_speed(&g_motor, (int32)target);
 
     // 采集当前电机数据（target 打印两次）
     report[0] = target;                       // 目标速度
     report[1] = target;                       // 目标速度（打印两次）
-    report[2] = g_motor.speed_pid.speed_cm_s; // 实际速度
+    report[2] = g_motor.speed_pid->speed_cm_s; // 实际速度
     report[3] = (float)g_motor.output;        // PWM输出
-    report[4] = g_motor.speed_pid.pid.error;  // PID误差
+    report[4] = g_motor.speed_pid->pid.error; // PID误差
+    report[5] = (float)g_motor.speed_pid_index; // 当前PID套号 0=低速 1=高速
 
     // 组装 JustFloat 帧: N×float(小端) + tail{0x00,0x00,0x80,0x7f}
     p = &frame[0];

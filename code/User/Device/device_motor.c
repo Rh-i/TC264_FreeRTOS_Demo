@@ -115,7 +115,7 @@ static uint8 check_motion_completed(DeviceMotor *motor)
 /**
  * @brief 初始化电机设备
  */
-void device_motor_init(DeviceMotor *motor, BspEncoder *encoder, BspPwm *pwm, gpio_pin_enum dir_pin, float speed_kp, float speed_ki, float speed_kd, uint32 out_max)
+void device_motor_init(DeviceMotor *motor, BspEncoder *encoder, BspPwm *pwm, gpio_pin_enum dir_pin, float kp_low, float ki_low, float kd_low, float kp_high, float ki_high, float kd_high, uint32 out_max)
 {
   motor->encoder      = encoder;
   motor->pwm          = pwm;
@@ -133,8 +133,13 @@ void device_motor_init(DeviceMotor *motor, BspEncoder *encoder, BspPwm *pwm, gpi
   motor->motion.is_active    = 0;
   motor->motion.is_completed = 0;
 
-  // 初始化速度环PID
-  SpeedPID_Init(&motor->speed_pid, speed_kp, speed_ki, speed_kd, (float)out_max);
+  // 初始化两套速度环PID
+  SpeedPID_Init(&motor->speed_pid_low, kp_low, ki_low, kd_low, (float)out_max);
+  SpeedPID_Init(&motor->speed_pid_high, kp_high, ki_high, kd_high, (float)out_max);
+
+  // 默认激活低速套
+  motor->speed_pid       = &motor->speed_pid_low;
+  motor->speed_pid_index = 0;
 
   // 初始化方向控制引脚
   gpio_init(dir_pin, GPO, GPIO_LOW, GPO_PUSH_PULL);
@@ -178,13 +183,16 @@ void device_motor_stop(DeviceMotor *motor)
   gpio_set_level(motor->dir_pin, MOTOR_DIR_REVERSE);
   bsp_pwm_set_duty(motor->pwm, 0);
 
-  // 重置速度环PID
-  SpeedPID_Reset(&motor->speed_pid);
+  // 重置两套速度环PID，并回默认低速套
+  SpeedPID_Reset(&motor->speed_pid_low);
+  SpeedPID_Reset(&motor->speed_pid_high);
+  motor->speed_pid       = &motor->speed_pid_low;
+  motor->speed_pid_index = 0;
 }
 
 /**
  * @brief 更新电机状态
- * @note 每20ms调用一次
+ * @note 每5ms调用一次
  */
 uint8 device_motor_update(DeviceMotor *motor)
 {
@@ -222,14 +230,52 @@ uint8 device_motor_update(DeviceMotor *motor)
 
     case MOTOR_MODE_SPEED:
     case MOTOR_MODE_SPEED_TIME:
-      // 速度模式：使用速度环PID
+      // 速度模式：按目标速度选择 PID 套
       {
-        float pwm_out = SpeedPID_Calculate(&motor->speed_pid,
+        SpeedPID *pid_sel;
+        uint8     pid_index;
+
+        // |target| < 35 → 低速套，否则高速套
+        if ((motor->motion.target_speed > -MOTOR_PID_SWITCH_SPEED) &&
+            (motor->motion.target_speed < MOTOR_PID_SWITCH_SPEED))
+        {
+          pid_sel   = &motor->speed_pid_low;
+          pid_index = 0;
+        }
+        else
+        {
+          pid_sel   = &motor->speed_pid_high;
+          pid_index = 1;
+        }
+
+        // 套切换：预置 last_error + 积分项直接复制，保证切换瞬间输出连续无跳变
+        if (pid_sel != motor->speed_pid)
+        {
+          SpeedPID *old_pid = motor->speed_pid;
+
+          // 1. 微分连续：新套继承旧套的 last_error，历史差分不中断（避免 Kd*e 毛刺）
+          pid_sel->pid.last_error = old_pid->pid.last_error;
+
+          // 2. 积分连续：integral 字段存的是积分项输出 Σ(Ki·e)（PWM量纲），
+          //    直接复制即可保持积分项贡献不变；切换后仅累积斜率按新 ki 变化
+          pid_sel->pid.integral = old_pid->pid.integral;
+
+          // 积分限幅保护
+          if (pid_sel->pid.integral > pid_sel->pid.integral_max)
+            pid_sel->pid.integral = pid_sel->pid.integral_max;
+          if (pid_sel->pid.integral < -pid_sel->pid.integral_max)
+            pid_sel->pid.integral = -pid_sel->pid.integral_max;
+
+          motor->speed_pid       = pid_sel;
+          motor->speed_pid_index = pid_index;
+        }
+
+        float pwm_out = SpeedPID_Calculate(motor->speed_pid,
                                            (float)motor->motion.target_speed,
                                            delta_count);
         motor->output = (int32)pwm_out;
         // 更新实际速度
-        motor->actual_speed = motor->speed_pid.speed_cm_s;
+        motor->actual_speed = motor->speed_pid->speed_cm_s;
       }
       break;
 
@@ -282,15 +328,16 @@ void device_motor_set_max_output(DeviceMotor *motor, uint32 max_output)
  */
 void device_motor_all_init(void)
 {
-  // 初始化全局电机设备 - 默认PID参数
+  // 初始化全局电机设备 - 双套PID参数（切换阈值 ±35 cm/s）
+  // 低速套：ki 为高速套 5 倍，补偿低速响应
+  // 高速套：当前整定值
   device_motor_init(&g_motor,
                     &bsp_encoder_tim2,
                     &bsp_pwm_motor,
                     P22_3,
-                    24.0f,  // speed_kp
-                    5.2f,   // speed_ki
-                    10.0f,  // speed_kd
-                    10000); // out_max
+                    80.0f, 4.8f, 20.0f, // 低速 kp/ki/kd
+                    80.0f, 1.2f, 20.0f, // 高速 kp/ki/kd
+                    10000);             // out_max
 }
 
 #pragma section all restore

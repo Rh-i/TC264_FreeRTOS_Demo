@@ -239,7 +239,7 @@ static uint8_t protocol_parse_frame(UartProtocol *protocol)
         protocol->status.target_angle = (int32)((uint32)frame[PROTOCOL_OFF_DATA] | ((uint32)frame[PROTOCOL_OFF_DATA + 1] << 8) | ((uint32)frame[PROTOCOL_OFF_DATA + 2] << 16) | ((uint32)frame[PROTOCOL_OFF_DATA + 3] << 24));
       }
       protocol_send_response(protocol, cmd, PROTOCOL_STATUS_OK);
-      // 返回0：舵机角度由20ms中断的 device_servo_set_angle 直接应用，无需触发 auto_ctrl；
+      // 返回0：舵机角度由5ms中断的 device_servo_set_angle 直接应用，无需触发 auto_ctrl；
       // 且不改变 mode，避免残留的 SPEED_TIME 模式导致电机速度时间被重新执行
       return 0;
       break;
